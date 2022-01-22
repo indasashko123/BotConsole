@@ -1,0 +1,4 @@
+﻿"M/{MonthId}/{UserId}" - пользователем выбран месяц.
+404 - 
+0 - none reaction
+"D/{day.DayId}/{user.UserId}" - пользователь выбрал день.

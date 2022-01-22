@@ -62,6 +62,7 @@ namespace BotLibary
                 {
                     ConsoleMessage?.Invoke($"Создаем нового пользователся с ChatID {e.Message.Chat.Id}\n");
                     currentUser = await context.db.CreateNewUserAsync(e.Message.From.Username, e.Message.From.FirstName, e.Message.From.LastName, e.Message.Chat.Id);
+                    return;
                 }
                 if (!currentUser.isAdmin)
                 {
@@ -74,16 +75,19 @@ namespace BotLibary
                     //TODO: apps
                     if (e.Message.Text == personalConfig.Buttons["APPOINTMENT"])
                     {
-                        await bot.SendTextMessageAsync(currentUser.chatId, "Для записи необходимо выбрать месяц", replyMarkup: KeyBoards.GetMonthButtons());
+                        await bot.SendTextMessageAsync(currentUser.chatId, "Для записи необходимо выбрать месяц", replyMarkup: KeyBoards.GetMonthButtons(await context.db.GetMonthsAsync(), currentUser));
+                        return;
                     }
                     if (e.Message.Text == personalConfig.Buttons["PRICE"])
                     {
                         await bot.SendPhotoAsync(currentUser.chatId, new InputOnlineFile(personalConfig.Paths["PRICE"]), replyMarkup: KeyBoards.GetStartKeyboard(options));
+                        return;
                     }
                     if (e.Message.Text == personalConfig.Buttons["FEEDBACK"])
                     {
                         await bot.SendTextMessageAsync(currentUser.chatId, personalConfig.Messages["FEEDBACK"]);
-                        await bot.SendTextMessageAsync(currentUser.chatId, "👇", replyMarkup: KeyBoards.GetInstagrammButton());
+                        await bot.SendTextMessageAsync(currentUser.chatId, "👇", replyMarkup: KeyBoards.GetInstagrammButton(options));
+                        return;
                     }
                     if (e.Message.Text == personalConfig.Buttons["MYWORKS"])
                     {
@@ -91,23 +95,28 @@ namespace BotLibary
                         {
                             await bot.SendPhotoAsync(currentUser.chatId, new InputOnlineFile(photoURL));
                         }
+                        return;
                     }                  
                     if (e.Message.Text == personalConfig.Buttons["ABOUT"])
                     {
                         await bot.SendTextMessageAsync(currentUser.chatId, personalConfig.Messages["ABOUT"], replyMarkup: KeyBoards.GetStartKeyboard(options));
+                        return;
                     }
                     if (e.Message.Text == personalConfig.Buttons["LOCATION"])
                     {
                         await bot.SendTextMessageAsync(currentUser.chatId, personalConfig.Messages["LOCATION"]);
                         await bot.SendLocationAsync(currentUser.chatId, personalConfig.Latitude, personalConfig.Longitude, replyMarkup: KeyBoards.GetStartKeyboard(options));
+                        return;
                     }
                     if (e.Message.Text == personalConfig.Buttons["LINK"])
                     {
-                        await bot.SendTextMessageAsync(currentUser.chatId, "👇", replyMarkup: KeyBoards.GetLinkButtons());
+                        await bot.SendTextMessageAsync(currentUser.chatId, "👇", replyMarkup: KeyBoards.GetLinkButtons(options));
+                        return;
                     }
 
                     //else
                     await bot.SendTextMessageAsync(currentUser.chatId, personalConfig.Messages["UNKNOWN"]);
+                    return;
                 }              
                 if (currentUser.isAdmin)
                 {
@@ -125,7 +134,30 @@ namespace BotLibary
         /// <param name="e"></param>
         private async void OnQuery(object sender, CallbackQueryEventArgs e)
         {
-            throw new NotImplementedException();
+            DataBase.Models.User admin = await context.db.FindAdminAsync();
+            long chatId = e.CallbackQuery.Message.Chat.Id;
+            DataBase.Models.User currentUser = await context.db.FindUserAsync(chatId);
+            string[] callBackData = e.CallbackQuery.Data.Split('/');
+            if (currentUser == null)
+            {
+                ConsoleMessage?.Invoke($"Пользователь NULL при нажатии кнопки {e.CallbackQuery.Data}");
+                return;
+            }
+            // User выбрал месяц
+            if (callBackData[0] == "M")
+            {
+                List<Day> days = await context.db.FindDaysAsync(Convert.ToInt32(callBackData[1]));
+                //List<Appointment> appointments = await context.db.FindAppointmentsAsync(Convert.ToInt32(callBackData[1]), Convert.ToInt32(callBackData[2]));
+                await bot.SendTextMessageAsync(chatId, personalConfig.Messages["CHOSEDAY"], replyMarkup: KeyBoards.GetDaysButton(days, options, currentUser));
+            }
+
+
+
+            if (callBackData[0] == "404")
+            {
+                ConsoleMessage?.Invoke($"Ошибка 404 {e.CallbackQuery.Data}");
+                await bot.SendTextMessageAsync(chatId, "Какая-то ошибка(( попробуйте еще раз", replyMarkup: KeyBoards.GetStartKeyboard(options));
+            }
         }
 
         
