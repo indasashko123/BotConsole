@@ -15,5 +15,17 @@ namespace DataBase.Models
         public int DayCount { get; set; }
         public int MonthNumber { get; set; }
         public int Year { get; set; }
+        public Month()
+        {
+        }
+        public Month(int user, int dayCount, int monthNumber, int year, string name)
+        {
+            IsCurrent = false;
+            Name = name;
+            User = user;
+            DayCount = dayCount;
+            MonthNumber = monthNumber;
+            Year = year;
+        }
     }
 }

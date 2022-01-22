@@ -1,4 +1,5 @@
 {
   "token": "token",
-  "personalPassword" : "xxxx"
+  "personalPassword": "xxxx",
+  "dataBaseName": "testName"
 }

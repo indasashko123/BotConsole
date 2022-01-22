@@ -26,6 +26,7 @@ namespace BotLibary
                 ResizeKeyboard = true
             };
         }
+
         /// <summary>
         /// Клавиатура для пользователя.
         /// </summary>
@@ -44,6 +45,7 @@ namespace BotLibary
                 ResizeKeyboard = true
             };
         }
+
         /// <summary>
         /// Инлайн клавиатура для выбора месяца на который можно записаться.
         /// </summary>
@@ -71,6 +73,7 @@ namespace BotLibary
             buttons.Add(rightButton);
             return new InlineKeyboardMarkup(buttons);                 
         }
+
         /// <summary>
         /// Возвращает кнопку которая ссылка на инстаграмм.
         /// </summary>
@@ -80,6 +83,7 @@ namespace BotLibary
         {
             return new InlineKeyboardMarkup(InlineKeyboardButton.WithUrl(options.personalConfig.Messages["INSTAGRAM"], options.personalConfig.MediaLink["INSTAGRAM"]));
         }
+
         /// <summary>
         /// Вызывает клавиатуру с ссылками на медиапространства.
         /// </summary>
@@ -108,6 +112,7 @@ namespace BotLibary
             }
             return new InlineKeyboardMarkup(buttons);
         }
+
         /// <summary>
         /// Вызывает список дней 
         /// </summary>

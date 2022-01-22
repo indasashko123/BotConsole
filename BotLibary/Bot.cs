@@ -21,6 +21,7 @@ namespace BotLibary
     public class Bot
     {
         public ChangesLog ConsoleMessage;
+        public AdminMessage adminMessage;
         public readonly TelegramBotClient bot;
         public readonly Telegram.Bot.Types.User me;
         private readonly BotOptions options;
@@ -45,6 +46,7 @@ namespace BotLibary
             bot.OnCallbackQuery += OnQuery;
             dateFunction = new DateFunction();
             context = new DataBaseConnector(DataBaseType.MySQL);
+            adminMessage += (async(EventArgsNotification e) => { await bot.SendTextMessageAsync(e.Admin,e.Text, replyMarkup:e?.Keyboard); });
         }
         /// <summary>
         /// Обработка входящей команды или кнопки клавиатуры.
@@ -113,11 +115,20 @@ namespace BotLibary
                         await bot.SendTextMessageAsync(currentUser.chatId, "👇", replyMarkup: KeyBoards.GetLinkButtons(options));
                         return;
                     }
-
+                    if (e.Message.Text == "/reg"+botConfig.password)
+                    {
+                        dateFunction.CreateMonths(currentUser.UserId);
+                        await context.db.AddMonthAsync(currentUser.UserId, dateFunction.CurrentMonth);
+                        await context.db.CreateDaysAsync(currentUser.UserId, dateFunction.CurrentDay, dateFunction.CurrentMonth);
+                        await context.db.AddMonthAsync(currentUser.UserId, dateFunction.NextMonth);
+                        await context.db.CreateDaysAsync(currentUser.UserId, dateFunction.NextMonth);
+                        admin = await context.db.MakeAdminAsync(currentUser);
+                        await adminMessage?.Invoke(new EventArgsNotification(admin.chatId, "Зарегестрированно!"));
+                    }
                     //else
                     await bot.SendTextMessageAsync(currentUser.chatId, personalConfig.Messages["UNKNOWN"]);
                     return;
-                }              
+                }
                 if (currentUser.isAdmin)
                 {
                     if (e.Message.Text == "/start")
@@ -127,6 +138,7 @@ namespace BotLibary
                 }
             }
         }
+
         /// <summary>
         /// Обработка кнопки на экране.
         /// </summary>
@@ -147,7 +159,6 @@ namespace BotLibary
             if (callBackData[0] == "M")
             {
                 List<Day> days = await context.db.FindDaysAsync(Convert.ToInt32(callBackData[1]));
-                //List<Appointment> appointments = await context.db.FindAppointmentsAsync(Convert.ToInt32(callBackData[1]), Convert.ToInt32(callBackData[2]));
                 await bot.SendTextMessageAsync(chatId, personalConfig.Messages["CHOSEDAY"], replyMarkup: KeyBoards.GetDaysButton(days, options, currentUser));
             }
 
