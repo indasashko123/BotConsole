@@ -1,6 +1,8 @@
 ﻿"U/C/M/{MonthId}/{UserId}" - пользователем выбран месяц. (U -user, C -choise, M-month)
 "U/C/D/{day.DayId}/{user.UserId}" - пользователь выбрал день. (U - user, C - choise, D -day)
 "A/A/M/{MonthId}/{UserId}" - админ выбрал месяц в котором нужно добавить запись   (A-admin, A-Add, M-month,)
+"A/Q/Y/{UserId}" - админ подтвердил запись (A - admin, Q-confirm, Y -yes)
+"A/Q/N/{UserId}" - админ не подтвердил запись (A - admin, Q-confirm, N -no)
 
 0 - none reaction
 404 - Отсутствуют данные

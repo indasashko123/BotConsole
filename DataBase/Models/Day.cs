@@ -9,12 +9,33 @@ namespace DataBase.Models
     public class Day
     {
         public int DayId { get; set; }
+        /// <summary>
+        /// Дата. Номер дня по счету в месяце.
+        /// </summary>
         public int Date { get; set; }
+        /// <summary>
+        /// Айди месяца.
+        /// </summary>
         public int Month { get; set; }
+        /// <summary>
+        /// Выходной?
+        /// </summary>
         public bool IsWorkDay { get; set; }
+        /// <summary>
+        /// Высокая цена?
+        /// </summary>
         public bool IsHighPriceDay { get; set; }
+        /// <summary>
+        /// Год.
+        /// </summary>
         public int Year { get; set; }
+        /// <summary>
+        /// Номер месяцав году.
+        /// </summary>
         public int MonthNumber { get; set; }
+        /// <summary>
+        /// Название дня недели.
+        /// </summary>
         public string DayOfWeek { get; set; }
     }
 }

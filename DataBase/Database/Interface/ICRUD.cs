@@ -9,18 +9,27 @@ namespace DataBase.Database.Interface
 {
     public interface ICRUD
     {
-        User FindAdmin();
-        User FindUser(long chatId);
-        User CreateNewUser(string username, string firstName, string lastName, long id);
-        List<Month> GetMonths();
-        List<Day> FindDays(int monthId, int userId);
-        void AddMonth(int user, Month month);
-        void CreateDays(int user, int currentDay, Month month);
-        void CreateDays(int user, Month month);
-        User MakeAdmin(User user);
-        List<Appointment> FindAppointments(int dayId, int userId);
-        Appointment FindAppointment(int dayId, int userId);
-        Day FindDay(int dayid);
+        protected internal User FindAdmin();
+        protected internal User FindUser(long chatId);
+        protected internal User CreateNewUser(string username, string firstName, string lastName, long id);
+        protected internal List<Month> GetMonths();
+        protected internal List<Day> FindDays(int monthId, int userId);
+        protected internal List<Day> FindDays(int monthId);
+        protected internal void AddMonth(int user, Month month);
+        protected internal void CreateDays(int user, int currentDay, Month month);
+        protected internal void CreateDays(int user, Month month);
+        protected internal void UpdateApp(Appointment app);
+        protected internal void UpdateUserStatus(User user);
+        protected internal void DeleteApp(Appointment app);
+        protected internal User MakeAdmin(User user);
+        protected internal List<Appointment> FindAppointments(int dayId, int userId);
+        protected internal List<Appointment> FindAppointments(int dayId);
+        protected internal Appointment FindAppointment(int appId);
+        protected internal Appointment AddAppointment(int dayId);
+        protected internal Day FindDay(int dayid);
+        protected internal Day FindDayByAppoint(int appId);
+
+
 
 
         #region ASYNC
@@ -44,6 +53,10 @@ namespace DataBase.Database.Interface
         {
             return await Task.Run(() => FindDays(monthId, userId));
         }
+        async Task<List<Day>> FindDaysAsync(int monthId)
+        {
+            return await Task.Run(() => FindDays(monthId));
+        }
         async Task AddMonthAsync(int user, Month month)
         {
             await Task.Run(() => AddMonth(user, month));
@@ -64,13 +77,37 @@ namespace DataBase.Database.Interface
         {
             return await Task.Run(() => FindAppointments(dayId, userId));
         }
-        async Task<Appointment> FindAppointmentAsync(int dayId, int UserId)
+        async Task<List<Appointment>> FindAppointmentsAsync(int dayId)
         {
-            return await Task.Run(() => FindAppointment(dayId, UserId));
+            return await Task.Run(() => FindAppointments(dayId));
+        }
+        async Task<Appointment> FindAppointmentAsync(int appId)
+        {
+            return await Task.Run(() => FindAppointment(appId));
         }
         async Task<Day> FindDayAsync(int dayId)
         {
             return await Task.Run(() => FindDay(dayId));
+        }
+        async Task UpdateAppAsync(Appointment app)
+        {
+            await Task.Run(() => UpdateApp(app));
+        }
+        async Task<Day> FindDayByAppointAsync(int appId)
+        {
+            return await Task.Run(() => FindDayByAppoint(appId));
+        }
+        async Task UpdateUserStatusAsync(User user)
+        {
+            await Task.Run(() => UpdateUserStatus(user));
+        }
+        async Task<Appointment> AddAppointmentAsync(int dayId)
+        {
+            return await Task.Run(() => AddAppointment(dayId));
+        }
+        async Task DeleteAppAsync(Appointment app)
+        {
+            await Task.Run(() => DeleteApp(app));
         }
         #endregion
 

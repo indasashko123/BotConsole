@@ -14,7 +14,7 @@ namespace DataBase.Models
         public string username { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
-
+        public string status { get; set; }
         public User(string username, string firstName, string lastName, long id)
         {
             this.username = username;

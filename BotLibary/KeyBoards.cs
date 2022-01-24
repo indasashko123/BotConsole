@@ -207,8 +207,8 @@ namespace BotLibary
         {
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton>()
             {
-                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["CONFIRM"]}",$"{code}/Y/{user.UserId}"),
-                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["NOTCONFIRM"]}",$"{code}/N/{user.UserId}")
+                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["CONFIRM"]}",$"{code}/Y/{app.AppointmentId}/{user.UserId}"),
+                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["NOTCONFIRM"]}",$"{code}/N/{app.AppointmentId}/{user.UserId}")
             }) ;
             
         }
