@@ -9,16 +9,21 @@ namespace DataBase.Database.Interface
 {
     public interface ICRUD
     {
-        User FindAdmin();   
+        User FindAdmin();
         User FindUser(long chatId);
         User CreateNewUser(string username, string firstName, string lastName, long id);
         List<Month> GetMonths();
-        List<Day> FindDays(int monthId);
+        List<Day> FindDays(int monthId, int userId);
         void AddMonth(int user, Month month);
         void CreateDays(int user, int currentDay, Month month);
         void CreateDays(int user, Month month);
         User MakeAdmin(User user);
-        //Async
+        List<Appointment> FindAppointments(int dayId, int userId);
+        Appointment FindAppointment(int dayId, int userId);
+        Day FindDay(int dayid);
+
+
+        #region ASYNC
         async Task<User> FindAdminAsync()
         {
             return await Task.Run(() => FindAdmin());
@@ -35,9 +40,9 @@ namespace DataBase.Database.Interface
         {
             return await Task.Run(() => GetMonths());
         }
-        async Task<List<Day>> FindDaysAsync(int monthId)
+        async Task<List<Day>> FindDaysAsync(int monthId, int userId)
         {
-            return await Task.Run(() => FindDays(monthId));
+            return await Task.Run(() => FindDays(monthId, userId));
         }
         async Task AddMonthAsync(int user, Month month)
         {
@@ -55,5 +60,19 @@ namespace DataBase.Database.Interface
         {
             return await Task.Run(() => MakeAdmin(user));
         }
+        async Task<List<Appointment>> FindAppointmentsAsync(int dayId, int userId)
+        {
+            return await Task.Run(() => FindAppointments(dayId, userId));
+        }
+        async Task<Appointment> FindAppointmentAsync(int dayId, int UserId)
+        {
+            return await Task.Run(() => FindAppointment(dayId, UserId));
+        }
+        async Task<Day> FindDayAsync(int dayId)
+        {
+            return await Task.Run(() => FindDay(dayId));
+        }
+        #endregion
+
     }
 }

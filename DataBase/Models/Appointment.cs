@@ -15,5 +15,8 @@ namespace DataBase.Models
         public int Day { get; set; }
         public bool IsConfirm { get; set; }
         public bool IsEmpty { get; set; }
+        public bool IsHighPrice { get; set; }
+        public decimal Price { get; set; }
+        public int User { get; set; }
     }
 }

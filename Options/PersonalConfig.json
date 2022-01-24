@@ -10,9 +10,16 @@
     "CHOSEDAY": "choseDay",
     "DAYOFF": "Не рабочий день",
     "HIGHPRICEDAY": "Высокая цена",
-    "REGULARDAY" :  "Обычный день"
+    "REGULARDAY": "Обычный день",
+    "ADDAPP_MONTHLVL": "Выбор месяца для добавления записи",
+    "CHOSEAPP": "Пользователь выбрал день для записи",
+    "APPEMPTY": "Если запись не занята",
+    "APPNOTEMPTY": "Если запись занята",
+    "SORRYTAKEN": "Извиняемся если запись уже занята. Это ошибка",
+    "WAITCINFIRM": "Ожидате подтверждения админа",
+    "NEWAPP" :  "Человек записался на прием"
   },
-  "Buttons" : {
+  "Buttons": {
     "APPOINTMENT": "Text1",
     "PRICE": "Text2",
     "FEEDBACK": "Text3",
@@ -20,6 +27,11 @@
     "ABOUT": "Text5",
     "LOCATION": "Text6",
     "LINK": "Text7"
+  },
+  "AdminButtons": {
+    "ADDAPP": "Добавить запись",
+    "CONFIRM": "Подтвердить запись",
+    "NOTCONFIRM" :  "Отменить запись"
   },
   "Paths": {
     "GREETING": "PhotoPath1",

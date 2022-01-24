@@ -11,7 +11,6 @@ namespace DataBase.Models
         public int DayId { get; set; }
         public int Date { get; set; }
         public int Month { get; set; }
-        public bool IsHaveAppoint { get; set; }
         public bool IsWorkDay { get; set; }
         public bool IsHighPriceDay { get; set; }
         public int Year { get; set; }
