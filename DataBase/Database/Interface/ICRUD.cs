@@ -28,8 +28,8 @@ namespace DataBase.Database.Interface
         protected internal Appointment AddAppointment(int dayId);
         protected internal Day FindDay(int dayid);
         protected internal Day FindDayByAppoint(int appId);
-
-
+        protected internal User FindUserByAppointment(int appId);
+        protected internal User FindUser(int userId);
 
 
         #region ASYNC
@@ -108,6 +108,14 @@ namespace DataBase.Database.Interface
         async Task DeleteAppAsync(Appointment app)
         {
             await Task.Run(() => DeleteApp(app));
+        }
+        async Task<User> FindUserByAppointmentAsync(int appId)
+        {
+            return await Task.Run(() => FindUserByAppointment(appId));
+        }
+        async Task<User> FindUserAsync(int userId)
+        {
+            return await Task.Run(() => FindUser(userId));
         }
         #endregion
 

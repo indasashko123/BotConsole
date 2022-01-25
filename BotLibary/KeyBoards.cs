@@ -133,7 +133,7 @@ namespace BotLibary
             {
                 string data;
                 string message;
-                if (!day.IsHaveAppoint || !day.IsWorkDay)
+                if (!day.IsWorkDay)
                 {
                     message = $"{day.Date}{options.personalConfig.Messages["DAYOFF"]}";
                     data = "0";
@@ -203,12 +203,12 @@ namespace BotLibary
             return new InlineKeyboardMarkup(buttons);
         }
 
-        internal static IReplyMarkup GetConfirmKeyboard(Appointment app, BotOptions options, string code, User user)
+        internal static IReplyMarkup GetConfirmKeyboard(Appointment app, BotOptions options, string code, int userId)
         {
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton>()
             {
-                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["CONFIRM"]}",$"{code}/Y/{app.AppointmentId}/{user.UserId}"),
-                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["NOTCONFIRM"]}",$"{code}/N/{app.AppointmentId}/{user.UserId}")
+                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["CONFIRM"]}",$"{code}/Y/{app.AppointmentId}/{userId}"),
+                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["NOTCONFIRM"]}",$"{code}/N/{app.AppointmentId}/{userId}")
             }) ;
             
         }

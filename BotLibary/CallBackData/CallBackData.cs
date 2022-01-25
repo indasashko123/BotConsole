@@ -64,6 +64,11 @@ namespace BotLibary.CallBackData
                         Action = Action.Confirm;
                         break;
                     }
+                case "D":
+                    {
+                        Action = Action.Delete;
+                        break;
+                    }
             }
             switch (callBackData[2])
             {
@@ -113,7 +118,8 @@ namespace BotLibary.CallBackData
     {
         Add,
         Choise,
-        Confirm
+        Confirm,
+        Delete
     }
     internal enum UserRole
     {

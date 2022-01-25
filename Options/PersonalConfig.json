@@ -11,7 +11,7 @@
     "DAYOFF": "Не рабочий день",
     "HIGHPRICEDAY": "Высокая цена",
     "REGULARDAY": "Обычный день",
-    "ADDAPP_MONTHLVL": "Выбор месяца для добавления записи",
+    "ADMINSELECTMONTH": "Выбор месяца для админа",
     "CHOSEAPP": "Пользователь выбрал день для записи",
     "APPEMPTY": "Если запись не занята",
     "APPNOTEMPTY": "Если запись занята",
@@ -20,8 +20,8 @@
     "NEWAPP": "Человек записался на прием",
     "YOURAPPCONFIRM": "Ваша запись подтверждена",
     "YOURAPPNOTCONFIRM": "Ваша запись не подтверждена",
-    "CHOISEDAYTOADDAPP": "Выбирите день в который нужно добавить запись",
-    "WRITEAPPTIME" :  "Напишите время приема или время приема"
+    "ADMINCHOISEDAY": "Выбирите день для админа",
+    "WRITEAPPTIME": "Напишите время приема или время приема"
   },
   "Buttons": {
     "APPOINTMENT": "Text1",
@@ -35,7 +35,8 @@
   "AdminButtons": {
     "ADDAPP": "Добавить запись",
     "CONFIRM": "Подтвердить запись",
-    "NOTCONFIRM" :  "Отменить запись"
+    "NOTCONFIRM": "Отменить запись",
+    "DELAPP" :  "Удалить запись"
   },
   "Paths": {
     "GREETING": "PhotoPath1",

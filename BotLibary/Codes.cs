@@ -11,5 +11,6 @@ namespace BotLibary
         internal static string UserChoise = "U/C";
         internal static string AdminAdd = "A/A";
         internal static string AdminConfirm = "A/Q";
+        internal static string AdminDelete = "A/D";
     }
 }
