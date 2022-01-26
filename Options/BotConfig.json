@@ -2,4 +2,10 @@
   "token": "token",
   "personalPassword": "xxxx",
   "dataBaseName": "testName",
+  "appointmentStandartCount": "3",
+  "appointmentStandartTimes": {
+    "0": "10:00",
+    "1": "14:00",
+    "2":  "18:00"
+  }
 }

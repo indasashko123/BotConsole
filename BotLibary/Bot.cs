@@ -75,7 +75,6 @@ namespace BotLibary
                         await bot.SendTextMessageAsync(currentUser.chatId, personalConfig.Messages["USERGREETING"], replyMarkup: KeyBoards.GetStartKeyboard(options));
                         return;
                     }
-                    //TODO: apps
                     if (e.Message.Text == personalConfig.Buttons["APPOINTMENT"])
                     {
                         await bot.SendTextMessageAsync(currentUser.chatId, "Для записи необходимо выбрать месяц", replyMarkup: KeyBoards.GetMonthButtons(await context.db.GetMonthsAsync(), Codes.UserChoise,currentUser));
@@ -119,14 +118,29 @@ namespace BotLibary
                     if (e.Message.Text == "/reg"+botConfig.password && admin == null)
                     {
                         dateFunction.CreateMonths(currentUser.UserId);
-                        ConsoleMessage?.Invoke("Началась регистрация\n");
-                        await context.db.AddMonthAsync(currentUser.UserId, dateFunction.CurrentMonth);
-                        ConsoleMessage?.Invoke($"месяц {dateFunction.CurrentMonth.Name}, дней {dateFunction.CurrentMonth.DayCount}\n");
+                        await context.db.AddMonthAsync(currentUser.UserId, dateFunction.CurrentMonth);                       
                         await context.db.CreateDaysAsync(currentUser.UserId, dateFunction.CurrentDay, dateFunction.CurrentMonth);
+                        List<Day> daysCurrentMonth = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
+                        foreach (Day day in daysCurrentMonth)
+                        {
+                            for (int i = 0; i<botConfig.appointmentStandartCount; i++)
+                            {
+                                Appointment app = new Appointment(botConfig.appointmentStandartTimes[i],day.DayId);
+                                await context.db.AddAppointmentAsync(app);
+                            }
+                        }
                         await context.db.AddMonthAsync(currentUser.UserId, dateFunction.NextMonth);
                         await context.db.CreateDaysAsync(currentUser.UserId, dateFunction.NextMonth);
+                        List<Day> daysNextMonth = await context.db.FindDaysAsync(dateFunction.NextMonth.MonthId);
+                        foreach (Day day in daysNextMonth)
+                        {
+                            for (int i = 0; i < botConfig.appointmentStandartCount; i++)
+                            {
+                                Appointment app = new Appointment(botConfig.appointmentStandartTimes[i], day.DayId);
+                                await context.db.AddAppointmentAsync(app);
+                            }
+                        }
                         admin = await context.db.MakeAdminAsync(currentUser);
-                        ConsoleMessage?.Invoke($"месяц {dateFunction.NextMonth.Name}, дней {dateFunction.NextMonth.DayCount}");
                         await adminMessage?.Invoke(new EventArgsNotification(admin.chatId, "Зарегестрированно!"));
                     }
                     //else
@@ -180,6 +194,7 @@ namespace BotLibary
                         return;
                     }
                     // TODO:  Список пользователей.
+                    //        Сделать день не рабочим
                     //        Просмотреть неподтвержденные
                     //        Посмотреть подтвержденные записи
                     //        Написать уведомление всем

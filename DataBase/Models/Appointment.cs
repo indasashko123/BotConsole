@@ -28,6 +28,7 @@ namespace DataBase.Models
         }
         public Appointment(int day)
         {
+            AppointmentTime = "";
             Day = day;
             IsConfirm = false;
             IsEmpty = true;
