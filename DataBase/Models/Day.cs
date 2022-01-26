@@ -18,7 +18,7 @@ namespace DataBase.Models
         /// </summary>
         public int Month { get; set; }
         /// <summary>
-        /// Выходной?
+        /// Рабочий день?
         /// </summary>
         public bool IsWorkDay { get; set; }
         /// <summary>

@@ -1,13 +1,13 @@
 {
   "Messages": {
-    "USERGREETING": "Text1",
-    "FEEDBACK": "Text2",
-    "ABOUT": "Text3",
-    "LOCATION": "Text4",
-    "UNKNOWN": "Text5",
-    "ADMINGREETING": "Text6",
-    "INSTAGRAM": "MyInsta",
-    "CHOSEDAY": "choseDay",
+    "USERGREETING": "Приветствие пользователя",
+    "FEEDBACK": "Сообщение при ссылке на отзывы",
+    "ABOUT": "Обо мне",
+    "LOCATION": "Текст для описания местанахождения",
+    "UNKNOWN": "Текст для неизвестной команды",
+    "ADMINGREETING": "Приветствие админа",
+    "INSTAGRAM": "Сообщение при ссылке на инст",
+    "CHOSEDAY": "Выбирите день",
     "DAYOFF": "Не рабочий день",
     "HIGHPRICEDAY": "Высокая цена",
     "REGULARDAY": "Обычный день",
@@ -21,7 +21,10 @@
     "YOURAPPCONFIRM": "Ваша запись подтверждена",
     "YOURAPPNOTCONFIRM": "Ваша запись не подтверждена",
     "ADMINCHOISEDAY": "Выбирите день для админа",
-    "WRITEAPPTIME": "Напишите время приема или время приема"
+    "WRITEAPPTIME": "Напишите время приема или время приема",
+    "ISWEEKENDFORUSER": "Сообщение пользователю что день не рабочий",
+    "WEEKENDWARNING": "Предупреждение. Продолжить делать день выходным? имеет не свободные записи",
+    "USERAPPISCANCEL" : "Запись пользователя отменена"
   },
   "Buttons": {
     "APPOINTMENT": "Text1",
@@ -36,7 +39,9 @@
     "ADDAPP": "Добавить запись",
     "CONFIRM": "Подтвердить запись",
     "NOTCONFIRM": "Отменить запись",
-    "DELAPP" :  "Удалить запись"
+    "DELAPP": "Удалить запись",
+    "ALLUSERS": "Все пользователи",
+    "MAKEWEEKEND": "Сделать выходной"
   },
   "Paths": {
     "GREETING": "PhotoPath1",

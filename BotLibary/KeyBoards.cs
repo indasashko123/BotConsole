@@ -20,7 +20,7 @@ namespace BotLibary
             {
                 Keyboard = new List<List<KeyboardButton>>
                 {
-                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"] }, new KeyboardButton { Text = options.personalConfig.Buttons["PRICE"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["ABOUT"] } },
+                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["DELAPP"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["ALLUSERS"] } },
                     new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.Buttons["MYWORKS"] }, new KeyboardButton { Text = options.personalConfig.Buttons["FEEDBACK"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["LOCATION"] } },
                     new List<KeyboardButton> {new KeyboardButton { Text = "LINK" } }
                 },
@@ -131,16 +131,14 @@ namespace BotLibary
             List<List<InlineKeyboardButton>> buttons = new List<List<InlineKeyboardButton>>();
             foreach (Day day in days)
             {
-                string data;
+                string data = $"{code}/D/{day.DayId}/{user.UserId}";
                 string message;
                 if (!day.IsWorkDay)
                 {
                     message = $"{day.Date}{options.personalConfig.Messages["DAYOFF"]}";
-                    data = "0";
                 }
                 else
-                {
-                    data = $"{code}/D/{day.DayId}/{user.UserId}";
+                {                  
                     if (day.IsHighPriceDay)
                         message = $"{day.Date}{options.personalConfig.Messages["HIGHPRICEDAY"]}";
                     else
@@ -203,12 +201,12 @@ namespace BotLibary
             return new InlineKeyboardMarkup(buttons);
         }
 
-        internal static IReplyMarkup GetConfirmKeyboard(Appointment app, BotOptions options, string code, int userId)
+        internal static IReplyMarkup GetConfirmKeyboard(int EntityId, BotOptions options, string code, int userId)
         {
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton>()
             {
-                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["CONFIRM"]}",$"{code}/Y/{app.AppointmentId}/{userId}"),
-                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["NOTCONFIRM"]}",$"{code}/N/{app.AppointmentId}/{userId}")
+                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["CONFIRM"]}",$"{code}/Y/{EntityId}/{userId}"),
+                InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["NOTCONFIRM"]}",$"{code}/N/{EntityId}/{userId}")
             }) ;
             
         }

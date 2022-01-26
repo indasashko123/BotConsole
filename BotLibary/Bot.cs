@@ -193,7 +193,24 @@ namespace BotLibary
                         await bot.SendTextMessageAsync(admin?.chatId, personalConfig.Messages["ADMINSELECTMONTH"], replyMarkup: KeyBoards.GetMonthButtons(months, Codes.AdminDelete, admin));
                         return;
                     }
-                    // TODO:  Список пользователей.
+                    if (e.Message.Text == personalConfig.AdminButtons["ALLUSERS"])
+                    {
+                        List<DataBase.Models.User> users = await context.db.FindUsersAsync();
+                        foreach (var user in users)
+                        {
+                            string message = $"Пользователь {user.firstName} {user.lastName} {user.username}\n";
+                            await bot.SendTextMessageAsync(admin.chatId, message);
+                        }
+                        await bot.SendTextMessageAsync(admin.chatId, "Это все пользователи", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                        return;
+                    }
+                    if (e.Message.Text == personalConfig.AdminButtons["MAKEWEEKEND"])
+                    {
+                        List<Month> months = await context.db.GetMonthsAsync();
+                        await bot.SendTextMessageAsync(admin.chatId, personalConfig.Messages["ADMINSELECTMONTH"], replyMarkup: KeyBoards.GetMonthButtons(months,Codes.AdminWeekEnd, admin));
+                        return;
+                    }
+                    // TODO:  
                     //        Сделать день не рабочим
                     //        Просмотреть неподтвержденные
                     //        Посмотреть подтвержденные записи
@@ -231,6 +248,12 @@ namespace BotLibary
                     }
                     if (data.Stage == Stage.Day && data.Action == CallBackData.Action.Choise)
                     {
+                        Day day = await context.db.FindDayAsync(data.EntityId);
+                        if (!day.IsWorkDay)
+                        {
+                            await bot.SendTextMessageAsync(currentUser.chatId, personalConfig.Messages["ISWEEKENDFORUSER"], replyMarkup: KeyBoards.GetStartKeyboard(options));
+                            return;
+                        }
                         List<Appointment> apps = await context.db.FindAppointmentsAsync(data.EntityId);
                         await bot.SendTextMessageAsync(chatId, personalConfig.Messages["CHOSEAPP"], replyMarkup: KeyBoards.GetAppointmentKeyboard(apps, options, Codes.UserChoise, currentUser.UserId));
                         return;
@@ -251,7 +274,7 @@ namespace BotLibary
                             $"{currentUser.firstName} {currentUser.lastName} {currentUser.username}\n в {day.DayOfWeek}, {day.Date}.{day.MonthNumber} числа\n на время - {app.AppointmentTime}";
                         await context.db.UpdateAppAsync(app);
                         await bot.SendTextMessageAsync(currentUser.chatId, personalConfig.Messages["WAITCINFIRM"], replyMarkup: KeyBoards.GetStartKeyboard(options));
-                        await bot.SendTextMessageAsync(admin.chatId, message, replyMarkup: KeyBoards.GetConfirmKeyboard(app,options, Codes.AdminConfirm, currentUser.UserId));
+                        await bot.SendTextMessageAsync(admin.chatId, message, replyMarkup: KeyBoards.GetConfirmKeyboard(app.AppointmentId,options, Codes.AdminConfirm, currentUser.UserId));
                         return;
                     }
                 }
@@ -309,17 +332,13 @@ namespace BotLibary
                         if (data.Stage == Stage.Appointment)
                         {
                             Appointment app = await context.db.FindAppointmentAsync(data.EntityId);
+                            int userIDtoSend = app.User;
                             if (app.IsEmpty)
                             {
-                                await bot.SendTextMessageAsync(admin.chatId, personalConfig.Messages["ADMINCONFIRM"], 
-                                    replyMarkup: KeyBoards.GetConfirmKeyboard(app, options, Codes.AdminDelete, admin.UserId));       
-                            }
-                            else
-                            {
-                                var user = await context.db.FindUserByAppointmentAsync(data.EntityId);
+                                userIDtoSend = admin.UserId; 
+                            }            
                                 await bot.SendTextMessageAsync(admin.chatId, personalConfig.Messages["ADMINCONFIRM"],
-                                    replyMarkup: KeyBoards.GetConfirmKeyboard(app, options, Codes.AdminDelete, user.UserId));
-                            }
+                                    replyMarkup: KeyBoards.GetConfirmKeyboard(app.AppointmentId, options, Codes.AdminDelete, userIDtoSend));                            
                             return;
                         }
                         if (data.Stage == Stage.Yes)
@@ -337,6 +356,77 @@ namespace BotLibary
                             await bot.SendTextMessageAsync(admin.chatId, "Отменено", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
                         }
 
+                    }
+                   if (data.Action == CallBackData.Action.WeekEnd)
+                    {
+                        if (data.Stage == Stage.Month)
+                        {
+                            List<Day> days = await context.db.FindDaysAsync(data.EntityId);
+                            await bot.SendTextMessageAsync(admin.chatId, personalConfig.Messages["ADMINCHOISEDAY"], replyMarkup: KeyBoards.GetDaysButton(days, options, Codes.AdminWeekEnd, admin));
+                            return; 
+                        }
+                        if (data.Stage == Stage.Day)
+                        {
+                            Day day = await context.db.FindDayAsync(data.EntityId);
+                            if (!day.IsWorkDay)
+                            {
+                                day.IsWorkDay = true;
+                                await context.db.UpdateDayAsync(day);
+                                await bot.SendTextMessageAsync(admin.chatId, $"День {day.Date}.{day.MonthNumber} теперь рабочий день\n", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                                return;
+                            }
+                            List<Appointment> apps = await context.db.FindAppointmentsAsync(day.DayId);
+                            bool AllEmpty = true;
+                            foreach (Appointment app in apps)
+                            {
+                                if (!app.IsEmpty)
+                                {
+                                    foreach (Appointment appointment in apps)
+                                    {
+                                        
+                                        if (!appointment.IsEmpty)
+                                        {
+                                            var user = await context.db.FindUserAsync(appointment.User);
+                                            string message = $"Запись на время {appointment.AppointmentTime} занята пользователем {user.firstName} {user.lastName}\n" +
+                                                $" и {(appointment.IsConfirm? "подтверждена ":"не подтверждена ")}.";
+                                            await bot.SendTextMessageAsync(admin.chatId, message);
+                                        }
+                                    }
+                                    await bot.SendTextMessageAsync(admin.chatId, personalConfig.Messages["WEEKENDWARNING"], replyMarkup: KeyBoards.GetConfirmKeyboard(day.DayId,options,Codes.AdminWeekEnd, admin.UserId));
+                                    return;
+                                }
+                            }
+                            if (AllEmpty)
+                            {
+                                day.IsWorkDay = false;
+                                await context.db.UpdateDayAsync(day);
+                                await bot.SendTextMessageAsync(admin.chatId, $"День {day.Date}.{day.MonthNumber} теперь выходной\n", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                                return;
+                            }
+                            
+                        }
+                        if (data.Stage == Stage.Yes)
+                        {
+                            List<Appointment> apps = await context.db.FindAppointmentsAsync(data.EntityId);
+                            Day day = await context.db.FindDayAsync(data.EntityId);
+                            foreach(Appointment app in apps)
+                            {
+                                if (!app.IsEmpty)
+                                {
+                                    DataBase.Models.User user = await context.db.FindUserAsync(app.User);
+                                    await bot.SendTextMessageAsync(user.chatId, personalConfig.Messages["USERAPPISCANCEL"]);
+                                }
+                            }
+                            day.IsWorkDay = false;
+                            await context.db.UpdateDayAsync(day);
+                            await bot.SendTextMessageAsync(admin.chatId, $"День {day.Date}.{day.MonthNumber} теперь выходной\n", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                            return;
+                        }
+                        if (data.Stage == Stage.No)
+                        {
+                            await bot.SendTextMessageAsync(admin.chatId, "Отменено", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                            return;
+                        }
                     }
                 }
             }                     

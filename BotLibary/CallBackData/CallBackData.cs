@@ -69,6 +69,11 @@ namespace BotLibary.CallBackData
                         Action = Action.Delete;
                         break;
                     }
+                case "W":
+                    {
+                        Action = Action.WeekEnd;
+                        break;
+                    }
             }
             switch (callBackData[2])
             {
@@ -119,7 +124,8 @@ namespace BotLibary.CallBackData
         Add,
         Choise,
         Confirm,
-        Delete
+        Delete,
+        WeekEnd
     }
     internal enum UserRole
     {

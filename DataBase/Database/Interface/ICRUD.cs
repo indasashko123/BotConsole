@@ -31,7 +31,8 @@ namespace DataBase.Database.Interface
          internal Day FindDayByAppoint(int appId);
          internal User FindUserByAppointment(int appId);
          internal User FindUser(int userId);
-
+        internal List<User> FindUsers();
+        internal void UpdateDay(Day day);
 
         #region ASYNC
         async Task<User> FindAdminAsync()
@@ -128,6 +129,16 @@ namespace DataBase.Database.Interface
         {
             await Task.Run(() => AddAppointment(app));
         }
+        async Task<List<User>> FindUsersAsync ()
+        {
+            return await Task.Run(() => FindUsers());
+        }
+        async Task UpdateDayAsync(Day day)
+        {
+            await Task.Run(() => UpdateDay(day));
+        }
+
+        
         #endregion
 
     }
