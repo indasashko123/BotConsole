@@ -74,6 +74,16 @@ namespace BotLibary.CallBackData
                         Action = Action.WeekEnd;
                         break;
                     }
+                case "F":
+                    {
+                        Action = Action.CancelApp;
+                        break;
+                    }
+                case "M":
+                    {
+                        Action = Action.Mailing;
+                        break;
+                    }
             }
             switch (callBackData[2])
             {
@@ -109,7 +119,7 @@ namespace BotLibary.CallBackData
             EmptyButton = false;
         }
         /// <summary>
-        /// Id сущьности к которой относятся сущьности для дальнейшей клавиатуры
+        /// Id сущности с которой будет вестись дальнейшая работа.
         /// </summary>
         internal int EntityId { get; set; }
         internal int UserId { get; set; }
@@ -125,7 +135,9 @@ namespace BotLibary.CallBackData
         Choise,
         Confirm,
         Delete,
-        WeekEnd
+        WeekEnd,
+        CancelApp,
+        Mailing
     }
     internal enum UserRole
     {

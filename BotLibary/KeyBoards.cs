@@ -21,7 +21,7 @@ namespace BotLibary
                 Keyboard = new List<List<KeyboardButton>>
                 {
                     new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["DELAPP"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["ALLUSERS"] } },
-                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.Buttons["MYWORKS"] }, new KeyboardButton { Text = options.personalConfig.Buttons["FEEDBACK"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["LOCATION"] } },
+                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.Buttons["MAKEWEEKEND"] }, new KeyboardButton { Text = options.personalConfig.Buttons["FEEDBACK"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["LOCATION"] } },
                     new List<KeyboardButton> {new KeyboardButton { Text = "LINK" } }
                 },
                 ResizeKeyboard = true
@@ -200,7 +200,14 @@ namespace BotLibary
             }
             return new InlineKeyboardMarkup(buttons);
         }
-
+        /// <summary>
+        /// Клавиатура подтверждения
+        /// </summary>
+        /// <param name="EntityId">Id Сущности</param>
+        /// <param name="options">Параметры бота</param>
+        /// <param name="code">Код операции</param>
+        /// <param name="userId">Id пользователя</param>
+        /// <returns></returns>
         internal static IReplyMarkup GetConfirmKeyboard(int EntityId, BotOptions options, string code, int userId)
         {
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton>()
@@ -209,6 +216,18 @@ namespace BotLibary
                 InlineKeyboardButton.WithCallbackData($"{options.personalConfig.AdminButtons["NOTCONFIRM"]}",$"{code}/N/{EntityId}/{userId}")
             }) ;
             
+        }
+        /// <summary>
+        /// Кнопка отмены
+        /// </summary>
+        /// <param name="appointmentId">Сущность</param>
+        /// <param name="options">Параметры бота</param>
+        /// <param name="code">Код операции</param>
+        /// <param name="userId">Пользователь</param>
+        /// <returns></returns>
+        internal static IReplyMarkup GetCanccelButton(int appointmentId, BotOptions options, string code, int userId)
+        {
+            return new InlineKeyboardMarkup(InlineKeyboardButton.WithCallbackData("Отменить", $"{code}/Y/{appointmentId}/{ userId}"));
         }
     }
 }

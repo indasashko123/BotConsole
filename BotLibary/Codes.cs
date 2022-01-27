@@ -28,5 +28,13 @@ namespace BotLibary
         /// Админ выбираем выходной 
         /// </summary>
         internal static string AdminWeekEnd = "A/W";
+        /// <summary>
+        /// Админ отменяет
+        /// </summary>
+        internal static string AdminCancel = "A/F";
+        /// <summary>
+        /// Админ отправляет рассылку
+        /// </summary>
+        internal static string AdminMailingConfirm = "A/M";
     }
 }

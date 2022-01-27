@@ -22,5 +22,9 @@ namespace DataBase.Models
             this.lastName = lastName;
             this.chatId = id;
         }
+        public override string ToString()
+        {
+            return $"{this.firstName} {this.lastName} { this.username}";
+        }
     }
 }

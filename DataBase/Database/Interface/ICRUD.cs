@@ -19,7 +19,7 @@ namespace DataBase.Database.Interface
          internal void CreateDays(int user, int currentDay, Month month);
          internal void CreateDays(int user, Month month);
          internal void UpdateApp(Appointment app);
-         internal void UpdateUserStatus(User user);
+         internal void UpdateUser(User user);
          internal void DeleteApp(Appointment app);
          internal User MakeAdmin(User user);
          internal List<Appointment> FindAppointments(int dayId, int userId);
@@ -33,6 +33,11 @@ namespace DataBase.Database.Interface
          internal User FindUser(int userId);
         internal List<User> FindUsers();
         internal void UpdateDay(Day day);
+        internal List<Appointment> FindNotConfirmAppointments();
+        internal List<Appointment> FindConfirmAppointments();
+
+
+
 
         #region ASYNC
         async Task<User> FindAdminAsync()
@@ -99,9 +104,9 @@ namespace DataBase.Database.Interface
         {
             return await Task.Run(() => FindDayByAppoint(appId));
         }
-         async Task UpdateUserStatusAsync(User user)
+         async Task UpdateUserAsync(User user)
         {
-            await Task.Run(() => UpdateUserStatus(user));
+            await Task.Run(() => UpdateUser(user));
         }
 
         /// <summary>
@@ -137,8 +142,14 @@ namespace DataBase.Database.Interface
         {
             await Task.Run(() => UpdateDay(day));
         }
-
-        
+        async Task<List<Appointment>> FindNotConfirmAppointmentsAsync()
+        {
+            return await Task.Run(() => FindNotConfirmAppointments());
+        }
+        async Task<List<Appointment>> FindConfirmAppointmentsAsync()
+        {
+            return await Task.Run(() => FindConfirmAppointments());
+        }
         #endregion
 
     }
