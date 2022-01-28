@@ -10,23 +10,9 @@ namespace DataBase.Database
     public class DataBaseConnector
     {
         public ICRUD db;
-        public DataBaseConnector(DataBaseType type)
+        public DataBaseConnector(ICRUD context)
         {
-            switch(type)
-            {
-                case DataBaseType.MySQL:
-                    {
-                        db = new MySQL.Context.Context();
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
-                
-
-            
+            db = context;
         }
     }
 }

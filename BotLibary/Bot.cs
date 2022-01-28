@@ -8,6 +8,7 @@ using Telegram.Bot.Requests;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.ReplyMarkups;
 using DataBase.Database;
+using DataBase.Database.Context.MySQL;
 using DataBase.Database.Interface;
 using System.Threading;
 using Options;
@@ -46,7 +47,7 @@ namespace BotLibary
             bot.OnMessage += onMessage;
             bot.OnCallbackQuery += OnQuery;
             dateFunction = new DateFunction();
-            context = new DataBaseConnector(DataBaseType.MySQL);
+            context = new DataBaseConnector(new SQLContext(botConfig.dataBaseName));
             adminMessage += (async(EventArgsNotification e) => { await bot.SendTextMessageAsync(e.Admin,e.Text, replyMarkup:e?.Keyboard); });
         }
         /// <summary>
@@ -117,9 +118,9 @@ namespace BotLibary
                     }
                     if (e.Message.Text == "/reg"+botConfig.password && admin == null)
                     {
-                        dateFunction.CreateMonths(currentUser.UserId);
-                        await context.db.AddMonthAsync(currentUser.UserId, dateFunction.CurrentMonth);                       
-                        await context.db.CreateDaysAsync(currentUser.UserId, dateFunction.CurrentDay, dateFunction.CurrentMonth);
+                        dateFunction.CreateMonths();
+                        await context.db.AddMonthAsync(dateFunction.CurrentMonth);                       
+                        await context.db.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.CurrentMonth);
                         List<Day> daysCurrentMonth = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
                         foreach (Day day in daysCurrentMonth)
                         {
@@ -129,8 +130,8 @@ namespace BotLibary
                                 await context.db.AddAppointmentAsync(app);
                             }
                         }
-                        await context.db.AddMonthAsync(currentUser.UserId, dateFunction.NextMonth);
-                        await context.db.CreateDaysAsync(currentUser.UserId, dateFunction.NextMonth);
+                        await context.db.AddMonthAsync(dateFunction.NextMonth);
+                        await context.db.CreateDaysAsync(1, dateFunction.NextMonth);
                         List<Day> daysNextMonth = await context.db.FindDaysAsync(dateFunction.NextMonth.MonthId);
                         foreach (Day day in daysNextMonth)
                         {
@@ -140,7 +141,14 @@ namespace BotLibary
                                 await context.db.AddAppointmentAsync(app);
                             }
                         }
-                        admin = await context.db.MakeAdminAsync(currentUser);
+                        currentUser.isAdmin = true;
+                        await context.db.UpdateUserAsync(currentUser);
+                        admin = await context.db.FindAdminAsync();
+                        if (admin == null)
+                        {
+                            ConsoleMessage?.Invoke($"Ошибка при регистрации");
+                            return;
+                        }
                         await adminMessage?.Invoke(new EventArgsNotification(admin.chatId, "Зарегестрированно!"));
                     }
                     //else

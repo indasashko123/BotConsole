@@ -15,7 +15,7 @@ namespace BotLibary
             CurrentMonth = new Month();
             NextMonth = new Month(); 
         }
-        internal void CreateMonths(int UserId)
+        internal void CreateMonths()
         {
             DateTime dateNow = DateTime.Now;           
             CurrentDay = dateNow.Day;
@@ -24,9 +24,7 @@ namespace BotLibary
             CurrentMonth.DayCount = DateTime.DaysInMonth(CurrentMonth.Year, CurrentMonth.MonthNumber);
             CurrentMonth.Name = DateNames.Months[CurrentMonth.MonthNumber];
             CurrentMonth.IsCurrent = true;
-            CurrentMonth.User = UserId;
-
-            NextMonth.User = UserId;
+  
             NextMonth.IsCurrent = false;
             if (CurrentMonth.MonthNumber == 11)
             {

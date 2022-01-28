@@ -11,18 +11,16 @@ namespace DataBase.Models
         public int MonthId { get; set; }
         public bool IsCurrent { get; set; }
         public string Name { get; set; }
-        public int User { get; set; }
         public int DayCount { get; set; }
         public int MonthNumber { get; set; }
         public int Year { get; set; }
         public Month()
         {
         }
-        public Month(int user, int dayCount, int monthNumber, int year, string name)
+        public Month(int dayCount, int monthNumber, int year, string name)
         {
             IsCurrent = false;
-            Name = name;
-            User = user;
+            Name = name;           
             DayCount = dayCount;
             MonthNumber = monthNumber;
             Year = year;
