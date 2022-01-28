@@ -7,7 +7,6 @@ namespace BotLibary
     internal class DateFunction
     {     
         internal int CurrentDay { get; set; }
-
         internal Month CurrentMonth { get; set; }
         internal Month NextMonth { get; set; }
         internal DateFunction()
@@ -24,20 +23,36 @@ namespace BotLibary
             CurrentMonth.DayCount = DateTime.DaysInMonth(CurrentMonth.Year, CurrentMonth.MonthNumber);
             CurrentMonth.Name = DateNames.Months[CurrentMonth.MonthNumber];
             CurrentMonth.IsCurrent = true;
-  
-            NextMonth.IsCurrent = false;
-            if (CurrentMonth.MonthNumber == 11)
+
+            NextMonth = IncreementMonth(CurrentMonth);          
+        }
+        internal void IncreementDay()
+        {
+            CurrentDay++;
+            if (CurrentMonth.DayCount < CurrentDay)
             {
-                NextMonth.MonthNumber = 0;
-                NextMonth.Year = CurrentMonth.Year + 1;
+                CurrentDay = 1;
+                CurrentMonth = NextMonth;
+                NextMonth = IncreementMonth(NextMonth);
+            }
+        }
+        Month IncreementMonth(Month previousMonth)
+        {
+            Month newMonth = new Month();
+            newMonth.IsCurrent = false;
+            if (previousMonth.MonthNumber == 11)
+            {
+                newMonth.MonthNumber = 0;
+                newMonth.Year = previousMonth.Year + 1;
             }
             else
             {
-                NextMonth.MonthNumber = CurrentMonth.MonthNumber + 1;
-                NextMonth.Year = CurrentMonth.Year;
+                newMonth.MonthNumber = previousMonth.MonthNumber + 1;
+                newMonth.Year = previousMonth.Year;
             }
-            NextMonth.Name = DateNames.Months[NextMonth.MonthNumber];
-            NextMonth.DayCount = DateTime.DaysInMonth(NextMonth.Year, NextMonth.MonthNumber);
+            newMonth.Name = DateNames.Months[newMonth.MonthNumber];
+            newMonth.DayCount = DateTime.DaysInMonth(newMonth.Year, newMonth.MonthNumber);
+            return newMonth;
         }
     }
 }
