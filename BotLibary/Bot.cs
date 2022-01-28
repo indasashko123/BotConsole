@@ -120,7 +120,7 @@ namespace BotLibary
                     {
                         dateFunction.CreateMonths();
                         await context.db.AddMonthAsync(dateFunction.CurrentMonth);                       
-                        await context.db.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.CurrentMonth);
+                        await context.db.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.CurrentMonth, DateNames.Days);
                         List<Day> daysCurrentMonth = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
                         foreach (Day day in daysCurrentMonth)
                         {
@@ -131,7 +131,7 @@ namespace BotLibary
                             }
                         }
                         await context.db.AddMonthAsync(dateFunction.NextMonth);
-                        await context.db.CreateDaysAsync(1, dateFunction.NextMonth);
+                        await context.db.CreateDaysAsync(1, dateFunction.NextMonth, DateNames.Days);
                         List<Day> daysNextMonth = await context.db.FindDaysAsync(dateFunction.NextMonth.MonthId);
                         foreach (Day day in daysNextMonth)
                         {
@@ -228,22 +228,22 @@ namespace BotLibary
                     }
                     if (e.Message.Text == personalConfig.AdminButtons["LOOKNOTCONFIRM"])
                     {
-                        List<Appointment> apps = await context.db.FindNotConfirmAppointmentsAsync();
+                        List<Appointment> apps = await context.db.FindConfirmAppointmentsAsync(false);
                         foreach (Appointment app in apps)
                         {
-                            DataBase.Models.User user = await context.db.FindUserByAppointmentAsync(app.AppointmentId);
-                            Day day = await context.db.FindDayByAppointAsync(app.AppointmentId);
+                            DataBase.Models.User user = await context.db.FindUserAsync(app.User); 
+                            Day day = await context.db.FindDayAsync(app.Day);
                             await bot.SendTextMessageAsync(admin.chatId, $"Запись на {day.Date}.{day.MonthNumber} на время {app.AppointmentTime}\n" +
                                 $"Записался {user.ToString()}", replyMarkup: KeyBoards.GetConfirmKeyboard(app.AppointmentId, options, Codes.AdminConfirm, user.UserId));
                         }
                     }
                     if (e.Message.Text == personalConfig.AdminButtons["LOOKNOTCONFIRM"])
                     {
-                        List<Appointment> apps = await context.db.FindNotConfirmAppointmentsAsync();
+                        List<Appointment> apps = await context.db.FindConfirmAppointmentsAsync(false);
                         foreach (Appointment app in apps)
                         {
-                            DataBase.Models.User user = await context.db.FindUserByAppointmentAsync(app.AppointmentId);
-                            Day day = await context.db.FindDayByAppointAsync(app.AppointmentId);
+                            DataBase.Models.User user = await context.db.FindUserAsync(app.User);
+                            Day day = await context.db.FindDayAsync(app.Day);
                             await bot.SendTextMessageAsync(admin.chatId, $"Запись на {day.Date}.{day.MonthNumber} на время {app.AppointmentTime}\n" +
                                 $"Записался {user.ToString()}", replyMarkup: KeyBoards.GetConfirmKeyboard(app.AppointmentId, options, Codes.AdminConfirm, user.UserId));
                         }
@@ -251,11 +251,11 @@ namespace BotLibary
                     }
                     if (e.Message.Text == personalConfig.AdminButtons["LOOKCONFIRM"])
                     {
-                        List<Appointment> apps = await context.db.FindConfirmAppointmentsAsync();
+                        List<Appointment> apps = await context.db.FindConfirmAppointmentsAsync(true);
                         foreach (Appointment app in apps)
                         {
-                            DataBase.Models.User user = await context.db.FindUserByAppointmentAsync(app.AppointmentId);
-                            Day day = await context.db.FindDayByAppointAsync(app.AppointmentId);
+                            DataBase.Models.User user = await context.db.FindUserAsync(app.User);
+                            Day day = await context.db.FindDayAsync(app.Day);
                             await bot.SendTextMessageAsync(admin.chatId, $"Запись на {day.Date}.{day.MonthNumber} на время {app.AppointmentTime}\n" +
                                 $"Записался {user.ToString()}", replyMarkup: KeyBoards.GetCanccelButton(app.AppointmentId, options, Codes.AdminCancel, user.UserId));
                         }          
@@ -320,7 +320,7 @@ namespace BotLibary
                         app.IsConfirm = false;
                         app.IsEmpty = false;
                         app.User = currentUser.UserId;
-                        Day day = await context.db.FindDayByAppointAsync(app.AppointmentId);
+                        Day day = await context.db.FindDayAsync(app.Day);
                         string message = $"{personalConfig.Messages["NEWAPP"]}\n " +
                             $"{currentUser.firstName} {currentUser.lastName} {currentUser.username}\n в {day.DayOfWeek}, {day.Date}.{day.MonthNumber} числа\n на время - {app.AppointmentTime}";
                         await context.db.UpdateAppAsync(app);

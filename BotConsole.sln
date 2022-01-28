@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotLibary", "BotLibary\BotL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBase", "DataBase\DataBase.csproj", "{38B98FEC-24D0-4049-88D3-E13AFE12C0DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Options", "Options\Options.csproj", "{293771A1-0135-469A-B636-7FEA0E21CD81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Options", "Options\Options.csproj", "{293771A1-0135-469A-B636-7FEA0E21CD81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnutTesting", "UnutTesting\UnutTesting.csproj", "{84EA9537-B00A-459E-B500-B23EBC9CC261}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{293771A1-0135-469A-B636-7FEA0E21CD81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{293771A1-0135-469A-B636-7FEA0E21CD81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{293771A1-0135-469A-B636-7FEA0E21CD81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84EA9537-B00A-459E-B500-B23EBC9CC261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84EA9537-B00A-459E-B500-B23EBC9CC261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84EA9537-B00A-459E-B500-B23EBC9CC261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84EA9537-B00A-459E-B500-B23EBC9CC261}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

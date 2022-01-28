@@ -37,5 +37,20 @@ namespace DataBase.Models
         /// Название дня недели.
         /// </summary>
         public string DayOfWeek { get; set; }
+
+        public Day()
+        {
+
+        }
+        public Day(Month month, int date, string dayOfWeek)
+        {
+            Date = date;
+            Month = month.MonthId;
+            IsWorkDay = true;
+            IsHighPriceDay = false;
+            Year = month.Year;
+            MonthNumber = month.MonthNumber;
+            DayOfWeek = dayOfWeek;
+        }
     }
 }
