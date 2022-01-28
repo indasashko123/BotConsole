@@ -50,6 +50,11 @@ namespace DataBase.Database.Interface
         /// </summary>
         /// <returns>Все месяцы</returns>
         internal List<Month> GetMonths();
+        /// <summary>
+        /// Находим список месяцев исключая месяцы с id из параметров
+        /// </summary>
+        /// <returns>месяцы не соответсвующие id</returns>
+        internal List<Month> GetMonths(params int[] monthsId);
 
         /// <summary>
         /// Найти день по id
@@ -143,6 +148,25 @@ namespace DataBase.Database.Interface
         /// <param name="app">запись которую нужно обновить</param>
         /// <returns></returns>
         internal void UpdateApp(Appointment app);
+        /// <summary>
+        /// Удалить список записей
+        /// </summary>
+        /// <param name="apps">Список записей на удаление</param>
+        internal void DeleteAppointments(List<Appointment> apps);
+
+        /// <summary>
+        /// Удаляет список дней
+        /// </summary>
+        /// <param name="days"></param>
+        /// <returns></returns>
+        internal void DeleteDays(List<Day> days);
+
+        /// <summary>
+        /// Удаляет список месяцев
+        /// </summary>
+        /// <param name="months"></param>
+        /// <returns></returns>
+        internal void DeleteMonths(List<Month> month);
 
 
 
@@ -337,6 +361,40 @@ namespace DataBase.Database.Interface
         async Task<List<Appointment>> FindConfirmAppointmentsAsync(bool IsConfirm)
         {
             return await Task.Run(() => FindConfirmAppointments(IsConfirm));
+        }
+        /// <summary>
+        /// Удалить список записей
+        /// </summary>
+        /// <param name="apps">Список записей на удаление</param>
+        async Task DeleteAppointmentsAsync(List<Appointment> apps)
+        {
+            await Task.Run(() => DeleteAppointments(apps));
+        }
+        /// <summary>
+        /// Находим список месяцев исключая месяцы с id из параметров
+        /// </summary>
+        /// <returns>месяцы не соответсвующие id</returns>
+        async Task<List<Month>> GetMonthsAsync(params int[] monthsId)
+        {
+            return await Task.Run(() => GetMonths(monthsId));
+        }
+        /// <summary>
+        /// Удаляет список дней
+        /// </summary>
+        /// <param name="days"></param>
+        /// <returns></returns>
+        async Task DeleteDaysAsync(List<Day> days)
+        {
+            await Task.Run(() => DeleteDays(days));
+        }
+        /// <summary>
+        /// Удаляет список месяцев
+        /// </summary>
+        /// <param name="months"></param>
+        /// <returns></returns>
+        async Task DeleteMonthsAsync(List<Month> months)
+        {
+            await Task.Run(() => DeleteMonths(months));
         }
         #endregion
 

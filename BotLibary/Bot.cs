@@ -529,6 +529,74 @@ namespace BotLibary
             }
         }
 
-        
+
+        // TODO: Добавить делегат включения.
+        public void BotStart()
+        {
+            bot.StartReceiving();
+            Task.Run(() => UpdateDays());
+            //Task.Run(() => StartNotificationAsync());
+        }
+        // TODO: Добавить срабатывание события отключения.
+        public void BotStop()
+        {
+            bot.StopReceiving();
+        }
+        private async void UpdateDays()
+        {
+            ConsoleMessage?.Invoke("start update");
+            while (true)
+            {
+                Thread.Sleep(1000);
+                ConsoleMessage?.Invoke("Check update Day");
+                await CheckUpdateAsync();
+            }
+        }
+
+        async Task CheckUpdateAsync()
+        {
+            await Task.Run(() => CheckUpdate());
+            
+        }
+        async void CheckUpdate()
+        {
+            if (DateTime.Now.Day > dateFunction.CurrentDay)
+            {
+                dateFunction.IncreementDay();
+                if (dateFunction.CurrentDay == 1)
+                {
+                    List<Month> pastMonth = await context.db.GetMonthsAsync(new int[]
+                        {dateFunction.CurrentMonth.MonthId,
+                        dateFunction.NextMonth.MonthId});
+                    List<Appointment> pastAppointment = new List<Appointment>();
+                    List<Day> pastDays = new List<Day>();
+                    if (pastMonth != null)
+                    {
+                        foreach(Month month in pastMonth)
+                        {
+                            pastDays.AddRange(await context.db.FindDaysAsync(month.MonthId));
+                        }
+                        foreach (Day day in pastDays)
+                        {
+                            pastAppointment.AddRange(await context.db.FindAppointmentsAsync(day.DayId));
+                        }
+                        await context.db.DeleteAppointmentsAsync(pastAppointment);
+                        await context.db.DeleteDaysAsync(pastDays);
+                        await context.db.DeleteMonthsAsync(pastMonth);
+                    }
+                    await context.db.AddMonthAsync(dateFunction.NextMonth);
+                    await context.db.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.NextMonth, DateNames.Days);
+                    List<Day> daysCurrentMonth = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
+                    foreach (Day day in daysCurrentMonth)
+                    {
+                        for (int i = 0; i < botConfig.appointmentStandartCount; i++)
+                        {
+                            Appointment app = new Appointment(botConfig.appointmentStandartTimes[i], day.DayId);
+                            await context.db.AddAppointmentAsync(app);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
