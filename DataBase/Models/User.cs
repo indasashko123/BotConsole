@@ -9,22 +9,26 @@ namespace DataBase.Models
     public class User
     {
         public int UserId { get; set; }
-        public bool isAdmin { get; set; }
-        public long chatId { get; set; }
-        public string username { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string status { get; set; }
-        public User(string username, string firstName, string lastName, long id)
+        public bool IsAdmin { get; set; }
+        public long ChatId { get; set; }
+        public string Username { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Status { get; set; }
+        public User()
         {
-            this.username = username;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.chatId = id;
+
+        }
+        public User(string username, string firstName, string lastName, long chat)
+        {
+            this.Username = username;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.ChatId = chat;
         }
         public override string ToString()
         {
-            return $"{this.firstName} {this.lastName} { this.username}";
+            return $"{this.FirstName} {this.LastName} { this.Username}";
         }
     }
 }

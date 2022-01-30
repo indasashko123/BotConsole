@@ -13,10 +13,6 @@ namespace DataBase.Models
         /// </summary>
         public int MonthId { get; set; }
         /// <summary>
-        /// Текущий месяц?
-        /// </summary>
-        public bool IsCurrent { get; set; }
-        /// <summary>
         /// Название месяца
         /// </summary>
         public string Name { get; set; }
@@ -37,7 +33,7 @@ namespace DataBase.Models
         }
         public Month(int dayCount, int monthNumber, int year, string name)
         {
-            IsCurrent = false;
+
             Name = name;           
             DayCount = dayCount;
             MonthNumber = monthNumber;

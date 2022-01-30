@@ -10,6 +10,13 @@ namespace DataBase.Database.Context.MySQL
 {
     public class SQLContext : ICRUD
     {
+        void ICRUD.DeleteDB()
+        {
+            using (Connection db = new Connection(DataBaseName))
+            {
+                db.Database.EnsureDeleted();
+            }    
+        }
         string DataBaseName { get; set; }
         public SQLContext(string dbName)
         {
@@ -21,7 +28,7 @@ namespace DataBase.Database.Context.MySQL
             using (Connection db = new Connection(DataBaseName))
             {
                admin = (from user in db.Users
-                               where user.isAdmin
+                               where user.IsAdmin
                                select user).FirstOrDefault();
             }
             return admin;
@@ -33,7 +40,7 @@ namespace DataBase.Database.Context.MySQL
             using (Connection db = new Connection(DataBaseName))
             {
                 currentUser = (from user in db.Users
-                         where user.chatId == chatId
+                         where user.ChatId == chatId
                          select user).FirstOrDefault();
             }
             return currentUser;
@@ -101,7 +108,7 @@ namespace DataBase.Database.Context.MySQL
             List<Appointment> apps;
             using (Connection db = new Connection(DataBaseName)) 
             {
-                apps = (from app in db.Appoinmetns
+                apps = (from app in db.Appointments
                         where app.Day == dayId
                         select app).ToList();
             }
@@ -113,7 +120,7 @@ namespace DataBase.Database.Context.MySQL
             Appointment app;
             using (Connection db = new Connection(DataBaseName))
             {
-                app = (from appointment in db.Appoinmetns
+                app = (from appointment in db.Appointments
                        where appointment.AppointmentId == appId
                        select appointment).FirstOrDefault();
             }
@@ -136,7 +143,7 @@ namespace DataBase.Database.Context.MySQL
         {
             using (Connection db = new Connection(DataBaseName))
             {
-                db.Appoinmetns.Update(app);
+                db.Appointments.Update(app);
                 db.SaveChanges();
             }
         }
@@ -154,7 +161,7 @@ namespace DataBase.Database.Context.MySQL
         {
            using (Connection db = new Connection(DataBaseName))
             {
-                db.Appoinmetns.Remove(app);
+                db.Appointments.Remove(app);
                 db.SaveChanges();
             }
         }
@@ -164,7 +171,7 @@ namespace DataBase.Database.Context.MySQL
             Appointment app = new Appointment(dayId);
             using (Connection db = new Connection(DataBaseName))
             {
-                db.Appoinmetns.Add(app);
+                db.Appointments.Add(app);
                 db.SaveChanges();
             }
             return app;
@@ -174,7 +181,7 @@ namespace DataBase.Database.Context.MySQL
         {
             using (Connection db = new Connection(DataBaseName))
             {
-                db.Appoinmetns.Add(app);
+                db.Appointments.Add(app);
                 db.SaveChanges();
             }
         }
@@ -215,7 +222,7 @@ namespace DataBase.Database.Context.MySQL
             List<Appointment> apps;
             using (Connection db = new Connection(DataBaseName))
             {
-                apps = (from app in db.Appoinmetns
+                apps = (from app in db.Appointments
                         where app.IsConfirm == IsConfirm
                         select app).ToList();
             }
@@ -251,7 +258,7 @@ namespace DataBase.Database.Context.MySQL
         {
             using (Connection db = new Connection(DataBaseName))
             {
-                db.Appoinmetns.RemoveRange(apps);
+                db.Appointments.RemoveRange(apps);
                 db.SaveChanges();
             }
         }

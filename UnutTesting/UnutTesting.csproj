@@ -13,4 +13,14 @@
     <PackageReference Include="coverlet.collector" Version="3.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BotLibary\BotLibary.csproj" />
+    <ProjectReference Include="..\DataBase\DataBase.csproj" />
+    <ProjectReference Include="..\Options\Options.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Mocks\" />
+  </ItemGroup>
+
 </Project>

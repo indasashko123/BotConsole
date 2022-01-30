@@ -56,23 +56,12 @@ namespace BotLibary
         /// <returns></returns>
         internal static IReplyMarkup GetMonthButtons(List<Month> months,string code, User user)
         {
-            List<InlineKeyboardButton> buttons = new List<InlineKeyboardButton>();
-            InlineKeyboardButton leftButton = InlineKeyboardButton.WithCallbackData("Не присвоенно значение","404/1");
-            InlineKeyboardButton rightButton = InlineKeyboardButton.WithCallbackData("Не присвоенно значение", "404/1");
-            foreach (var month in months)
+            List<InlineKeyboardButton> buttons = new List<InlineKeyboardButton>();            
+            foreach (Month month in months)
             {
                 string data = $"{code}/M/{month.MonthId}/{user.UserId}";
-                if (month.IsCurrent)
-                {
-                    leftButton = InlineKeyboardButton.WithCallbackData(month.Name, data);
-                }
-                else
-                {
-                    rightButton = InlineKeyboardButton.WithCallbackData(month.Name, data);
-                }
+                buttons.Add(InlineKeyboardButton.WithCallbackData(month.Name, data));
             }
-            buttons.Add(leftButton);
-            buttons.Add(rightButton);
             return new InlineKeyboardMarkup(buttons);                 
         }
 
