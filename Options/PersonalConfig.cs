@@ -10,7 +10,6 @@ namespace Options
         public List<string> Partfolio { get; set; }
         public float Latitude { get; set; }
         public float Longitude { get; set; }
-        public Dictionary<string, string> Smiles { get; set; }
         public Dictionary<string,string> MediaLink { get; set; }
     }
 }

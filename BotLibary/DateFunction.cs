@@ -1,14 +1,22 @@
 ﻿
 using System;
+using System.Threading.Tasks;
 using DataBase.Models;
 
 namespace BotLibary
 {
     internal class DateFunction
     {     
+        /// <summary>
+        /// Текущий день в календаре
+        /// </summary>
         internal int CurrentDay { get; set; }
         internal Month CurrentMonth { get; set; }
         internal Month NextMonth { get; set; }
+        /// <summary>
+        /// Текущий день.
+        /// </summary>
+        internal Day ToDay { get; set; }
         internal DateFunction()
         {
             CurrentMonth = new Month();
@@ -36,6 +44,10 @@ namespace BotLibary
                 NextMonth = IncreementMonth(NextMonth);
             }
         }
+        internal async void IncreementDayAsync()
+        {
+            await Task.Run(() => IncreementDay());
+        }
         Month IncreementMonth(Month previousMonth)
         {
             Month newMonth = new Month();
@@ -53,6 +65,10 @@ namespace BotLibary
             newMonth.Name = DateNames.Months[newMonth.MonthNumber];
             newMonth.DayCount = DateTime.DaysInMonth(newMonth.Year, newMonth.MonthNumber);
             return newMonth;
+        }
+        internal void SetToDay(Day day)
+        {
+            ToDay = day;
         }
     }
 }

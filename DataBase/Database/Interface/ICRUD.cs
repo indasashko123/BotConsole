@@ -167,9 +167,7 @@ namespace DataBase.Database.Interface
         /// <param name="months"></param>
         /// <returns></returns>
         internal void DeleteMonths(List<Month> month);
-
-
-
+  
         #region ASYNC
         /// <summary>
         /// Находим админа

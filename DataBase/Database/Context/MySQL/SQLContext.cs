@@ -14,8 +14,7 @@ namespace DataBase.Database.Context.MySQL
         public SQLContext(string dbName)
         {
             DataBaseName = dbName;
-        }
-
+        }        
         User ICRUD.FindAdmin()
         {
             User admin;
@@ -222,5 +221,58 @@ namespace DataBase.Database.Context.MySQL
             }
             return apps;
         }
+
+        List<Month> ICRUD.GetMonths(params int[] monthsId)
+        {
+            List<Month> ExeptMonth = new List<Month>();
+            using (Connection db = new Connection(DataBaseName))
+            {
+                List<Month> months = db.Months.ToList();
+                foreach (Month month in months)
+                {
+                    bool IsNeedToAdd = true;
+                    foreach (int id in monthsId)
+                    {
+                        if (month.MonthId == id)
+                        {
+                            IsNeedToAdd = false;
+                        }
+                    }
+                    if (IsNeedToAdd)
+                    {
+                        ExeptMonth.Add(month);
+                    }
+                }
+            }
+            return ExeptMonth;
+        }
+
+        void ICRUD.DeleteAppointments(List<Appointment> apps)
+        {
+            using (Connection db = new Connection(DataBaseName))
+            {
+                db.Appoinmetns.RemoveRange(apps);
+                db.SaveChanges();
+            }
+        }
+
+        void ICRUD.DeleteDays(List<Day> days)
+        {
+            using (Connection db = new Connection(DataBaseName))
+            {
+                db.Days.RemoveRange(days);
+                db.SaveChanges();
+            }
+        }
+
+        void ICRUD.DeleteMonths(List<Month> months)
+        {
+            using (Connection db = new Connection(DataBaseName))
+            {
+                db.Months.RemoveRange(months);
+                db.SaveChanges();
+            }
+        }
+
     }
 }

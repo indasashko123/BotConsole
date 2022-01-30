@@ -22,16 +22,13 @@ namespace BotLibary
     
     public class Bot
     {
-        public ChangesLog ConsoleMessage;
-        public AdminMessage adminMessage;
-        public readonly TelegramBotClient bot;
-        public readonly Telegram.Bot.Types.User me;
+        public ChangesLog ConsoleMessage { get; set; }
+        public AdminMessage adminMessage { get; set; }
+        public readonly TelegramBotClient bot; 
         private readonly BotOptions options;
         private readonly BotConfig botConfig;
         private readonly PersonalConfig personalConfig;
-        private readonly string token;
-        
-
+       
         private Message lastMessage;
         private DateFunction dateFunction;
         private readonly DataBaseConnector context;
@@ -41,9 +38,7 @@ namespace BotLibary
             this.options = options;
             botConfig = options.botConfig;
             personalConfig = options.personalConfig;
-            this.token = botConfig.token;
-            this.bot = new TelegramBotClient(token);
-            me = bot.GetMeAsync().Result;
+            this.bot = new TelegramBotClient(botConfig.token);
             bot.OnMessage += onMessage;
             bot.OnCallbackQuery += OnQuery;
             dateFunction = new DateFunction();
@@ -528,21 +523,23 @@ namespace BotLibary
                 await bot.SendTextMessageAsync(chatId, "Ошибка парсинга данных(( попробуйте еще раз", replyMarkup: KeyBoards.GetStartKeyboard(options));
             }
         }
-
-
-        // TODO: Добавить делегат включения.
+        /// <summary>
+        ///  Запуск бота
+        /// </summary>
         public void BotStart()
         {
             bot.StartReceiving();
             Task.Run(() => UpdateDays());
-            //Task.Run(() => StartNotificationAsync());
+            Task.Run(() => StartNotificationAsync());
         }
-        // TODO: Добавить срабатывание события отключения.
+        /// <summary>
+        /// Остановка бота
+        /// </summary>
         public void BotStop()
         {
             bot.StopReceiving();
         }
-        private async void UpdateDays()
+        protected virtual async void UpdateDays()
         {
             ConsoleMessage?.Invoke("start update");
             while (true)
@@ -552,17 +549,16 @@ namespace BotLibary
                 await CheckUpdateAsync();
             }
         }
-
-        async Task CheckUpdateAsync()
+        protected virtual async Task CheckUpdateAsync()
         {
             await Task.Run(() => CheckUpdate());
             
         }
-        async void CheckUpdate()
+        protected virtual async void CheckUpdate()
         {
             if (DateTime.Now.Day > dateFunction.CurrentDay)
             {
-                dateFunction.IncreementDay();
+                dateFunction.IncreementDayAsync();
                 if (dateFunction.CurrentDay == 1)
                 {
                     List<Month> pastMonth = await context.db.GetMonthsAsync(new int[]
@@ -597,6 +593,43 @@ namespace BotLibary
                     }
                 }
             }
+        }
+
+        protected virtual async void StartNotificationAsync()
+        {
+            ConsoleMessage?.Invoke("Start notification");
+            while(true)
+            {
+                Thread.Sleep(3000000);
+                ConsoleMessage?.Invoke("Check notification");
+                await CheckNotificationAsync();
+
+            }
+        }
+        protected virtual async void CheckNotification()
+        {
+            DateTime timeNow = DateTime.Now;
+            if (timeNow.Hour <= 19 && timeNow.Hour >= 18)
+            {
+                List<Day> days = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
+                days.OrderBy(day => day.Date);
+                Day firstDay = days.FirstOrDefault();
+                List<Appointment> apps = await context.db.FindAppointmentsAsync(firstDay.DayId);
+                var admin = await context.db.FindAdminAsync();
+                foreach (Appointment app in apps)
+                {
+                    if (app.IsConfirm)
+                    {
+                        var user = await context.db.FindUserAsync(app.User);
+                        await bot.SendTextMessageAsync(user.chatId, personalConfig.Messages["NOTIFICATION"]+"\n "+$"на время {app.AppointmentTime}");
+                        await bot.SendTextMessageAsync(admin.chatId, $"{user.firstName} {user.lastName} {user.username} записан на завтра на время {app.AppointmentTime}");
+                    }
+                }
+            }
+        }
+        protected virtual async Task CheckNotificationAsync()
+        {
+            await Task.Run(() => CheckNotification());
         }
     }
 }
