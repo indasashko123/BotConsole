@@ -9,7 +9,7 @@ namespace BotLibary.TestingMock
 {
     public class TestDateFunctionFAKE
     {
-        internal DateFunction df { get; set; }
+        public DateFunction df { get; set; }
         public TestDateFunctionFAKE()
         {
             df = new DateFunction();

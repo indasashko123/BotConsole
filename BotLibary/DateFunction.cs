@@ -6,7 +6,7 @@ using DataBase.Models;
 
 namespace BotLibary
 {
-    internal class DateFunction
+    public  class DateFunction
     {
         /// <summary>
         /// Текущий день в календаре

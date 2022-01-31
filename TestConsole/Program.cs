@@ -3,15 +3,17 @@ using BotLibary.TestingMock;
 using DataBase.Database;
 using DataBase.Database.Context.MySQL;
 using DataBase.Models;
+using Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace TestConsole
 {
     class Program
-    {
+    {        
         static void Main(string[] args)
         {
             Console.WriteLine("Ввести T + номер теста");
@@ -23,7 +25,7 @@ namespace TestConsole
             }
             if (comm == "T2")
             {
-                ///Test2();
+                //Test2();
                 Console.ReadLine();
             }
             
@@ -119,14 +121,8 @@ namespace TestConsole
                 await ConsoleAsync($"Создано расписание\n {days2.Count} - колличество дней \n {allApps2.Count} - количество записей");
                 await ConsoleAsync($"{currentUser.ChatId}, Создано рассписание на {days.Count} дней");
 
-            }
-
-
-
-
-
-
-
+            }            
+           
         }
     }
 }

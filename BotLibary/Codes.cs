@@ -8,6 +8,7 @@ namespace BotLibary
 {
     internal static class Codes
     {
+        // TODO: отрефачить это говно
         /// <summary>
         /// Пользователь выбирает для записи
         /// </summary>
