@@ -16,16 +16,13 @@ using DataBase.Models;
 using BotLibary.Events;
 using Telegram.Bot.Types.InputFiles;
 using BotLibary.CallBackData;
-using BotLibary.Interfases;
+using BotLibary.Interfaces;
 
 namespace BotLibary
 {
     
     public class Bot : AbstractBot, IBot
-    {
-        
-       
-
+    {             
         public Bot(BotOptions options)
         {
             this.options = options;

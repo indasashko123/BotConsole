@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace BotLibary.Interfases
+namespace BotLibary.Interfaces
 {
     public abstract class AbstractBot
     {
         public AbstractBot()
         {
-            
+
         }
         protected internal TelegramBotClient bot;
         protected internal BotOptions options;
@@ -27,6 +27,7 @@ namespace BotLibary.Interfases
         protected internal Message lastMessage;
         protected internal DateFunction dateFunction;
         protected internal DataBaseConnector context;
+        protected internal BotName BotName {get;set;}
         public ChangesLog ConsoleMessage { get; set; }
         public AdminMessage adminMessage { get; set; }
 

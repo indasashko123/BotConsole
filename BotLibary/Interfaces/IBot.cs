@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 
-namespace BotLibary.Interfases
+namespace BotLibary.Interfaces
 {
     internal interface IBot
     {

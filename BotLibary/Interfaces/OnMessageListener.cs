@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.InputFiles;
 
-namespace BotLibary.Interfases
+namespace BotLibary.Interfaces
 {
     class OnMessageListener : AbstractBot
     {
