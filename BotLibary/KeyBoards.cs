@@ -41,7 +41,7 @@ namespace BotLibary
                 {
                     new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.Buttons["APPOINTMENT"] }, new KeyboardButton { Text = options.personalConfig.Buttons["PRICE"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["ABOUT"] } },
                     new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.Buttons["MYWORKS"] }, new KeyboardButton { Text = options.personalConfig.Buttons["FEEDBACK"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["LOCATION"] } },
-                    new List<KeyboardButton> {new KeyboardButton { Text = "LINK" } }
+                    new List<KeyboardButton> {new KeyboardButton { Text = options.personalConfig.Buttons["LINK"] } }
                 },
                 ResizeKeyboard = true
             };
@@ -87,7 +87,15 @@ namespace BotLibary
             List<List<InlineKeyboardButton>> buttons = new List<List<InlineKeyboardButton>>();
             foreach (var link in options.personalConfig.MediaLink)
             {
-                var buttn = InlineKeyboardButton.WithUrl(options.personalConfig.Messages[link.Key], link.Value);
+                InlineKeyboardButton buttn;
+                if (link.Key == "PHONE")
+                {
+                    buttn = InlineKeyboardButton.WithCallbackData("Телефон", $"Phone/{link.Value}");                    
+                }
+                else
+                {
+                    buttn = InlineKeyboardButton.WithUrl(options.personalConfig.MediaLink[link.Key], link.Value);
+                }                
                 if (count%2 == 0)
                 {                   
                     var list = new List<InlineKeyboardButton>();
@@ -95,7 +103,7 @@ namespace BotLibary
                     buttons.Add(list);
                     count++;
                 }
-                if (count%2 == 1)
+                else
                 {
                     buttons[line].Add(buttn);
                     line++;

@@ -8,8 +8,15 @@ namespace BotLibary.BotManager
 {
     public class BotManager : AbstractBotManager,IBotManager
     { 
+        public virtual void InitBotManager()
+        {
+            BotCreater = new BotCreater();
+            BotSaver = new BotSaver();
+            BotFinder = new BotFinder();
+        }
         public BotManager()
-        {                 
+        {
+            InitBotManager();
         }
         public virtual void BotStart()
         {
@@ -30,17 +37,21 @@ namespace BotLibary.BotManager
 
         public virtual void CreateBot(BotName Name, string Path)
         {
-            BotCreater.CreateBot(Name, Path);
+            BotCreater.Create(Name, Path, BotList);
         }
 
-        public virtual void SelectBot(string Name, List<Bot> bots)
+        public virtual void SelectBot(BotName Name, List<Bot> bots)
         {
-            BotFinder.FindByName(Name, bots)
+           SelectedBot = BotFinder.FindByName(Name, bots);
         }
 
         public virtual void ShowBots(List<Bot> bots)
         {
-            BotFinder.ShowBots(bots)
+            BotFinder.ShowBots(bots);
+        }
+        public virtual string GetCurrentBotName()
+        {
+            return this.SelectedBot.BotName.Name;
         }
     }
 }

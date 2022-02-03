@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.HelperClasses
 {
-    class BotSaver : IBotSaver
+    class ConsoleFinder : IBotFinder
     {
-        public void Update(Bot SelectedBot)
+        public Bot FindByName(BotName Name, List<Bot> bots)
+        {
+            return bots.Where(bot => bot.BotName.Name == Name.Name).FirstOrDefault();
+        }
+
+        public void ShowBots(List<Bot> bots)
         {
             throw new NotImplementedException();
         }

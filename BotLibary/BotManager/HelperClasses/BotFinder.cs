@@ -1,4 +1,5 @@
 ﻿using BotLibary.BotManager.Interfaces;
+using BotLibary.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,16 @@ using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.HelperClasses
 {
-    class BotFinder: IBotFinder
+    class BotFinder : IBotFinder
     {
+        public Bot FindByName(BotName Name, List<Bot> bots)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowBots(List<Bot> bots)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -37,7 +37,8 @@ namespace BotLibary.Interfaces
             ConsoleMessage?.Invoke("start update");
             while (true)
             {
-                Thread.Sleep(1000);
+                if (await context.db.FindAdminAsync() != null)
+                Thread.Sleep(85000000);
                 ConsoleMessage?.Invoke("Check update Day");
                 await CheckUpdateAsync();
             }
@@ -93,7 +94,7 @@ namespace BotLibary.Interfaces
             ConsoleMessage?.Invoke("Start notification");
             while (true)
             {
-                Thread.Sleep(3000000);
+                Thread.Sleep(30000000);
                 ConsoleMessage?.Invoke("Check notification");
                 await CheckNotificationAsync();
 
@@ -123,20 +124,6 @@ namespace BotLibary.Interfaces
         protected async Task CheckNotificationAsync()
         {
             await Task.Run(() => CheckNotification());
-        }
-
-
-
-        protected virtual void ConnectBotData(Bot bot)
-        {
-            this.adminMessage = adminMessage;
-            this.bot = bot.bot;
-            this.botConfig = bot.botConfig;
-            this.context = bot.context;
-            this.dateFunction = bot.dateFunction;
-            this.lastMessage = bot.lastMessage;
-            this.options = bot.options;
-            this.personalConfig = bot.personalConfig;
-        }
+        }       
     }
 }

@@ -16,6 +16,7 @@ namespace BotLibary
         internal int CurrentDay { get; set; }
         internal Month CurrentMonth { get; set; }
         internal Month NextMonth { get; set; }   
+        private bool IsCreated { get; set; }
         internal DateFunction()
         {
             CurrentMonth = new Month();
@@ -45,9 +46,11 @@ namespace BotLibary
             {11 , "Ноябрь" },
             {12, "Декабрь" }
             };
+            IsCreated = false;
         }
         internal virtual void CreateMonths()
         {
+            IsCreated = true;
             DateTime dateNow = DateTime.Now;           
             CurrentDay = dateNow.Day;
             CurrentMonth.MonthNumber = dateNow.Month;
@@ -59,13 +62,17 @@ namespace BotLibary
         }
         internal void IncreementDay()
         {
-            CurrentDay++;
-            if (CurrentMonth.DayCount < CurrentDay)
+            if (IsCreated)
             {
-                CurrentDay = 1;
-                CurrentMonth = NextMonth;
-                NextMonth = IncreementMonth(NextMonth);
+                CurrentDay++;
+                if (CurrentMonth.DayCount < CurrentDay)
+                {
+                    CurrentDay = 1;
+                    CurrentMonth = NextMonth;
+                    NextMonth = IncreementMonth(NextMonth);
+                }
             }
+           
         }
         protected internal async Task CreateMonthsAsync()
         {

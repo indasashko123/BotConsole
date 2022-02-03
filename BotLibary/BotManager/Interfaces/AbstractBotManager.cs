@@ -1,20 +1,20 @@
 ﻿using BotLibary.BotManager.HelperClasses;
+using BotLibary.Events;
 using System.Collections.Generic;
 
 namespace BotLibary.BotManager.Interfaces
 {
     public class AbstractBotManager
     {
-        internal Bot SelectedBot { get; set; }
-        protected List<Bot> BotList { get; set; }
-        protected private BotCreater BotCreater { get; set; }
-        protected private BotSaver BotSaver { get; set; }
-        protected private BotFinder BotFinder { get; set; }
+        public ChangesLog SystemMessage { get; set; }
+        public Bot SelectedBot { get; set; }
+        public List<Bot> BotList { get; set; }
+        protected private IBotCreater BotCreater { get; set; }
+        protected private IBotSaver BotSaver { get; set; }
+        protected private IBotFinder BotFinder { get; set; }
         public AbstractBotManager()
         {
-            BotCreater = new BotCreater();
-            BotSaver = new BotSaver();
-            BotFinder = new BotFinder();
+
             BotList = new List<Bot>();
         }
 

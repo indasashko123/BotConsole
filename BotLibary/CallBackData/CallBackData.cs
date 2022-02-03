@@ -27,7 +27,12 @@ namespace BotLibary.CallBackData
             {
                 EmptyButton = true;
                 return;
-            }            
+            }  
+            if (data.Contains("PHONE"))
+            {
+                EmptyButton = true;
+                return;
+            }
             string[] callBackData = data.Split('/');
             if (callBackData.Length != 5)
             {

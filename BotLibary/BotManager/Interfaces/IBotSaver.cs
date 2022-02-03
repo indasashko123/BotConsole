@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.Interfaces
 {
-    class IBotSaver
+    interface IBotSaver
     {
+        void Update(Bot SelectedBot);
     }
 }

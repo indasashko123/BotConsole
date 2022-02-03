@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BotLibary.BotManager;
 
 namespace TestConsole
 {
@@ -16,19 +17,53 @@ namespace TestConsole
     {        
         static void Main(string[] args)
         {
-            Console.WriteLine("Ввести T + номер теста");
-            string comm = Console.ReadLine();            
-            if (comm == "T1")
+            var BotManager = new ConsoleBotManager();
+            while (true) 
             {
-                Test1();
-                Console.ReadLine();
+                
+                Console.WriteLine("Ввести T + номер теста");
+                string comm = Console.ReadLine();
+                if (comm == "T1")
+                {
+                    Test1();
+                    Console.ReadLine();
+                }
+                if (comm == "T2")
+                {
+                    //Test2();
+                    Console.ReadLine();
+                }
+                if (comm == "T3")
+                {                 
+                    BotManager.CreateBot(new BotName("Test", "TestName", "Nails"), "D:\\BotManager");
+                    BotManager.SelectBot(new BotName("Test"), BotManager.BotList);
+                    Console.WriteLine($"{BotManager.GetCurrentBotName()}");
+                    BotManager.BotStart();
+                }
+                if (comm == "T4")
+                {
+                    
+                }
+                if (comm == "T5")
+                {
+                   
+                }
             }
-            if (comm == "T2")
-            {
-                //Test2();
-                Console.ReadLine();
-            }
-            
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             static async Task ConsoleAsync(string text)
             {
                 await Task.Run(() => Console.WriteLine(text));
