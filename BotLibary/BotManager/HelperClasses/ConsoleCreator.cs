@@ -10,31 +10,31 @@ namespace BotLibary.BotManager.HelperClasses
 {
     class ConsoleCreator : IBotCreater
     {
-        //string TemplateBotConfig = "D:\\BotManager\\Template\\BotConfig.json";
-        //string TemplatePersonalConfig = "D:\\BotManager\\Template\\PersonalConfig.json";
+        string Path { get; set; }
         string FileSystem = "\\FileSystem";
         ChangesLog SystemMessage { get; set; }
-        public ConsoleCreator(ChangesLog log)
+        
+        public ConsoleCreator(ChangesLog log, string Path)
         {
             SystemMessage = log;
+            this.Path = Path;
         }
-        
-        public void Create(BotName Name, string Path , List<Bot> bots)
+        public void Create(BotName Name,  List<Bot> bots)
         {           
             CreateFolderSystem(Path);           
             Directory.CreateDirectory(Path + $"{FileSystem}\\{Name.Name}");
             Directory.CreateDirectory(Path + $"{FileSystem}\\{Name.Name}\\MyPhoto");
             Directory.CreateDirectory(Path + $"{FileSystem}\\{Name.Name}\\MyWorks");
             BotOptions options = CreateBotOptions(Path + $"{FileSystem}\\{Name.Name}");
-            Bot newBot = new Bot(options, Name);
+            AddPhotos(Path, Path + $"{FileSystem}\\{Name.Name}\\MyPhoto", "Hello.jpg");
+            AddPhotos(Path, Path + $"{FileSystem}\\{Name.Name}\\MyPhoto", "Price.jpg");
+            AddPhotos(Path, Path + $"{FileSystem}\\{Name.Name}\\MyWorks", "0.jpg");
+            AddPhotos(Path, Path + $"{FileSystem}\\{Name.Name}\\MyWorks", "1.jpg");
+            Bot newBot = new Bot(options);
             bots.Add(newBot);
-            SystemMessage?.Invoke("Ost");
+            SystemMessage?.Invoke($"Создан бот {newBot.BotName.Name}");
         }
-        bool CheckFileSystem(string Path)
-        {
-            SystemMessage($"Ищем папку {Path}");
-            return Directory.Exists(Path);            
-        }
+       
         void CreateFolderSystem(string Path)
         {
             Directory.CreateDirectory(Path + FileSystem);
@@ -60,10 +60,26 @@ namespace BotLibary.BotManager.HelperClasses
             }
             return options;
         }
+        bool CheckFileSystem(string Path)
+        {
+            SystemMessage($"Ищем папку {Path}");
+            return Directory.Exists(Path);
+        }
         bool CheckBotExist(string path)
         {
             SystemMessage($"Проверяем существование папки {path}");
             return Directory.Exists(path);
+        }
+        void AddPhotos(string path, string newPath, string fileName)
+        {
+            string pathTemplate =path + $"Template\\{fileName}";            
+            FileInfo fileInf = new FileInfo(pathTemplate);
+            if (fileInf.Exists)
+            {
+                fileInf.CopyTo(newPath, true);
+
+            }
+            
         }
     }
 }

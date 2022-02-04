@@ -1,5 +1,6 @@
 ﻿using BotLibary.BotManager.HelperClasses;
 using BotLibary.BotManager.Interfaces;
+using BotLibary.Events;
 using BotLibary.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -35,23 +36,31 @@ namespace BotLibary.BotManager
             BotSaver.Update(SelectedBot);
         }
 
-        public virtual void CreateBot(BotName Name, string Path)
+        public virtual void CreateBot(BotName Name)
         {
-            BotCreater.Create(Name, Path, BotList);
+            BotCreater.Create(Name,  BotList);
         }
 
-        public virtual void SelectBot(BotName Name, List<Bot> bots)
+        public virtual void SelectBot(BotName Name)
         {
-           SelectedBot = BotFinder.FindByName(Name, bots);
+           SelectedBot = BotFinder.FindByName(Name, this.BotList);
         }
 
-        public virtual void ShowBots(List<Bot> bots)
+        public virtual void ShowBots()
         {
-            BotFinder.ShowBots(bots);
+            BotFinder.ShowBots(this.BotList);
         }
-        public virtual string GetCurrentBotName()
+        public virtual void ShowCurrent()
         {
-            return this.SelectedBot.BotName.Name;
+            BotFinder.ShowCurrent(SelectedBot);
+        }
+        public void FindAllBots()
+        {
+            this.BotList = BotSaver.FindAllBots();
+        }
+        public void UpdateAll()
+        {
+            this.BotSaver.UpdateAll(this.BotList);
         }
     }
 }

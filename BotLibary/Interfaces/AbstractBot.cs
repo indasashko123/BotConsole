@@ -38,9 +38,12 @@ namespace BotLibary.Interfaces
             while (true)
             {
                 if (await context.db.FindAdminAsync() != null)
-                Thread.Sleep(85000000);
-                ConsoleMessage?.Invoke("Check update Day");
-                await CheckUpdateAsync();
+                {
+                    await Task.Run(() => { Thread.Sleep(85000000); });                    
+                    ConsoleMessage?.Invoke("Check update Day");
+                    await CheckUpdateAsync();
+                }
+                
             }
         }
         protected virtual async Task CheckUpdateAsync()
@@ -94,8 +97,11 @@ namespace BotLibary.Interfaces
             ConsoleMessage?.Invoke("Start notification");
             while (true)
             {
-                Thread.Sleep(30000000);
-                ConsoleMessage?.Invoke("Check notification");
+                await Task.Run(() =>
+                {
+                    Thread.Sleep(30000000);
+                    ConsoleMessage?.Invoke("Check notification");
+                });               
                 await CheckNotificationAsync();
 
             }
@@ -116,7 +122,7 @@ namespace BotLibary.Interfaces
                     {
                         var user = await context.db.FindUserAsync(app.User);
                         await bot.SendTextMessageAsync(user.ChatId, personalConfig.Messages["NOTIFICATION"] + "\n " + $"на время {app.AppointmentTime}");
-                        await bot.SendTextMessageAsync(admin.ChatId, $"{user.FirstName} {user.LastName} {user.Username} записан на завтра на время {app.AppointmentTime}");
+                        await bot.SendTextMessageAsync(admin.ChatId, $"{user.FirstName} {user.LastName} @{user.Username} записан на завтра на время {app.AppointmentTime}");
                     }
                 }
             }

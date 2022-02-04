@@ -1,4 +1,5 @@
 ﻿using BotLibary.BotManager.Interfaces;
+using BotLibary.Events;
 using BotLibary.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,11 @@ namespace BotLibary.BotManager.HelperClasses
         }
 
         public void ShowBots(List<Bot> bots)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowCurrent(Bot currentBot)
         {
             throw new NotImplementedException();
         }

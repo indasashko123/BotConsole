@@ -24,12 +24,12 @@ namespace BotLibary
     
     public class Bot : AbstractBot, IBot
     {
-        public Bot(BotOptions options, BotName name)
+        public Bot(BotOptions options)
         {
             this.options = options;
             botConfig = options.botConfig;
             personalConfig = options.personalConfig;
-            this.BotName = name;
+            this.BotName = new BotName(botConfig.Name, botConfig.CustomerName, botConfig.Direction);
             dateFunction = new DateFunction();
             context = new DataBaseConnector(new SQLContext(botConfig.dataBaseName));
             this.bot = new TelegramBotClient(botConfig.token);
@@ -133,7 +133,9 @@ namespace BotLibary
                             ConsoleMessage?.Invoke($"Ошибка при регистрации");
                             return;
                         }
-                        await adminMessage?.Invoke(new EventArgsNotification(admin.ChatId, "Зарегестрированно!"));
+                        await adminMessage?.Invoke(new EventArgsNotification(admin.ChatId, "Зарегестрированно!", KeyBoards.GetKeyboardAdmin(options)));
+
+                        return;
                     }
                     //else
                     await bot.SendTextMessageAsync(currentUser.ChatId, personalConfig.Messages["UNKNOWN"]);
@@ -141,41 +143,44 @@ namespace BotLibary
                 }
                 if (currentUser.IsAdmin)
                 {
-                    if (admin.Status.Split('/')[0] == "AddApp")
+                    if (admin.Status != null)
                     {
-
-                        int appId = 0;
-                        if (Int32.TryParse(admin.Status.Split('/')[1], out appId))
+                        if (admin.Status.Split('/')[0] == "AddApp")
                         {
-                            admin.Status = "";
-                            await context.db.UpdateUserAsync(admin);
-                            Appointment app = await context.db.FindAppointmentAsync(appId);
-                            if (e.Message.Text == "Отмена")
+
+                            int appId = 0;
+                            if (Int32.TryParse(admin.Status.Split('/')[1], out appId))
                             {
-                                await context.db.DeleteAppAsync(app);
-                                app = null;
-                                await bot.SendTextMessageAsync(admin.ChatId, $" запись удалена", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                                admin.Status = "";
+                                await context.db.UpdateUserAsync(admin);
+                                Appointment app = await context.db.FindAppointmentAsync(appId);
+                                if (e.Message.Text == "Отмена")
+                                {
+                                    await context.db.DeleteAppAsync(app);
+                                    app = null;
+                                    await bot.SendTextMessageAsync(admin.ChatId, $" запись удалена", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                                    return;
+                                }
+                                app.AppointmentTime = e.Message.Text;
+                                await context.db.UpdateAppAsync(app);
+                                await bot.SendTextMessageAsync(admin.ChatId, $"Добавилась запись на {app.AppointmentTime}", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
                                 return;
                             }
-                            app.AppointmentTime = e.Message.Text;
-                            await context.db.UpdateAppAsync(app);
-                            await bot.SendTextMessageAsync(admin.ChatId, $"Добавилась запись на {app.AppointmentTime}", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
-                            return;
+                            else
+                            {
+                                await bot.SendTextMessageAsync(admin.ChatId, $"Запись не добавилась. Ошибка ", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                                return;
+                            }
                         }
-                        else
+                        if (admin.Status.Split('/')[0] == "Mailing")
                         {
-                            await bot.SendTextMessageAsync(admin.ChatId, $"Запись не добавилась. Ошибка ", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                            lastMessage = e.Message;
+                            admin.Status = "";
+                            await context.db.UpdateUserAsync(admin);
+                            await bot.SendTextMessageAsync(admin.ChatId, "Отправить это сообщение всем пользователям?", replyMarkup: KeyBoards.GetConfirmKeyboard(0, options, Codes.AdminMailingConfirm, 0));
                             return;
                         }
-                    }
-                    if (admin.Status.Split('/')[0] == "Mailing")
-                    {
-                        lastMessage = e.Message;
-                        admin.Status = "";
-                        await context.db.UpdateUserAsync(admin);
-                        await bot.SendTextMessageAsync(admin.ChatId, "Отправить это сообщение всем пользователям?", replyMarkup: KeyBoards.GetConfirmKeyboard(0, options, Codes.AdminMailingConfirm, 0));
-                        return;
-                    }
+                    }              
                     if (e.Message.Text == "/start")
                     {
                         await bot.SendTextMessageAsync(currentUser.ChatId, personalConfig.Messages["ADMINGREETING"], replyMarkup: KeyBoards.GetKeyboardAdmin(options));
@@ -198,7 +203,7 @@ namespace BotLibary
                         List<DataBase.Models.User> users = await context.db.FindUsersAsync();
                         foreach (var user in users)
                         {
-                            string message = $"Пользователь {user.FirstName} {user.LastName} {user.Username}\n";
+                            string message = $"Пользователь {user.FirstName} {user.LastName} @{user.Username}\n";
                             await bot.SendTextMessageAsync(admin.ChatId, message);
                         }
                         await bot.SendTextMessageAsync(admin.ChatId, "Это все пользователи", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
@@ -209,21 +214,15 @@ namespace BotLibary
                         List<Month> months = await context.db.GetMonthsAsync();
                         await bot.SendTextMessageAsync(admin.ChatId, personalConfig.Messages["ADMINSELECTMONTH"], replyMarkup: KeyBoards.GetMonthButtons(months, Codes.AdminWeekEnd, admin));
                         return;
-                    }
+                    }       
                     if (e.Message.Text == personalConfig.AdminButtons["LOOKNOTCONFIRM"])
                     {
                         List<Appointment> apps = await context.db.FindConfirmAppointmentsAsync(false);
-                        foreach (Appointment app in apps)
+                        if (apps == null || apps.Count == 0)
                         {
-                            DataBase.Models.User user = await context.db.FindUserAsync(app.User);
-                            Day day = await context.db.FindDayAsync(app.Day);
-                            await bot.SendTextMessageAsync(admin.ChatId, $"Запись на {day.Date}.{day.MonthNumber} на время {app.AppointmentTime}\n" +
-                                $"Записался {user.ToString()}", replyMarkup: KeyBoards.GetConfirmKeyboard(app.AppointmentId, options, Codes.AdminConfirm, user.UserId));
+                            await bot.SendTextMessageAsync(admin.ChatId, "Не подтвержденных записей нет");
+                            return;
                         }
-                    }
-                    if (e.Message.Text == personalConfig.AdminButtons["LOOKNOTCONFIRM"])
-                    {
-                        List<Appointment> apps = await context.db.FindConfirmAppointmentsAsync(false);
                         foreach (Appointment app in apps)
                         {
                             DataBase.Models.User user = await context.db.FindUserAsync(app.User);
@@ -236,6 +235,11 @@ namespace BotLibary
                     if (e.Message.Text == personalConfig.AdminButtons["LOOKCONFIRM"])
                     {
                         List<Appointment> apps = await context.db.FindConfirmAppointmentsAsync(true);
+                        if (apps == null || apps.Count == 0)
+                        {
+                            await bot.SendTextMessageAsync(admin.ChatId, "Подтвержденных записей нет");
+                            return;
+                        }
                         foreach (Appointment app in apps)
                         {
                             DataBase.Models.User user = await context.db.FindUserAsync(app.User);
@@ -306,7 +310,7 @@ namespace BotLibary
                         app.User = currentUser.UserId;
                         Day day = await context.db.FindDayAsync(app.Day);
                         string message = $"{personalConfig.Messages["NEWAPP"]}\n " +
-                            $"{currentUser.FirstName} {currentUser.LastName} {currentUser.Username}\n в {day.DayOfWeek}, {day.Date}.{day.MonthNumber} числа\n на время - {app.AppointmentTime}";
+                            $"{currentUser.FirstName} {currentUser.LastName} @{currentUser.Username}\n в {day.DayOfWeek}, {day.Date}.{day.MonthNumber} числа\n на время - {app.AppointmentTime}";
                         await context.db.UpdateAppAsync(app);
                         await bot.SendTextMessageAsync(currentUser.ChatId, personalConfig.Messages["WAITCINFIRM"], replyMarkup: KeyBoards.GetStartKeyboard(options));
                         await bot.SendTextMessageAsync(admin.ChatId, message, replyMarkup: KeyBoards.GetConfirmKeyboard(app.AppointmentId, options, Codes.AdminConfirm, currentUser.UserId));
@@ -322,7 +326,8 @@ namespace BotLibary
                             Appointment app = await context.db.FindAppointmentAsync(data.EntityId);
                             app.IsConfirm = true;
                             await context.db.UpdateAppAsync(app);
-                            await bot.SendTextMessageAsync(data.UserId, personalConfig.Messages["YOURAPPCONFIRM"], replyMarkup: KeyBoards.GetStartKeyboard(options));
+                            var confirmedUser = await context.db.FindUserAsync(data.UserId);
+                            await bot.SendTextMessageAsync(confirmedUser.ChatId, personalConfig.Messages["YOURAPPCONFIRM"], replyMarkup: KeyBoards.GetStartKeyboard(options));
                         }
                         if (data.Stage == Stage.No)
                         {
@@ -330,7 +335,8 @@ namespace BotLibary
                             app.IsEmpty = true;
                             app.User = 0;
                             await context.db.UpdateAppAsync(app);
-                            await bot.SendTextMessageAsync(data.UserId, personalConfig.Messages["YOURAPPNOTCONFIRM"], replyMarkup: KeyBoards.GetStartKeyboard(options));
+                            var confirmedUser = await context.db.FindUserAsync(data.UserId);
+                            await bot.SendTextMessageAsync(confirmedUser.ChatId, personalConfig.Messages["YOURAPPNOTCONFIRM"], replyMarkup: KeyBoards.GetStartKeyboard(options));
                         }
                     }
                     if (data.Action == CallBackData.Action.Add)

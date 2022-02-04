@@ -9,14 +9,20 @@ namespace BotLibary.BotManager
 {
     public class ConsoleBotManager: BotManager
     {
-        
+        string Path { get; set; }
         public override void InitBotManager()
         {
             this.SystemMessage = ((string text) => { Console.WriteLine(text); });
-            this.BotCreater = new ConsoleCreator(SystemMessage);
-            this.BotSaver = new BotSaver();
-            this.BotFinder = new ConsoleFinder();
+            this.BotCreater = new ConsoleCreator(SystemMessage, Path);
+            this.BotSaver = new ConsoleSaver(SystemMessage,Path);
+            this.BotFinder = new ConsoleFinder(SystemMessage);
         }
-        
+        public ConsoleBotManager(string Path)
+        {
+            this.Path = Path;
+            InitBotManager();
+        }
+
+
     }
 }

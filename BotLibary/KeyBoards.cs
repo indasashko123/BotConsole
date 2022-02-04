@@ -15,14 +15,13 @@ namespace BotLibary
         /// <returns></returns>
         internal static IReplyMarkup GetKeyboardAdmin(BotOptions options)
         {
-            // TODO: не закончено
             return new ReplyKeyboardMarkup
             {
                 Keyboard = new List<List<KeyboardButton>>
                 {
-                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["DELAPP"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["ALLUSERS"] } },
-                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.Buttons["MAKEWEEKEND"] }, new KeyboardButton { Text = options.personalConfig.Buttons["FEEDBACK"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["LOCATION"] } },
-                    new List<KeyboardButton> {new KeyboardButton { Text = "LINK" } }
+                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["DELAPP"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["ALLUSERS"] } },
+                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["MAKEWEEKEND"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKCONFIRM"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKNOTCONFIRM"] } },
+                
                 },
                 ResizeKeyboard = true
             };
@@ -150,7 +149,7 @@ namespace BotLibary
                     buttons.Add(list);
                     count++;
                 }
-                if (count % 2 == 1)
+                else
                 {
                     buttons[line].Add(buttn);
                     line++;
@@ -188,7 +187,7 @@ namespace BotLibary
                     buttons.Add(list);
                     count++;
                 }
-                if (count % 2 == 1)
+                else
                 {
                     buttons[line].Add(buttn);
                     line++;

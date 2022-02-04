@@ -6,7 +6,7 @@ namespace BotLibary.BotManager.HelperClasses
 {
     internal class BotCreater : IBotCreater
     {
-        public void Create(BotName Name, string Path, List<Bot> bots)
+        public void Create(BotName Name, List<Bot> bots)
         {
             throw new System.NotImplementedException();
         }

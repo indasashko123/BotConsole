@@ -223,7 +223,7 @@ namespace DataBase.Database.Context.MySQL
             using (Connection db = new Connection(DataBaseName))
             {
                 apps = (from app in db.Appointments
-                        where app.IsConfirm == IsConfirm
+                        where app.IsConfirm == IsConfirm && app.IsEmpty == false
                         select app).ToList();
             }
             return apps;

@@ -1,5 +1,4 @@
-﻿using BotLibary.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.Interfaces
 {
-    interface IBotCreater
+    interface IConsoleBotManager
     {
-        void Create(BotName Name,  List<Bot> bots);
+        
     }
 }

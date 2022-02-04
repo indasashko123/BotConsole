@@ -14,6 +14,9 @@ namespace Options
         public string dataBaseName { get; set; }
         public int appointmentStandartCount { get;set; }
         public List<string> appointmentStandartTimes { get; set; }
+        public string Name { get; set; }
+        public string CustomerName { get; set; }
+        public string Direction { get; set; }
        public BotConfig()
         {
             appointmentStandartTimes = new List<string>();
@@ -32,6 +35,9 @@ namespace Options
             password = config.password;
             dataBaseName = config.dataBaseName;
             appointmentStandartCount = config.appointmentStandartCount;
+            Name = config.Name;
+            CustomerName = config.CustomerName;
+            Direction = config.Direction;
         }
         public BotConfig CreatTemplate()
         {
@@ -45,7 +51,11 @@ namespace Options
             token = "1973705386:AAECVqHeUF6GHIFOT0xnzD23mNu9HPL0eMs",
             password = "xxxx",
             dataBaseName = "testname",
-            appointmentStandartCount = 3
+            appointmentStandartCount = 3,
+            Name = "TestName",
+            CustomerName = "TestCustomer",
+            Direction= "TestDirection"
+
         };           
         }
     }
