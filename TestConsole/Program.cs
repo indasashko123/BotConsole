@@ -17,7 +17,7 @@ namespace TestConsole
     {        
         static void Main(string[] args)
         {
-            var BotManager = new ConsoleBotManager();
+            var BotManager = new ConsoleBotManager("D:\\BotManager");
             while (true) 
             {
                 
@@ -25,7 +25,7 @@ namespace TestConsole
                 string comm = Console.ReadLine();
                 if (comm == "T1")
                 {
-                    Test1();
+                    //Test1();
                     Console.ReadLine();
                 }
                 if (comm == "T2")
@@ -35,9 +35,9 @@ namespace TestConsole
                 }
                 if (comm == "T3")
                 {                 
-                    BotManager.CreateBot(new BotName("Test", "TestName", "Nails"), "D:\\BotManager");
-                    BotManager.SelectBot(new BotName("Test"), BotManager.BotList);
-                    Console.WriteLine($"{BotManager.GetCurrentBotName()}");
+                    BotManager.CreateBot(new BotName("Test", "TestName", "Nails"));
+                    BotManager.SelectBot(new BotName("Test"));
+                    BotManager.ShowCurrent();
                     BotManager.BotStart();
                 }
                 if (comm == "T4")
