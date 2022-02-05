@@ -19,14 +19,14 @@ namespace BotLibary.BotManager.HelperClasses
             this.log = log;
             this.Path = Path;
         }
-        public void Create(BotName Name,  List<Bot> bots, string Token)
+        public void Create(BotName Name,  List<Bot> bots, string Token, string DataBaseName)
         {
             log?.Invoke($"Созданм на пути {Path}");
             CreateFolderSystem(Path);           
             Directory.CreateDirectory(Path + $"{FileSystem}\\{Name.Name}");
             Directory.CreateDirectory(Path + $"{FileSystem}\\{Name.Name}\\MyPhoto");
             Directory.CreateDirectory(Path + $"{FileSystem}\\{Name.Name}\\MyWorks");
-            BotOptions options = CreateBotOptions(Path + $"{FileSystem}\\{Name.Name}", Name);
+            BotOptions options = CreateBotOptions(Path + $"{FileSystem}\\{Name.Name}", Name, Token, DataBaseName);
             AddPhotos(Path, Path + $"\\{FileSystem}\\{Name.Name}\\MyPhoto", "\\Hello.jpg");
             AddPhotos(Path, Path + $"\\{FileSystem}\\{Name.Name}\\MyPhoto", "\\Price.jpg");
             AddPhotos(Path, Path + $"\\{FileSystem}\\{Name.Name}\\MyWorks", "\\0.jpg");
@@ -40,7 +40,7 @@ namespace BotLibary.BotManager.HelperClasses
         {
             Directory.CreateDirectory(Path + FileSystem);
         }
-        BotOptions CreateBotOptions(string Path, BotName name)
+        BotOptions CreateBotOptions(string Path, BotName name, string Token, string DataBaseName)
         {
             BotConfig botConfig = new BotConfig().CreatTemplate();
             PersonalConfig personalConfig = new PersonalConfig().CreateTemplate();
@@ -51,6 +51,8 @@ namespace BotLibary.BotManager.HelperClasses
             botConfig.Name = name.Name;
             botConfig.CustomerName = name.CustomerName;
             botConfig.Direction = name.Direction;
+            botConfig.token = Token;
+            botConfig.dataBaseName = DataBaseName;
             BotOptions options = new BotOptions(botConfig, personalConfig);
             using (StreamWriter file = File.CreateText(Path+"\\BotConfig.json"))
             {

@@ -29,9 +29,9 @@ namespace BotConsole
                 }
                 if (command[0].ToLower() == "new")
                 {
-                    if (command.Length == 5)
+                    if (command.Length == 6)
                     {
-                        manager.CreateBot(new BotName(command[1], command[2], command[3]), command[4]);
+                        manager.CreateBot(new BotName(command[1], command[2], command[3]), command[4], command[5]);
                     }
                     else
                     {

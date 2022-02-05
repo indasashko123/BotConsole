@@ -32,7 +32,7 @@ namespace BotLibary.BotManager.HelperClasses
             {
                 log?.Invoke($"Выбран бот {bot.BotName.CustomerName}");
                 bot.ConsoleMessage += ((string text) => { log?.Invoke(text); });
-                bot.ConsoleMessage?.Invoke("\n\n   Боту незначен log");
+                bot.ConsoleMessage?.Invoke("\n\n   Боту незначен log");               
             }
             return bot;
         }

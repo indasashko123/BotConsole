@@ -21,6 +21,8 @@ namespace DataBase.Database.Context.MySQL
         public SQLContext(string dbName)
         {
             DataBaseName = dbName;
+            Connection db = new Connection(DataBaseName);
+            db.CreateDataBase();
         }        
         User ICRUD.FindAdmin()
         {

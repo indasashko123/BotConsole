@@ -6,7 +6,7 @@ namespace BotLibary.BotManager.Interfaces
 {
     interface IBotManager
     {        
-        public void CreateBot(BotName Name, string Token);
+        public void CreateBot(BotName Name, string Token, string DataBaseName);
         public void BotUpdate();
         public void SelectBot(BotName Name);
         public void ShowBots();

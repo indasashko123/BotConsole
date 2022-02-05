@@ -13,6 +13,7 @@ namespace DataBase.Database.Context.MySQL
 {
     class Connection : DbContext
     {
+        public Action<string> SystemMessage;
         public DbSet<User> Users { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Day> Days { get; set; }
@@ -20,8 +21,10 @@ namespace DataBase.Database.Context.MySQL
         private string DbName { get; set; }
         public Connection(string DbName)
         {
-            this.DbName = DbName;
-            
+            this.DbName = DbName;          
+        }
+        public void CreateDataBase()
+        {
             Database.EnsureCreated();
         }
         protected override void
