@@ -10,5 +10,6 @@ namespace BotLibary.BotManager.Interfaces
     interface IBotCreater
     {
         void Create(BotName Name,  List<Bot> bots, string Token, string DataBaseName);
+        public void Create(BotConfig config);
     }
 }

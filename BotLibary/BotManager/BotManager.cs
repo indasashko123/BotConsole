@@ -2,6 +2,7 @@
 using BotLibary.BotManager.Interfaces;
 using BotLibary.Events;
 using BotLibary.Interfaces;
+using Options;
 using System;
 using System.Collections.Generic;
 
@@ -40,7 +41,10 @@ namespace BotLibary.BotManager
         {
             BotCreater.Create(Name,  BotList, Token, DataBaseName);
         }
-
+        public virtual void CreateBot(BotConfig config)
+        {
+            BotCreater.Create(config);
+        }
         public virtual void SelectBot(BotName Name)
         {
            SelectedBot = BotFinder.FindByName(Name, this.BotList);

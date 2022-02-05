@@ -1,6 +1,7 @@
 ﻿using BotLibary.BotManager;
 using System;
 using BotLibary;
+using Options;
 
 namespace BotConsole
 {
@@ -9,9 +10,12 @@ namespace BotConsole
         static void Main(string[] args)
         {
             ConsoleBotManager manager = new ConsoleBotManager(@"D:\BotManager");
+            BotConfig botConfig = new BotConfig();
+
             manager.FindAllBots();
             Console.WriteLine("Ввод команды\n" +
-                   "new + name + customer name + direct + token\n" +
+                   "config + name customerName + direct + token + dbName + password +Times('|')\n"+
+                   "new + name + customer name + direct + token + dbName\n" +
                    "select\n" +
                    "update\n" +
                    "showall\n" +
@@ -19,13 +23,33 @@ namespace BotConsole
                    "stop\n" +
                    "current\n");
             while (true)
-            {
-               
+            {               
                 string[] command = Console.ReadLine().Split(' ');
                 if (command[0] == "q" || command[0] == "Quit")
                 {
                     manager.UpdateAll();
                     break;
+                }
+                if (command[0].ToLower()== "config")
+                {
+                    if (command.Length == 8)
+                    {
+                        botConfig = new BotConfig()
+                        {
+                            Name = command[1],
+                            CustomerName = command[2],
+                            Direction = command[3],
+                            token = command[4],
+                            dataBaseName = command[5],
+                            password = command[6]
+                        };
+                        foreach (var time in command[7].Split('|'))
+                        {
+                            botConfig.appointmentStandartTimes.Add(time);
+                            botConfig.appointmentStandartCount++;
+                        }
+                        Console.WriteLine("СОзданы настройки бота");
+                    }                 
                 }
                 if (command[0].ToLower() == "new")
                 {
@@ -35,6 +59,11 @@ namespace BotConsole
                     }
                     else
                     {
+                        if (command.Length == 2 && command[2] == "config")
+                        {
+                            manager.CreateBot(botConfig);
+                        }
+                        else
                         Console.WriteLine($"Ошибка в {command}\n");
                     }
                 }
@@ -69,6 +98,7 @@ namespace BotConsole
                 {
                     manager.ShowCurrent();
                 }
+                
             }
            
         }
