@@ -10,7 +10,8 @@ namespace BotLibary.BotManager.Interfaces
     interface IBotSaver
     {
         void Update(Bot SelectedBot);
-        List<Bot> FindAllBots();
+
         void UpdateAll(List<Bot> bots);
+        //TODO: Serializate config
     }
 }

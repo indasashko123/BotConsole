@@ -10,16 +10,17 @@ namespace BotConsole
         {
             ConsoleBotManager manager = new ConsoleBotManager(@"D:\BotManager");
             manager.FindAllBots();
+            Console.WriteLine("Ввод команды\n" +
+                   "new + name + customer name + direct + token\n" +
+                   "select\n" +
+                   "update\n" +
+                   "showall\n" +
+                   "start\n" +
+                   "stop\n" +
+                   "current\n");
             while (true)
             {
-                Console.WriteLine("Ввод команды\n" +
-                    "new + name + customer name + direct\n" +
-                    "select\n" +
-                    "update\n" +
-                    "showall\n" +
-                    "start\n" +
-                    "stop\n" +
-                    "current\n");
+               
                 string[] command = Console.ReadLine().Split(' ');
                 if (command[0] == "q" || command[0] == "Quit")
                 {
@@ -28,9 +29,9 @@ namespace BotConsole
                 }
                 if (command[0].ToLower() == "new")
                 {
-                    if (command.Length == 4)
+                    if (command.Length == 5)
                     {
-                        manager.CreateBot(new BotName(command[1], command[2], command[3]));
+                        manager.CreateBot(new BotName(command[1], command[2], command[3]), command[4]);
                     }
                     else
                     {

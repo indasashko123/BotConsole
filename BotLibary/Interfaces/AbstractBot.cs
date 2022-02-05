@@ -34,13 +34,13 @@ namespace BotLibary.Interfaces
 
         protected virtual async void StartUpdateDays()
         {
-            ConsoleMessage?.Invoke("start update");
+            ConsoleMessage?.Invoke($"Начало проверки обновлений у бота {BotName.Name}\n");
             while (true)
             {
                 if (await context.db.FindAdminAsync() != null)
                 {
                     await Task.Run(() => { Thread.Sleep(85000000); });                    
-                    ConsoleMessage?.Invoke("Check update Day");
+                    ConsoleMessage?.Invoke($"Проверка обновлений у бота {BotName.Name}\n");
                     await CheckUpdateAsync();
                 }
                 
@@ -94,13 +94,13 @@ namespace BotLibary.Interfaces
 
         protected async virtual void StartNotificationAsync()
         {
-            ConsoleMessage?.Invoke("Start notification");
+            ConsoleMessage?.Invoke($"Начало проверки отправки уведомлений у бота {BotName.Name}\n");
             while (true)
             {
                 await Task.Run(() =>
                 {
                     Thread.Sleep(30000000);
-                    ConsoleMessage?.Invoke("Check notification");
+                    ConsoleMessage?.Invoke($"Проверка необходимости отправки уведомлений у бота {BotName.Name}\n");
                 });               
                 await CheckNotificationAsync();
 

@@ -11,10 +11,7 @@ namespace BotLibary.BotManager.HelperClasses
 {
     class BotSaver : IBotSaver
     {
-        public List<Bot> FindAllBots()
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public void Update(Bot SelectedBot)
         {

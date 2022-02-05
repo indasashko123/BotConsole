@@ -13,5 +13,6 @@ namespace BotLibary.BotManager.Interfaces
         Bot FindByName(BotName Name,List<Bot> bots);
         void ShowBots(List<Bot> bots);
         void ShowCurrent(Bot currentBot);
+        List<Bot> FindAllBots();
     }
 }

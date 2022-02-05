@@ -15,7 +15,7 @@ namespace BotLibary.BotManager
             this.SystemMessage = ((string text) => { Console.WriteLine(text); });
             this.BotCreater = new ConsoleCreator(SystemMessage, Path);
             this.BotSaver = new ConsoleSaver(SystemMessage,Path);
-            this.BotFinder = new ConsoleFinder(SystemMessage);
+            this.BotFinder = new ConsoleFinder(SystemMessage, Path);
         }
         public ConsoleBotManager(string Path)
         {

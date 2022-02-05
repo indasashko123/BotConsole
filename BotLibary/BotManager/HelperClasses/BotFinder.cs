@@ -25,5 +25,9 @@ namespace BotLibary.BotManager.HelperClasses
         {
             throw new NotImplementedException();
         }
+        public List<Bot> FindAllBots()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

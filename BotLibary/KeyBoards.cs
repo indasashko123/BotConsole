@@ -21,7 +21,7 @@ namespace BotLibary
                 {
                     new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["DELAPP"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["ALLUSERS"] } },
                     new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["MAKEWEEKEND"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKCONFIRM"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKNOTCONFIRM"] } },
-                
+                    new List<KeyboardButton> {new KeyboardButton { Text = options.personalConfig.AdminButtons["MAILING"] } }
                 },
                 ResizeKeyboard = true
             };
@@ -93,7 +93,7 @@ namespace BotLibary
                 }
                 else
                 {
-                    buttn = InlineKeyboardButton.WithUrl(options.personalConfig.MediaLink[link.Key], link.Value);
+                    buttn = InlineKeyboardButton.WithUrl(link.Key, link.Value);
                 }                
                 if (count%2 == 0)
                 {                   

@@ -35,16 +35,17 @@ namespace BotLibary
             this.bot = new TelegramBotClient(botConfig.token);
             bot.OnMessage += onMessage;
             bot.OnCallbackQuery += OnQuery;
-           
+            bot.Timeout = new TimeSpan(0, 10, 0);
+
             adminMessage += (async (EventArgsNotification e) => { await bot.SendTextMessageAsync(e.Admin, e.Text, replyMarkup: e?.Keyboard); });
         }
         private protected virtual async void onMessage(object sender, MessageEventArgs e)
         {
-            if (e.Message != null && e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Text && !string.IsNullOrEmpty(e.Message.Text))
+            if (e.Message != null && (!string.IsNullOrEmpty(e.Message.Text)|| e.Message.Type != Telegram.Bot.Types.Enums.MessageType.Text))
             {
                 DataBase.Models.User admin = await context.db.FindAdminAsync();
                 DataBase.Models.User currentUser = await context.db.FindUserAsync(e.Message.Chat.Id);
-                ConsoleMessage?.Invoke(currentUser == null ? $"\nПользователь с chatId {e.Message.Chat.Id} не найден\n" : $"\nПользователь с chatId {e.Message.Chat.Id} уже заходил\n");
+               // ConsoleMessage?.Invoke(currentUser == null ? $"\nПользователь с chatId {e.Message.Chat.Id} не найден\n" : $"\nПользователь с chatId {e.Message.Chat.Id} уже заходил\n");
                 if (currentUser == null)
                 {
                     ConsoleMessage?.Invoke($"Создаем нового пользователся с ChatID {e.Message.Chat.Id}\n");
@@ -53,21 +54,38 @@ namespace BotLibary
                 }
                 if (!currentUser.IsAdmin)
                 {
-                    if (e.Message.Text == "/start")
+                    if (e.Message.Text == "/start" || e.Message.Text == personalConfig.Buttons["ABOUT"])
                     {
-                                             
-                        await bot.SendPhotoAsync(currentUser.ChatId, new InputOnlineFile(System.IO.File.OpenRead(personalConfig.Paths["GREETING"])), caption: personalConfig.Messages["USERGREETING"]);
-                        await bot.SendTextMessageAsync(currentUser.ChatId, personalConfig.Messages["USERGREETING"], replyMarkup: KeyBoards.GetStartKeyboard(options));
-                        return;
+                        try
+                        {
+                            await bot.SendPhotoAsync(currentUser.ChatId, new InputOnlineFile(System.IO.File.OpenRead(personalConfig.Paths["GREETING"])), caption: personalConfig.Messages["USERGREETING"], replyMarkup: KeyBoards.GetStartKeyboard(options));                           
+                        }
+                        catch(Exception ex)
+                        {
+                            ConsoleMessage?.Invoke($"\n\n !!!Возникла ошибка {BotName.Name}  "+ ex.Message +"\n\n");
+                        }
+                         return;
                     }
                     if (e.Message.Text == personalConfig.Buttons["APPOINTMENT"])
                     {
+                        if (admin == null)
+                        {
+                            await bot.SendTextMessageAsync(currentUser.ChatId, "Бот пока не активирован");
+                            return;
+                        }
                         await bot.SendTextMessageAsync(currentUser.ChatId, "Для записи необходимо выбрать месяц", replyMarkup: KeyBoards.GetMonthButtons(await context.db.GetMonthsAsync(), Codes.UserChoise, currentUser));
                         return;
                     }
                     if (e.Message.Text == personalConfig.Buttons["PRICE"])
                     {
-                        await bot.SendPhotoAsync(currentUser.ChatId, new InputOnlineFile(System.IO.File.OpenRead(personalConfig.Paths["PRICE"])), replyMarkup: KeyBoards.GetStartKeyboard(options));
+                        try
+                        {
+                            await bot.SendPhotoAsync(currentUser.ChatId, new InputOnlineFile(System.IO.File.OpenRead(personalConfig.Paths["PRICE"])), replyMarkup: KeyBoards.GetStartKeyboard(options));
+                        }
+                        catch (Exception ex)
+                        {
+                            ConsoleMessage?.Invoke($"\n\n !!!Возникла ошибка {BotName.Name}  " + ex.Message + "\n\n");
+                        }
                         return;
                     }
                     if (e.Message.Text == personalConfig.Buttons["FEEDBACK"])
@@ -83,12 +101,7 @@ namespace BotLibary
                             await bot.SendPhotoAsync(currentUser.ChatId, new InputOnlineFile(System.IO.File.OpenRead(photoURL)));
                         }
                         return;
-                    }
-                    if (e.Message.Text == personalConfig.Buttons["ABOUT"])
-                    {
-                        await bot.SendTextMessageAsync(currentUser.ChatId, personalConfig.Messages["ABOUT"], replyMarkup: KeyBoards.GetStartKeyboard(options));
-                        return;
-                    }
+                    }            
                     if (e.Message.Text == personalConfig.Buttons["LOCATION"])
                     {
                         await bot.SendTextMessageAsync(currentUser.ChatId, personalConfig.Messages["LOCATION"]);
@@ -344,7 +357,8 @@ namespace BotLibary
                         if (data.Stage == CallBackData.Stage.Month)
                         {
                             List<Day> days = await context.db.FindDaysAsync(data.EntityId);
-                            await bot.SendTextMessageAsync(data.UserId, personalConfig.Messages["ADMINCHOISEDAY"], replyMarkup: KeyBoards.GetDaysButton(days, options, Codes.AdminAdd, admin));
+                            var user = await context.db.FindUserAsync(data.UserId);
+                            await bot.SendTextMessageAsync(user.ChatId, personalConfig.Messages["ADMINCHOISEDAY"], replyMarkup: KeyBoards.GetDaysButton(days, options, Codes.AdminAdd, admin));
                             return;
                         }
                         if (data.Stage == CallBackData.Stage.Day)
@@ -525,6 +539,7 @@ namespace BotLibary
         /// </summary>
         public  void  BotStart()
         {
+            ConsoleMessage?.Invoke($"Бот {BotName.Name} запущен");
             bot.StartReceiving();
             Task.Run(() => StartUpdateDays());
             Task.Run(() => StartNotificationAsync()); 
@@ -536,9 +551,6 @@ namespace BotLibary
         {
             bot.StopReceiving();
         }     
-        public string GetName()
-        {
-            return this.BotName.Name;
-        }
+       
     }
 }

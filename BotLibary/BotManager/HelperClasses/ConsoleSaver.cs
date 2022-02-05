@@ -13,6 +13,7 @@ namespace BotLibary.BotManager.HelperClasses
 {
     class ConsoleSaver : IBotSaver
     {
+
         ChangesLog log { get; set; }
         string PathToDirectory { get; set; }
         string FileSystem = "\\FileSystem";
@@ -43,25 +44,7 @@ namespace BotLibary.BotManager.HelperClasses
             }
         }
         
-        public List<Bot> FindAllBots ()
-        {
-            List<Bot> bots = new List<Bot>();
-            string[] directories = Directory.GetDirectories(PathToDirectory);
-            foreach(var path in directories)
-            {
-                BotConfig botConfig;
-                string botConfigText = File.ReadAllText(path+ "\\BotConfig.json", Encoding.UTF8);
-                botConfig = JsonConvert.DeserializeObject<BotConfig>(botConfigText);
-                PersonalConfig personalConfig;
-                string personalConfigText = File.ReadAllText(path + "\\PersonalConfig.json", Encoding.UTF8);
-                personalConfig = JsonConvert.DeserializeObject<PersonalConfig>(personalConfigText);
-                Bot newBot = new Bot(new BotOptions(botConfig, personalConfig));
-                log?.Invoke($"Найден бот {newBot.BotName.Name}");
-                bots.Add(newBot);
-            }
-            log?.Invoke($"Найденно {bots.Count}");
-            return bots;
-        }
+        
         bool FindPath(string Name, string Path)
         {
             return Directory.Exists(Path + $"{FileSystem}\\{Name}");

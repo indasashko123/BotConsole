@@ -36,9 +36,9 @@ namespace BotLibary.BotManager
             BotSaver.Update(SelectedBot);
         }
 
-        public virtual void CreateBot(BotName Name)
+        public virtual void CreateBot(BotName Name, string Token)
         {
-            BotCreater.Create(Name,  BotList);
+            BotCreater.Create(Name,  BotList, Token);
         }
 
         public virtual void SelectBot(BotName Name)
@@ -56,7 +56,7 @@ namespace BotLibary.BotManager
         }
         public void FindAllBots()
         {
-            this.BotList = BotSaver.FindAllBots();
+            this.BotList = BotFinder.FindAllBots();
         }
         public void UpdateAll()
         {
