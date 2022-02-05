@@ -11,7 +11,7 @@ namespace BotLibary.BotManager.HelperClasses
         {
             throw new System.NotImplementedException();
         }
-        public void Create(BotConfig config)
+       public void Create(BotConfig config, List<Bot> bots)
         {
             throw new System.NotImplementedException();
         }

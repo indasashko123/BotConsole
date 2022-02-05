@@ -19,7 +19,7 @@ namespace BotLibary.BotManager.HelperClasses
             this.log = log;
             this.Path = Path;
         }
-        public void Create(BotConfig config)
+        public void Create(BotConfig config, List<Bot> bots)
         {
             log?.Invoke($"Созданм на пути {Path}");
             CreateFolderSystem(Path, config.Name);

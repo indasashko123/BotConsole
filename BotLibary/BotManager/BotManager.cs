@@ -43,7 +43,7 @@ namespace BotLibary.BotManager
         }
         public virtual void CreateBot(BotConfig config)
         {
-            BotCreater.Create(config);
+            BotCreater.Create(config, BotList);
         }
         public virtual void SelectBot(BotName Name)
         {

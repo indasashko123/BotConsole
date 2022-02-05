@@ -1,4 +1,5 @@
 ﻿using BotLibary.Interfaces;
+using Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace BotLibary.BotManager.Interfaces
     interface IBotCreater
     {
         void Create(BotName Name,  List<Bot> bots, string Token, string DataBaseName);
-        public void Create(BotConfig config);
+        public void Create(BotConfig config, List<Bot> bots);
     }
 }
