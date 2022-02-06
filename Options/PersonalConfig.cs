@@ -11,6 +11,7 @@ namespace Options
         public Dictionary<string, string> Buttons { get; set; }
         public Dictionary<string, string> AdminButtons { get; set; }
         public Dictionary<string, string> Paths { get; set; }
+        public Dictionary<string, string> Options { get; set; }
         public List<string> Partfolio { get; set; }
         public float Latitude { get; set; }
         public float Longitude { get; set; }
@@ -118,7 +119,16 @@ namespace Options
                     ["ADMINAPPISCANCEL"] = "Запись отменена",
                     ["ADMINMAILING"] = "Следующее записанное сообщение будет отправленно. Может быть текст, фото, голосовое и т.д.",
                     ["NOTIFICATION"] = "У Вас записано на завтра!",
-                    ["ADMINCHOISEAPP"] = "Выбирите запись"
+                    ["ADMINCHOISEAPP"] = "Выбирите запись",
+                    [ "ADMINCONFIRM"] =  "Подтверждение",
+                    ["ADMINOPTIONS"] = "Меню настройки бота"                
+                },
+                Options = new Dictionary<string, string>()
+                {
+                    ["ADDEXAMPLE"] = "Добавить в примеры",
+                    ["DELETEEXAMPLE"] = "Удалить из примеров",
+                    ["GREETING"] = "Сменнить приветственное фото",
+                    ["PRICE"] = "Сменить прайс"
                 },
                 Buttons = new Dictionary<string, string>() {
                     ["APPOINTMENT"] = "Запись на маникюр🖍",
@@ -138,7 +148,8 @@ namespace Options
                     ["MAKEWEEKEND"] = "Сделать выходной",
                     ["LOOKCONFIRM"] = "Подтвержденные записи",
                     ["LOOKNOTCONFIRM"] = "Не подствержденные записи", 
-                    ["MAILING"] = "Отправить рассылку"
+                    ["MAILING"] = "Отправить рассылку",
+                    ["OPTIONS"] = "настройка🛠"
                 },
                 Paths = new Dictionary<string, string>() {
                     ["GREETING"] = @"\MyPhoto\Hello.jpg",

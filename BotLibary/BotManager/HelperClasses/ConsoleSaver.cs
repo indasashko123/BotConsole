@@ -11,6 +11,11 @@ using Options;
 
 namespace BotLibary.BotManager.HelperClasses
 {
+    /// <summary>
+    /// Сущность для обновления состояния бота.
+    /// Может обновить существующего бота
+    /// или обновить  всех ботов сразу
+    /// </summary>
     class ConsoleSaver : IBotSaver
     {
 
@@ -42,9 +47,7 @@ namespace BotLibary.BotManager.HelperClasses
             {
                 log?.Invoke("Бот не найден");
             }
-        }
-        
-        
+        }               
         bool FindPath(string Name, string Path)
         {
             return Directory.Exists(Path + $"{FileSystem}\\{Name}");

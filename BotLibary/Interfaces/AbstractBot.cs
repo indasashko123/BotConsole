@@ -20,6 +20,7 @@ namespace BotLibary.Interfaces
         {
 
         }
+        public IImageManager ImageManager;
         protected internal TelegramBotClient bot;
         protected internal BotOptions options;
         protected internal BotConfig botConfig;

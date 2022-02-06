@@ -23,7 +23,7 @@ namespace BotLibary
 {
     
     public class Bot : AbstractBot, IBot
-    {
+    {       
         public Bot(BotOptions options)
         {
             this.options = options;
@@ -36,12 +36,13 @@ namespace BotLibary
             bot.OnMessage += onMessage;
             bot.OnCallbackQuery += OnQuery;
             bot.Timeout = new TimeSpan(0, 10, 0);
+            ImageManager = new ImageManager();
 
             adminMessage += (async (EventArgsNotification e) => { await bot.SendTextMessageAsync(e.Admin, e.Text, replyMarkup: e?.Keyboard); });
         }
         private protected virtual async void onMessage(object sender, MessageEventArgs e)
         {
-            if (e.Message != null && (!string.IsNullOrEmpty(e.Message.Text)|| e.Message.Type != Telegram.Bot.Types.Enums.MessageType.Text))
+            if (e.Message != null && (e.Message.Type != Telegram.Bot.Types.Enums.MessageType.Text || !string.IsNullOrEmpty(e.Message.Text)))
             {
                 DataBase.Models.User admin = await context.db.FindAdminAsync();
                 DataBase.Models.User currentUser = await context.db.FindUserAsync(e.Message.Chat.Id);
@@ -167,17 +168,20 @@ namespace BotLibary
                                 admin.Status = "";
                                 await context.db.UpdateUserAsync(admin);
                                 Appointment app = await context.db.FindAppointmentAsync(appId);
-                                if (e.Message.Text == "Отмена")
+                                if (e.Message.Text.Length == 5)
+                                {
+                                    app.AppointmentTime = e.Message.Text;
+                                    await context.db.UpdateAppAsync(app);
+                                    await bot.SendTextMessageAsync(admin.ChatId, $"Добавилась запись на {app.AppointmentTime}", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
+                                    return;
+                                }
+                                else
                                 {
                                     await context.db.DeleteAppAsync(app);
                                     app = null;
                                     await bot.SendTextMessageAsync(admin.ChatId, $" запись удалена", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
                                     return;
-                                }
-                                app.AppointmentTime = e.Message.Text;
-                                await context.db.UpdateAppAsync(app);
-                                await bot.SendTextMessageAsync(admin.ChatId, $"Добавилась запись на {app.AppointmentTime}", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
-                                return;
+                                }                                  
                             }
                             else
                             {
@@ -193,7 +197,16 @@ namespace BotLibary
                             await bot.SendTextMessageAsync(admin.ChatId, "Отправить это сообщение всем пользователям?", replyMarkup: KeyBoards.GetConfirmKeyboard(0, options, Codes.AdminMailingConfirm, 0));
                             return;
                         }
-                    }              
+                        if (admin.Status.Split('/')[0] == "AddExample" && e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Photo)
+                        {
+                            admin.Status = "";
+                            await context.db.UpdateUserAsync(admin);
+                            string fileId = e.Message.Photo[e.Message.Photo.Length - 1].FileId;            
+                            ImageManager.AddWorkExample?.Invoke(new EventArgsUpdate(this, e.Message.Photo[e.Message.Photo.Length-1].FileId));
+                            
+
+                        }
+                    }                     
                     if (e.Message.Text == "/start")
                     {
                         await bot.SendTextMessageAsync(currentUser.ChatId, personalConfig.Messages["ADMINGREETING"], replyMarkup: KeyBoards.GetKeyboardAdmin(options));
@@ -262,12 +275,32 @@ namespace BotLibary
                         }
                         return;
                     }
+                    if (e.Message.Text == personalConfig.AdminButtons["OPTIONS"])
+                    {
+                        await bot.SendTextMessageAsync(admin.ChatId, personalConfig.Messages["ADMINOPTIONS"], replyMarkup: KeyBoards.GetOptionsKeyboard(options));
+                        return;
+                    }
                     if (e.Message.Text == personalConfig.AdminButtons["MAILING"])
                     {
                         admin.Status = "Mailing";
                         await context.db.UpdateUserAsync(admin);
                         await bot.SendTextMessageAsync(admin.ChatId, personalConfig.Messages["ADMINMAILING"]);
+                        return;
                     }
+
+                    // Настройки
+                    if (e.Message.Text == personalConfig.AdminButtons["ADDEXAMPLE"])
+                    {
+                        admin.Status = "AddExample";
+                        await context.db.UpdateUserAsync(admin);
+                        await bot.SendTextMessageAsync(admin.ChatId, $"Отправте следующим сообщением фото, которое нужно добавить в портфолио");
+                    }
+                    if (e.Message.Text == personalConfig.AdminButtons["DELETEEXAMPLE"])
+                    if (e.Message.Text == personalConfig.AdminButtons["GREETING"])
+                    if (e.Message.Text == personalConfig.AdminButtons["PRICE"])
+
+                    await bot.SendTextMessageAsync(admin.ChatId, "Неизвестная команда");
+                    return;
                 }
             }
         }

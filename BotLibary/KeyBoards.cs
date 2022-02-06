@@ -19,9 +19,9 @@ namespace BotLibary
             {
                 Keyboard = new List<List<KeyboardButton>>
                 {
-                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["DELAPP"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["ALLUSERS"] } },
+                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"]  }, new KeyboardButton { Text = options.personalConfig.AdminButtons["DELAPP"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["ALLUSERS"] } },
                     new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["MAKEWEEKEND"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKCONFIRM"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKNOTCONFIRM"] } },
-                    new List<KeyboardButton> {new KeyboardButton { Text = options.personalConfig.AdminButtons["MAILING"] } }
+                    new List<KeyboardButton> {new KeyboardButton { Text = options.personalConfig.AdminButtons["MAILING"] }, new KeyboardButton {Text = options.personalConfig.AdminButtons["OPTIONS"] } }
                 },
                 ResizeKeyboard = true
             };
@@ -224,6 +224,18 @@ namespace BotLibary
         internal static IReplyMarkup GetCanccelButton(int appointmentId, BotOptions options, string code, int userId)
         {
             return new InlineKeyboardMarkup(InlineKeyboardButton.WithCallbackData("Отменить", $"{code}/Y/{appointmentId}/{ userId}"));
+        }
+        internal static IReplyMarkup GetOptionsKeyboard(BotOptions options)
+        {
+            return new ReplyKeyboardMarkup
+            {
+                Keyboard = new List<List<KeyboardButton>>()
+            {
+                new List<KeyboardButton> { new KeyboardButton() {Text = options.personalConfig.Options["ADDEXAMPLE"] }, new KeyboardButton() { Text = options.personalConfig.Options["DELETEEXAMPLE"] } },
+                new List<KeyboardButton> { new KeyboardButton() {Text = options.personalConfig.Options["GREETING"] }, new KeyboardButton() { Text = options.personalConfig.Options["PRICE"] } },
+            },
+                ResizeKeyboard = true
+            };     
         }
     }
 }
