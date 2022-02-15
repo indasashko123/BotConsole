@@ -34,11 +34,7 @@ namespace TestConsole
                     Console.ReadLine();
                 }
                 if (comm == "T3")
-                {                 
-                    BotManager.CreateBot(new BotName("Test", "TestName", "Nails"));
-                    BotManager.SelectBot(new BotName("Test"));
-                    BotManager.ShowCurrent();
-                    BotManager.BotStart();
+                { 
                 }
                 if (comm == "T4")
                 {

@@ -9,7 +9,9 @@ namespace BotConsole
     {
         static void Main(string[] args)
         {
-            ConsoleBotManager manager = new ConsoleBotManager(@"D:\BotManager");
+            Console.WriteLine("Путь  - \n");
+
+            ConsoleBotManager manager = new ConsoleBotManager(Console.ReadLine());
             BotConfig botConfig = new BotConfig();
 
             manager.FindAllBots();
