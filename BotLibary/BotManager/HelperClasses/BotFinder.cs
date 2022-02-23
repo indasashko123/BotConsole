@@ -1,31 +1,28 @@
 ﻿using BotLibary.BotManager.Interfaces;
-using BotLibary.Events;
-using BotLibary.Interfaces;
+using BotLibary.Bots;
+using BotLibary.Bots.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.HelperClasses
 {
     class BotFinder : IBotFinder
     {
-        public Bot FindByName(BotName Name, List<Bot> bots)
+        public IBot FindByName(BotName Name, List<IBot> bots)
         {
             throw new NotImplementedException();
         }
 
-        public void ShowBots(List<Bot> bots)
+        public void ShowBots(List<IBot> bots)
         {
             throw new NotImplementedException();
         }
 
-        public void ShowCurrent(Bot currentBot)
+        public void ShowCurrent(IBot currentBot)
         {
             throw new NotImplementedException();
         }
-        public List<Bot> FindAllBots()
+        public List<IBot> FindAllBots()
         {
             throw new NotImplementedException();
         }

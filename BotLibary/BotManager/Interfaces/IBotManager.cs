@@ -1,7 +1,5 @@
-﻿using BotLibary.Events;
-using BotLibary.Interfaces;
+﻿using BotLibary.Bots;
 using Options;
-using System.Collections.Generic;
 
 namespace BotLibary.BotManager.Interfaces
 {

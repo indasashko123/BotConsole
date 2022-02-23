@@ -1,8 +1,10 @@
 ﻿using BotLibary.BotManager.Interfaces;
-using BotLibary.Events;
+using BotLibary.Bots;
+using BotLibary.Bots.Events;
+using BotLibary.Bots.Interfaces;
+using BotLibary.Bots.Masters;
 using Newtonsoft.Json;
 using Options;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -19,21 +21,29 @@ namespace BotLibary.BotManager.HelperClasses
             this.log = log;
             this.Path = Path;
         }
-        public void Create(BotConfig config, List<Bot> bots)
+        public void Create(BotConfig config, List<IBot> bots)
         {
-            log?.Invoke($"Созданм на пути {Path}");
+            log?.Invoke($"Создан на пути {Path}");
             CreateFolderSystem(Path, config.Name);
-            BotOptions options = new BotOptions(config, CreatePersonalConfig(Path));
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyPhoto", "\\Hello.jpg");
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyPhoto", "\\Price.jpg");
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyWorks", "\\0.jpg");
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyWorks", "\\1.jpg");
-            SerializeOptions(options);
-            Bot newBot = new Bot(options);
+            BotOptions options;
+            switch (config.Direction)
+            {
+                case "Nails":
+                    {
+                        options = CreateMasterBot(config);
+                        break;
+                    }
+                default:
+                    {
+                        options = null;
+                        break;
+                    }
+            }           
+            var newBot = BotDestinationCreater.Create(options);
             bots.Add(newBot);
-            log?.Invoke($"Создан бот {newBot.BotName.Name}");
+            log?.Invoke($"Создан бот {newBot.GetName()}");
         }
-        public void Create(BotName Name,  List<Bot> bots, string Token, string DataBaseName)
+        public void Create(BotName Name,  List<IBot> bots, string Token, string DataBaseName)
         {
             log?.Invoke($"Созданм на пути {Path}");
             CreateFolderSystem(Path, Name.Name);                       
@@ -43,7 +53,8 @@ namespace BotLibary.BotManager.HelperClasses
             AddPhotos(Path, Path + $"\\{FileSystem}\\{Name.Name}\\MyWorks", "\\0.jpg");
             AddPhotos(Path, Path + $"\\{FileSystem}\\{Name.Name}\\MyWorks", "\\1.jpg");
             SerializeOptions(options);
-            Bot newBot = new Bot(options);            
+            var newBot = new MasterBot(options);         
+            // TODO: I was stop here!
             bots.Add(newBot);
             log?.Invoke($"Создан бот {newBot.BotName.Name}");
         }
@@ -77,8 +88,7 @@ namespace BotLibary.BotManager.HelperClasses
             botConfig.Direction = name.Direction;
             botConfig.token = Token;
             botConfig.dataBaseName = DataBaseName;
-            BotOptions options = new BotOptions(botConfig, personalConfig);
-               
+            BotOptions options = new BotOptions(botConfig, personalConfig);              
             return options;
         }
         PersonalConfig CreatePersonalConfig(string Path)
@@ -103,6 +113,15 @@ namespace BotLibary.BotManager.HelperClasses
             }           
         }
 
-        
+        BotOptions CreateMasterBot(BotConfig config)
+        {
+            BotOptions options = new BotOptions(config, CreatePersonalConfig(Path));
+            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyPhoto", "\\Hello.jpg");
+            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyPhoto", "\\Price.jpg");
+            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyWorks", "\\0.jpg");
+            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyWorks", "\\1.jpg");
+            SerializeOptions(options);
+            return options;
+        }
     }
 }

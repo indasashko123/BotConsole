@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotLibary.CallBackData
+namespace BotLibary.Bots.CallBackData
 {
-    internal class CallBackData
+    internal class CallBackDataMasters
     {
-        internal static CallBackData GetData(string data)
+        internal static CallBackDataMasters GetData(string data)
         {
-            return new CallBackData(data);
+            return new CallBackDataMasters(data);
         }
-        internal static async Task<CallBackData> GetDataAsync(string data)
+        internal static async Task<CallBackDataMasters> GetDataAsync(string data)
         {
             return await Task.Run(() => GetData(data));
         }
-        internal CallBackData(string data)
+        internal CallBackDataMasters(string data)
         {
             if (data == "404")
             {

@@ -1,5 +1,6 @@
 ﻿using BotLibary.BotManager.Interfaces;
-using BotLibary.Events;
+using BotLibary.Bots.Events;
+using BotLibary.Bots.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,12 +24,12 @@ namespace BotLibary.BotManager.HelperClasses
 
         public async void AddExample(EventArgsUpdate e)
         {
-            string fileName =await CheckValidExampleNameAsync(e.bot.personalConfig.Partfolio, e.bot.BotName.Name);
-            var file = await e.bot.bot.GetFileAsync(e.fileId);
-            string fullPath = $"{Path}+{FileSystem}\\{e.bot.BotName.Name}\\MyWorks\\{fileName}";
+            string fileName =await CheckValidExampleNameAsync(e.bot.GetOptions().personalConfig.Partfolio, e.bot.GetName().Name);
+            var file = await e.bot.GetFileAsync(e.fileId);
+            string fullPath = $"{Path}+{FileSystem}\\{e.bot.GetName().Name}\\MyWorks\\{fileName}";
             using (FileStream stream = new FileStream(fullPath, FileMode.Create))
             {
-                await e.bot.bot.DownloadFileAsync(file.FilePath, stream);
+                await e.bot.DownLoadFileAsync(file.FilePath, stream);
             }
             SerializePersonalConfig(fullPath,e.bot);
         }
@@ -61,16 +62,16 @@ namespace BotLibary.BotManager.HelperClasses
         {
             return await Task.Run(() => CheckValidExampleName(paths, botName) );            
         }
-        void SerializePersonalConfig(string fullPath, Bot bot)
+        void SerializePersonalConfig(string fullPath, IBot bot)
         {
-            bot.personalConfig.Partfolio.Add(fullPath);
-            using (StreamWriter configFile = File.CreateText($"{Path}{FileSystem}\\{bot.BotName.Name}" + "\\PersonalConfig.json"))
+            bot.GetOptions().personalConfig.Partfolio.Add(fullPath);
+            using (StreamWriter configFile = File.CreateText($"{Path}{FileSystem}\\{bot.GetName().Name}" + "\\PersonalConfig.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(configFile, bot.personalConfig);
+                serializer.Serialize(configFile, bot.GetOptions().personalConfig);
             }
         }
-        async Task SerializePersonalConfigAsync(string fullPath, Bot bot)
+        async Task SerializePersonalConfigAsync(string fullPath, IBot bot)
         {
             await Task.Run(() => SerializePersonalConfig(fullPath,bot));
         }

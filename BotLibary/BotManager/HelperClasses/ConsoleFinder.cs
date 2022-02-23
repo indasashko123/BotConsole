@@ -1,5 +1,8 @@
 ﻿using BotLibary.BotManager.Interfaces;
-using BotLibary.Events;
+using BotLibary.Bots;
+using BotLibary.Bots.Events;
+using BotLibary.Bots.Interfaces;
+using BotLibary.Bots.Masters;
 using Newtonsoft.Json;
 using Options;
 using System;
@@ -21,43 +24,43 @@ namespace BotLibary.BotManager.HelperClasses
             PathToDirectory = path;
             this.log = log;
         }
-        public Bot FindByName(BotName Name, List<Bot> bots)
+        public IBot FindByName(BotName Name, List<IBot> bots)
         {           
-            Bot bot =  bots.Where(bot => bot.BotName.Name == Name.Name).FirstOrDefault();
+            var bot =  bots.Where(bot => bot.GetName().Name == Name.Name).FirstOrDefault();
             if (bot == null)
             {
                 log?.Invoke("Бот не найден");
             }
             else
             {
-                log?.Invoke($"Выбран бот {bot.BotName.CustomerName}");
-                bot.ConsoleMessage += ((string text) => { log?.Invoke(text); });
-                bot.ConsoleMessage?.Invoke("\n\n   Боту незначен log");               
+                log?.Invoke($"Выбран бот {bot.GetName().CustomerName}");
+                bot.Log += ((string text) => { log?.Invoke(text); });
+                bot.Log?.Invoke("\n\n   Боту незначен log");               
             }
             return bot;
         }
 
-        public void ShowBots(List<Bot> bots)
+        public void ShowBots(List<IBot> bots)
         {
-            foreach (Bot bot in bots)
+            foreach (var bot in bots)
             {
-                string answer = $" bot name is {bot.BotName.Name}, customer is {bot.BotName.CustomerName}, direction is  {bot.BotName.Direction}\n";
+                string answer = $"{bot.GetName()}\n";
                 log?.Invoke(answer);
             }
         }
-        public void ShowCurrent(Bot bot)
+        public void ShowCurrent(IBot bot)
         {
             if (bot == null)
             {
                 log?.Invoke("Бот не выбран");
                 return;
             }
-            string answer = $" bot name is{bot.BotName.Name}, customer is {bot.BotName.CustomerName}, direction is  {bot.BotName.Direction}\n";
+            string answer = $" {bot.GetName()}\n";
             log?.Invoke(answer);
         }
-        public List<Bot> FindAllBots()
+        public List<IBot> FindAllBots()
         {
-            List<Bot> bots = new List<Bot>();
+            List<IBot> bots = new List<IBot>();
             string[] directories = Directory.GetDirectories(PathToDirectory + FileSystem);
             if (directories == null || directories.Length == 0)
             {
@@ -72,7 +75,8 @@ namespace BotLibary.BotManager.HelperClasses
                 PersonalConfig personalConfig;
                 string personalConfigText = File.ReadAllText(path + $"\\PersonalConfig.json", Encoding.UTF8);
                 personalConfig = JsonConvert.DeserializeObject<PersonalConfig>(personalConfigText);
-                Bot newBot = new Bot(new BotOptions(botConfig, personalConfig));
+                // TODO: make deffirent bots
+                var newBot = new MasterBot(new BotOptions(botConfig, personalConfig));
                 log?.Invoke($"Найден бот {newBot.BotName.Name}");
                 bots.Add(newBot);
             }

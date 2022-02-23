@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotLibary.Events
+namespace BotLibary.Bots.Events
 {
     public delegate void UpdateEvent(EventArgsUpdate args);
 }

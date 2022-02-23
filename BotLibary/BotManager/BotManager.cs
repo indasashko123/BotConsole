@@ -1,7 +1,6 @@
 ﻿using BotLibary.BotManager.HelperClasses;
 using BotLibary.BotManager.Interfaces;
-using BotLibary.Events;
-using BotLibary.Interfaces;
+using BotLibary.Bots;
 using Options;
 using System;
 using System.Collections.Generic;

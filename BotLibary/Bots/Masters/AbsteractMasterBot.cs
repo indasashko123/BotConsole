@@ -1,37 +1,19 @@
-﻿using BotLibary.Events;
-using DataBase.Database;
-using DataBase.Database.Context.MySQL;
+﻿using BotLibary.BotManager.Interfaces;
+using BotLibary.Bots.Interfaces;
 using DataBase.Models;
-using Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Telegram.Bot;
-using Telegram.Bot.Types;
 
-namespace BotLibary.Interfaces
+namespace BotLibary.Bots.Masters
 {
-    public abstract class AbstractBot
+    public class AbstractMasterBot : AbstractBot
     {
-        public AbstractBot()
-        {
-
-        }
         public IImageManager ImageManager;
-        protected internal TelegramBotClient bot;
-        protected internal BotOptions options;
-        protected internal BotConfig botConfig;
-        protected internal PersonalConfig personalConfig;
-        protected internal Message lastMessage;
         protected internal DateFunction dateFunction;
-        protected internal DataBaseConnector context;
-        protected internal BotName BotName {get;set;}
-        public ChangesLog ConsoleMessage { get; set; }
-        public AdminMessage adminMessage { get; set; }
-
 
         protected virtual async void StartUpdateDays()
         {
@@ -40,11 +22,11 @@ namespace BotLibary.Interfaces
             {
                 if (await context.db.FindAdminAsync() != null)
                 {
-                    await Task.Run(() => { Thread.Sleep(85000000); });                    
+                    await Task.Run(() => { Thread.Sleep(85000000); });
                     ConsoleMessage?.Invoke($"Проверка обновлений у бота {BotName.Name}\n");
                     await CheckUpdateAsync();
                 }
-                
+
             }
         }
         protected virtual async Task CheckUpdateAsync()
@@ -102,7 +84,7 @@ namespace BotLibary.Interfaces
                 {
                     Thread.Sleep(30000000);
                     ConsoleMessage?.Invoke($"Проверка необходимости отправки уведомлений у бота {BotName.Name}\n");
-                });               
+                });
                 await CheckNotificationAsync();
 
             }
@@ -131,6 +113,6 @@ namespace BotLibary.Interfaces
         protected async Task CheckNotificationAsync()
         {
             await Task.Run(() => CheckNotification());
-        }       
+        }
     }
 }

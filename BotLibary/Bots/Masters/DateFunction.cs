@@ -4,13 +4,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataBase.Models;
 
-namespace BotLibary
+namespace BotLibary.Bots.Masters
 {
     public  class DateFunction
-    {
-        /// <summary>
-        /// Текущий день в календаре
-        /// </summary>
+    {      
         internal Dictionary<int, string> MonthNames { get; set; }
         internal Dictionary<int, string> DayNames { get; set; }
         internal int CurrentDay { get; set; }

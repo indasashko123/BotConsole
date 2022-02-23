@@ -1,17 +1,12 @@
-﻿using BotLibary.Events;
-using System;
+﻿using BotLibary.Bots.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.Interfaces
 {
     interface IBotSaver
     {
-        void Update(Bot SelectedBot);
-
-        void UpdateAll(List<Bot> bots);
+        void Update(IBot SelectedBot);
+        void UpdateAll(List<IBot> bots);
         //TODO: Serializate config
     }
 }

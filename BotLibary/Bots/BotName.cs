@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BotLibary
+﻿
+namespace BotLibary.Bots
 {
     public class BotName
     {
@@ -20,6 +15,10 @@ namespace BotLibary
         public BotName(string name)
         {
             Name = name;
+        }
+        public override string ToString()
+        {
+            return $"Имя бота - {Name}, Имя пользователя - {CustomerName}, Направление бота - {Direction}";
         }
     }
 }

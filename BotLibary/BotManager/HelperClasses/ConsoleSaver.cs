@@ -1,5 +1,4 @@
 ﻿using BotLibary.BotManager.Interfaces;
-using BotLibary.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +7,8 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using Options;
+using BotLibary.Bots.Events;
+using BotLibary.Bots.Interfaces;
 
 namespace BotLibary.BotManager.HelperClasses
 {
@@ -27,21 +28,21 @@ namespace BotLibary.BotManager.HelperClasses
             this.log = log;
             this.PathToDirectory = path;
         }            
-        public void Update(Bot SelectedBot)
+        public void Update(IBot SelectedBot)
         {
-            if (FindPath(SelectedBot.BotName.Name, PathToDirectory))
+            if (FindPath(SelectedBot.GetName().Name, PathToDirectory))
             {
-                using (StreamWriter file = File.CreateText(PathToDirectory + $"{FileSystem}\\{SelectedBot.BotName.Name}\\BotConfig.json"))
+                using (StreamWriter file = File.CreateText(PathToDirectory + $"{FileSystem}\\{SelectedBot.GetName().Name}\\BotConfig.json"))
                 {
                     JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, SelectedBot.botConfig);
+                    serializer.Serialize(file, SelectedBot.GetOptions().botConfig);
                 }
-                using (StreamWriter file = File.CreateText(PathToDirectory + $"{FileSystem}\\{SelectedBot.BotName.Name}\\PersonalConfig.json"))
+                using (StreamWriter file = File.CreateText(PathToDirectory + $"{FileSystem}\\{SelectedBot.GetName().Name}\\PersonalConfig.json"))
                 {
                     JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, SelectedBot.personalConfig);
+                    serializer.Serialize(file, SelectedBot.GetOptions().personalConfig);
                 }
-                log?.Invoke($"Бот {SelectedBot.BotName.Name} обновлен");
+                log?.Invoke($"Бот {SelectedBot.GetName().Name} обновлен");
             }
             else
             {
@@ -53,9 +54,9 @@ namespace BotLibary.BotManager.HelperClasses
             return Directory.Exists(Path + $"{FileSystem}\\{Name}");
         }
 
-        public void UpdateAll(List<Bot> bots)
+        public void UpdateAll(List<IBot> bots)
         {
-            foreach (Bot bot in bots)
+            foreach (var bot in bots)
             {
                 Update(bot);
             }

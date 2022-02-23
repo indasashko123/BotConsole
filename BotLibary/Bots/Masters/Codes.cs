@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotLibary
+namespace BotLibary.Bots.Masters
 {
     internal static class Codes
     {

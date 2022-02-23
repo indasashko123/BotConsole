@@ -1,12 +1,9 @@
-﻿using BotLibary.Events;
-using BotLibary.Interfaces;
+﻿using BotLibary.BotManager.Interfaces;
+using BotLibary.Bots.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BotLibary
+
+namespace BotLibary.Bots.Masters
 {
     public class ImageManager : IImageManager
     {

@@ -1,7 +1,7 @@
 ﻿using BotLibary.BotManager;
 using System;
-using BotLibary;
 using Options;
+using BotLibary.Bots;
 
 namespace BotConsole
 {

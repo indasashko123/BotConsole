@@ -1,18 +1,14 @@
-﻿using BotLibary.Events;
-using BotLibary.Interfaces;
-using System;
+﻿using BotLibary.Bots;
+using BotLibary.Bots.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.Interfaces
 {
     interface IBotFinder
     {
-        Bot FindByName(BotName Name,List<Bot> bots);
-        void ShowBots(List<Bot> bots);
-        void ShowCurrent(Bot currentBot);
-        List<Bot> FindAllBots();
+        IBot FindByName(BotName Name,List<IBot> bots);
+        void ShowBots(List<IBot> bots);
+        void ShowCurrent(IBot currentBot);
+        List<IBot> FindAllBots();
     }
 }
