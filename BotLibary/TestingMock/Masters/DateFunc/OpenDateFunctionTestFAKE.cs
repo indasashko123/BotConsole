@@ -1,11 +1,7 @@
-﻿using DataBase.Models;
+﻿using BotLibary.Bots.Masters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BotLibary.TestingMock
+namespace BotLibary.TestingMock.Masters.DateFunc
 {
     internal class OpenDateFunctionTestFAKE : DateFunction
     {

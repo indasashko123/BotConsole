@@ -1,11 +1,8 @@
 ﻿using DataBase.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace DataBase.Database.Interface
+namespace DataBase.Masters.Database.Interface
 {
     public interface ICRUD
     {

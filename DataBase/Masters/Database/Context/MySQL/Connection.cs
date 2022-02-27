@@ -1,17 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using MySqlConnector.Authentication;
-using MySqlConnector.Logging;
-using MySqlConnector;
 using DataBase.Models;
 using System.IO;
 using Newtonsoft.Json;
+using DataBase.Config;
 
-namespace DataBase.Database.Context.MySQL
+namespace DataBase.Masters.Database.Context.MySQL
 {
     class Connection : DbContext
     {
