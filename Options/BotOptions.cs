@@ -1,12 +1,11 @@
-﻿using System;
-
+﻿
 namespace Options
 {
-    public class BotOptions
+    public class BotOptions<T,PT>
     {
-        public BotConfig botConfig { get; set; }
-        public PersonalConfig personalConfig { get; set; }
-        public BotOptions (BotConfig bot, PersonalConfig pers)
+        public T botConfig { get; set; }
+        public PT personalConfig { get; set; }
+        public BotOptions (T bot, PT pers)
         {
             botConfig = bot;
             personalConfig = pers;

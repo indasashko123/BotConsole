@@ -5,6 +5,7 @@ using BotLibary.Bots.Interfaces;
 using BotLibary.Bots.Masters;
 using Newtonsoft.Json;
 using Options;
+using Options.MasterBotConfig;
 using System.Collections.Generic;
 using System.IO;
 
@@ -14,59 +15,47 @@ namespace BotLibary.BotManager.HelperClasses
     {
         string Path { get; set; }
         string FileSystem = "\\FileSystem";
-        ChangesLog log { get; set; }
-        
+        ChangesLog log { get; set; }        
         public ConsoleCreator(ChangesLog log, string Path)
         {
             this.log = log;
             this.Path = Path;
         }
-        public void Create(BotConfig config, List<IBot> bots)
+        public void Create(string Data, List<IBot> bots)
         {
             log?.Invoke($"Создан на пути {Path}");
-            CreateFolderSystem(Path, config.Name);
-            BotOptions options;
-            switch (config.Direction)
+            string[] ConsoleData = Data.Split(' ');
+            BotConfig botConfig = null;
+            if (ConsoleData.Length >= 6)
+            {
+                botConfig = new BotConfig(ConsoleData[3], ConsoleData[5], ConsoleData[4], ConsoleData[0], ConsoleData[1], ConsoleData[2]);
+            }                
+            IBot newBot;
+            switch (botConfig.Direction)
             {
                 case "Nails":
                     {
-                        options = CreateMasterBot(config);
-                        break;
+                    CreateMasterFolderSystem(botConfig.Name, botConfig.Direction);
+                    PersonalMasterBotConfig personalConfig = new PersonalMasterBotConfig().CreateMasterBotTemplate();
+                    MasterBotConfig masterBotConfig = new MasterBotConfig(ConsoleData[6], botConfig);
+                    var options = new BotOptions<MasterBotConfig, PersonalMasterBotConfig>(masterBotConfig, personalConfig);
+                    CreateMasterBotPersonalConfig(personalConfig);
+                    CreateMasterBotPhotos(options.botConfig);
+                    SerializeOptions<MasterBotConfig,PersonalMasterBotConfig>(options);
+                    newBot = BotDestinationCreater.Create(options, options.botConfig.Direction);                                        
+                    break;
                     }
                 default:
                     {
-                        options = null;
+                        newBot = null;
                         break;
                     }
-            }           
-            var newBot = BotDestinationCreater.Create(options);
+            }
             bots.Add(newBot);
-            log?.Invoke($"Создан бот {newBot.GetName()}");
-        }
-        public void Create(BotName Name,  List<IBot> bots, string Token, string DataBaseName)
-        {
-            log?.Invoke($"Созданм на пути {Path}");
-            CreateFolderSystem(Path, Name.Name);                       
-            BotOptions options = CreateBotOptions(Path + $"{FileSystem}\\{Name.Name}", Name, Token, DataBaseName);
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{Name.Name}\\MyPhoto", "\\Hello.jpg");
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{Name.Name}\\MyPhoto", "\\Price.jpg");
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{Name.Name}\\MyWorks", "\\0.jpg");
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{Name.Name}\\MyWorks", "\\1.jpg");
-            SerializeOptions(options);
-            var newBot = new MasterBot(options);         
-            // TODO: I was stop here!
-            bots.Add(newBot);
-            log?.Invoke($"Создан бот {newBot.BotName.Name}");
-        }
+            log?.Invoke(newBot == null?$"Создан бот {newBot.GetName()}": "Бот не создан");
+        }      
        
-        void CreateFolderSystem(string Path, string name)
-        {
-            Directory.CreateDirectory(Path + FileSystem);
-            Directory.CreateDirectory(Path + $"{FileSystem}\\{name}");
-            Directory.CreateDirectory(Path + $"{FileSystem}\\{name}\\MyPhoto");
-            Directory.CreateDirectory(Path + $"{FileSystem}\\{name}\\MyWorks");
-        }
-        void SerializeOptions (BotOptions options)
+        void SerializeOptions<T,K>(BotOptions<T,K> options)
         {
             using (StreamWriter file = File.CreateText(Path + "\\BotConfig.json"))
             {
@@ -79,49 +68,56 @@ namespace BotLibary.BotManager.HelperClasses
                 serializer.Serialize(file, options.personalConfig);
             }
         }
-        BotOptions CreateBotOptions(string Path, BotName name, string Token, string DataBaseName)
+
+
+
+
+
+        #region Methods for masterBot's photos 
+        void CreateMasterFolderSystem(string name, string direction)
         {
-            BotConfig botConfig = new BotConfig().CreatTemplate();
-            PersonalConfig personalConfig = CreatePersonalConfig(Path);
-            botConfig.Name = name.Name;
-            botConfig.CustomerName = name.CustomerName;
-            botConfig.Direction = name.Direction;
-            botConfig.token = Token;
-            botConfig.dataBaseName = DataBaseName;
-            BotOptions options = new BotOptions(botConfig, personalConfig);              
-            return options;
+            Directory.CreateDirectory(Path + FileSystem);
+            Directory.CreateDirectory(Path + $"{FileSystem}\\{name}");
+            Directory.CreateDirectory(Path + $"{FileSystem}\\{name}\\MyPhoto");
+            Directory.CreateDirectory(Path + $"{FileSystem}\\{name}\\MyWorks");
+            File.Create(Path + FileSystem + $"\\{name}" + "\\Dir.txt");
+            File.WriteAllText(Path + FileSystem + $"\\{name}" + "\\Dir.txt", direction);
         }
-        PersonalConfig CreatePersonalConfig(string Path)
-        {
-            PersonalConfig personalConfig = new PersonalConfig().CreateTemplate();
+        void CreateMasterBotPersonalConfig(PersonalMasterBotConfig personalConfig)
+        {           
             personalConfig.Paths["GREETING"] = Path + personalConfig.Paths["GREETING"];
             personalConfig.Paths["PRICE"] = Path + personalConfig.Paths["PRICE"];
             personalConfig.Partfolio[0] = Path + @"\MyWorks\" + "0.jpg";
             personalConfig.Partfolio[1] = Path + @"\MyWorks\" + "1.jpg";
-            return personalConfig;
         }
-        void AddPhotos(string path, string newPath, string fileName)
+        void CreateMasterBotPhotos(BotConfig config)
         {
-            string pathTemplate =path + $"\\Template\\{fileName}";
+            AddPhotos(Path + $"\\{FileSystem}\\{config.Name}\\MyPhoto", "\\Hello.jpg");
+            AddPhotos(Path + $"\\{FileSystem}\\{config.Name}\\MyPhoto", "\\Price.jpg");
+            AddPhotos(Path + $"\\{FileSystem}\\{config.Name}\\MyWorks", "\\0.jpg");
+            AddPhotos(Path + $"\\{FileSystem}\\{config.Name}\\MyWorks", "\\1.jpg");
+        }        
+        /// <summary>
+        /// Add Photos from templates on the disk
+        /// </summary>
+        /// <param name="newPath">путь куда будут копироваться фото</param>
+        /// <param name="fileName">Имя файла который будет копирован</param>
+        void AddPhotos(string newPath, string fileName)
+        {
+            string pathTemplate =Path + $"\\Template\\{fileName}";
             log?.Invoke("Путь к шаблону -  " + pathTemplate + "\n Путь к новому файлу -" +
                 $"{newPath+fileName}");
-
             FileInfo fileInf = new FileInfo(pathTemplate);
             if (fileInf.Exists)
             {
                 fileInf.CopyTo(newPath+fileName, true);
-            }           
+            } 
+            else
+            {
+                log?.Invoke("Ошибка при копировании фото из шаблона\n");
+            }
         }
+        #endregion
 
-        BotOptions CreateMasterBot(BotConfig config)
-        {
-            BotOptions options = new BotOptions(config, CreatePersonalConfig(Path));
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyPhoto", "\\Hello.jpg");
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyPhoto", "\\Price.jpg");
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyWorks", "\\0.jpg");
-            AddPhotos(Path, Path + $"\\{FileSystem}\\{config.Name}\\MyWorks", "\\1.jpg");
-            SerializeOptions(options);
-            return options;
-        }
     }
 }

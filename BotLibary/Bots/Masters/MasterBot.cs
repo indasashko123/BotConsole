@@ -11,26 +11,26 @@ using Telegram.Bot.Types.InputFiles;
 using BotLibary.Bots.Interfaces;
 using BotLibary.Bots.Events;
 using BotLibary.Bots.Masters.Keyboards;
-using BotLibary.Bots.CallBackData;
+using BotLibary.Bots.Masters.CallBackData;
 using System.IO;
+using Options.MasterBotConfig;
 
 namespace BotLibary.Bots.Masters
 {
     
     public class MasterBot : AbstractMasterBot, IBot
     {
-        public ChangesLog Log { get; set; }
-        public AdminMessage AdminLog { get; set; }
+        
 
-        public MasterBot(BotOptions options)
+        public MasterBot(BotOptions<MasterBotConfig, PersonalMasterBotConfig> options)
         {
             this.options = options;
             botConfig = options.botConfig;
             personalConfig = options.personalConfig;
             this.BotName = new BotName(botConfig.Name, botConfig.CustomerName, botConfig.Direction);
             dateFunction = new DateFunction();
-            context = new DataBaseConnector(new SQLContext(botConfig.dataBaseName));
-            this.bot = new TelegramBotClient(botConfig.token);
+            context = new DataBaseConnector(new SQLContext(botConfig.DataBaseName));
+            this.bot = new TelegramBotClient(botConfig.Token);
             bot.OnMessage += onMessage;
             bot.OnCallbackQuery += OnQuery;
             bot.Timeout = new TimeSpan(0, 10, 0);
@@ -118,7 +118,7 @@ namespace BotLibary.Bots.Masters
                         await bot.SendTextMessageAsync(currentUser.ChatId, "👇", replyMarkup: UserKeyboard.GetLinkButtons(options));
                         return;
                     }
-                    if (e.Message.Text == "/reg" + botConfig.password && admin == null)
+                    if (e.Message.Text == "/reg" + botConfig.Password && admin == null)
                     {
                         await dateFunction.CreateMonthsAsync();
                         await context.db.AddMonthAsync(dateFunction.CurrentMonth);
@@ -586,10 +586,6 @@ namespace BotLibary.Bots.Masters
         {
             return this.BotName;
         }        
-        public BotOptions GetOptions()
-        {
-            return this.options;
-        }
         public async Task<Telegram.Bot.Types.File> GetFileAsync(string field)
         {
             return await bot.GetFileAsync(field);

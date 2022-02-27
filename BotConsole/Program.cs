@@ -12,13 +12,13 @@ namespace BotConsole
             Console.WriteLine("Путь  - \n");
 
             ConsoleBotManager manager = new ConsoleBotManager(Console.ReadLine());
-            BotConfig botConfig = new BotConfig();
+            BotConfig botConfig = null;
 
             manager.FindAllBots();
             Console.WriteLine("Ввод команды\n" +
-                   "config + name customerName + direct + token + dbName + password +Times('|')\n"+
-                   "new + name + customer name + direct + token + dbName\n" +
-                   "select\n" +
+                   "config + name + customerName + direct + token + dbName + password +Times('|')\n"+
+                   "new \n" +
+                   "select + name\n" +
                    "update\n" +
                    "showall\n" +
                    "start\n" +
@@ -41,32 +41,27 @@ namespace BotConsole
                             Name = command[1],
                             CustomerName = command[2],
                             Direction = command[3],
-                            token = command[4],
-                            dataBaseName = command[5],
-                            password = command[6]
+                            Token = command[4],
+                            DataBaseName = command[5],
+                            Password = command[6]
                         };
                         foreach (var time in command[7].Split('|'))
                         {
                             botConfig.appointmentStandartTimes.Add(time);
                             botConfig.appointmentStandartCount++;
                         }
-                        Console.WriteLine("СОзданы настройки бота");
+                        Console.WriteLine("Созданы настройки бота");
                     }                 
                 }
                 if (command[0].ToLower() == "new")
-                {
-                    if (command.Length == 6)
+                {                  
+                    if (botConfig != null)
                     {
-                        manager.CreateBot(new BotName(command[1], command[2], command[3]), command[4], command[5]);
+                    manager.CreateBot(botConfig);
                     }
                     else
                     {
-                        if (command.Length == 2 && command[2] == "config")
-                        {
-                            manager.CreateBot(botConfig);
-                        }
-                        else
-                        Console.WriteLine($"Ошибка в {command}\n");
+                        Console.WriteLine("Config is null\n");
                     }
                 }
                 if (command[0].ToLower()== "select")

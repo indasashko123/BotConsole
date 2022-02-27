@@ -15,7 +15,6 @@ namespace BotLibary.BotManager.Interfaces
         protected private IBotFinder BotFinder { get; set; }
         public AbstractBotManager()
         {
-
             BotList = new List<IBot>();
         }
 

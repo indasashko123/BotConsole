@@ -10,7 +10,7 @@ namespace BotLibary.Bots.Masters
 {
     internal class CreaterMasterBot
     {
-        public static IBot Create(BotOptions options)
+        public static IBot Create(MasterBotOptions options)
         {
             return new MasterBot(options);
         }

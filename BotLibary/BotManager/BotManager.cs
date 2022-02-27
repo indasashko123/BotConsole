@@ -35,11 +35,6 @@ namespace BotLibary.BotManager
         {
             BotSaver.Update(SelectedBot);
         }
-
-        public virtual void CreateBot(BotName Name, string Token, string DataBaseName)
-        {
-            BotCreater.Create(Name,  BotList, Token, DataBaseName);
-        }
         public virtual void CreateBot(BotConfig config)
         {
             BotCreater.Create(config, BotList);

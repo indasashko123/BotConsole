@@ -68,20 +68,19 @@ namespace BotLibary.BotManager.HelperClasses
                 return bots;
             }
             foreach (var path in directories)
-            {
-                BotConfig botConfig;
+            {               
                 string botConfigText = File.ReadAllText(path + $"\\BotConfig.json", Encoding.UTF8);
-                botConfig = JsonConvert.DeserializeObject<BotConfig>(botConfigText);
-                PersonalConfig personalConfig;
+                var botConfig = JsonConvert.DeserializeObject(botConfigText);
                 string personalConfigText = File.ReadAllText(path + $"\\PersonalConfig.json", Encoding.UTF8);
-                personalConfig = JsonConvert.DeserializeObject<PersonalConfig>(personalConfigText);
-                // TODO: make deffirent bots
-                var newBot = new MasterBot(new BotOptions(botConfig, personalConfig));
+                var personalConfig = JsonConvert.DeserializeObject(personalConfigText);
+
+                var newBot = new MasterBot(new MasterBotOptions(botConfig, personalConfig));
                 log?.Invoke($"Найден бот {newBot.BotName.Name}");
                 bots.Add(newBot);
             }
             log?.Invoke($"Найденно {bots.Count}");
             return bots;
         }
+       
     }
 }

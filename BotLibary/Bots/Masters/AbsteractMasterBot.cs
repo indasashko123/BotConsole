@@ -1,10 +1,12 @@
 ﻿using BotLibary.BotManager.Interfaces;
+using BotLibary.Bots.Events;
 using BotLibary.Bots.Interfaces;
 using DataBase.Models;
+using Options;
+using Options.MasterBotConfig;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,16 +16,20 @@ namespace BotLibary.Bots.Masters
     {
         public IImageManager ImageManager;
         protected internal DateFunction dateFunction;
-
+        protected internal BotOptions<MasterBotConfig, PersonalMasterBotConfig> options;
+        protected internal MasterBotConfig botConfig;
+        protected internal PersonalMasterBotConfig personalConfig;
+        public ChangesLog Log { get; set; }
+        public AdminMessage AdminLog { get; set; }
         protected virtual async void StartUpdateDays()
         {
-            ConsoleMessage?.Invoke($"Начало проверки обновлений у бота {BotName.Name}\n");
+            Log?.Invoke($"Начало проверки обновлений у бота {BotName.Name}\n");
             while (true)
             {
                 if (await context.db.FindAdminAsync() != null)
                 {
                     await Task.Run(() => { Thread.Sleep(85000000); });
-                    ConsoleMessage?.Invoke($"Проверка обновлений у бота {BotName.Name}\n");
+                    Log?.Invoke($"Проверка обновлений у бота {BotName.Name}\n");
                     await CheckUpdateAsync();
                 }
 
@@ -77,13 +83,13 @@ namespace BotLibary.Bots.Masters
 
         protected async virtual void StartNotificationAsync()
         {
-            ConsoleMessage?.Invoke($"Начало проверки отправки уведомлений у бота {BotName.Name}\n");
+            Log?.Invoke($"Начало проверки отправки уведомлений у бота {BotName.Name}\n");
             while (true)
             {
                 await Task.Run(() =>
                 {
                     Thread.Sleep(30000000);
-                    ConsoleMessage?.Invoke($"Проверка необходимости отправки уведомлений у бота {BotName.Name}\n");
+                    Log?.Invoke($"Проверка необходимости отправки уведомлений у бота {BotName.Name}\n");
                 });
                 await CheckNotificationAsync();
 

@@ -1,9 +1,6 @@
 ﻿using Options;
-using System;
+using Options.MasterBotConfig;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace BotLibary.Bots.Masters.Keyboards
@@ -15,7 +12,7 @@ namespace BotLibary.Bots.Masters.Keyboards
         /// </summary>
         /// <param name="options">Параметры бота</param>
         /// <returns></returns>
-        internal protected static IReplyMarkup GetStartKeyboard(BotOptions options)
+        internal protected static IReplyMarkup GetStartKeyboard(BotOptions<MasterBotConfig, PersonalMasterBotConfig> options)
         {
             return new ReplyKeyboardMarkup
             {
@@ -33,7 +30,7 @@ namespace BotLibary.Bots.Masters.Keyboards
         /// </summary>
         /// <param name="options">Параметры бота.</param>
         /// <returns></returns>
-        internal protected static IReplyMarkup GetInstagrammButton(BotOptions options)
+        internal protected static IReplyMarkup GetInstagrammButton(BotOptions<MasterBotConfig, PersonalMasterBotConfig> options)
         {
             return new InlineKeyboardMarkup(InlineKeyboardButton.WithUrl(options.personalConfig.Messages["INSTAGRAM"], options.personalConfig.MediaLink["INSTAGRAM"]));
         }
@@ -42,7 +39,7 @@ namespace BotLibary.Bots.Masters.Keyboards
         /// </summary>
         /// <param name="options">Конфигурация бота</param>
         /// <returns></returns>
-        internal protected static IReplyMarkup GetLinkButtons(BotOptions options)
+        internal protected static IReplyMarkup GetLinkButtons(BotOptions<MasterBotConfig, PersonalMasterBotConfig> options)
         {
             int count = 0;
             int line = 0;

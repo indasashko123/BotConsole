@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Options
+namespace Options.MasterBotConfig
 {
-    public class PersonalConfig
+    public class PersonalMasterBotConfig
     {
         public Dictionary<string, string> Messages { get; set; }
         public Dictionary<string, string> Buttons { get; set; }
@@ -17,7 +17,7 @@ namespace Options
         public float Longitude { get; set; }
         public Dictionary<string,string> MediaLink { get; set; }
 
-        public PersonalConfig()
+        public PersonalMasterBotConfig()
         {
             Messages = new Dictionary<string, string>();
             Buttons = new Dictionary<string, string>();
@@ -29,11 +29,11 @@ namespace Options
             Longitude = 0;
 
         }
-        public PersonalConfig(string Path)
+        public PersonalMasterBotConfig(string Path)
         {
-            PersonalConfig config;
+            PersonalMasterBotConfig config;
             string text = File.ReadAllText(Path, Encoding.UTF8);
-            config = JsonConvert.DeserializeObject<PersonalConfig>(text);
+            config = JsonConvert.DeserializeObject<PersonalMasterBotConfig>(text);
             Messages = config.Messages;
             Buttons = config.Buttons;
             AdminButtons = config.AdminButtons;
@@ -43,9 +43,9 @@ namespace Options
             Latitude = config.Latitude;
             Longitude = config.Longitude;
         }
-        public PersonalConfig CreateTemplate()
+        public PersonalMasterBotConfig CreateMasterBotTemplate()
         {
-            PersonalConfig config = new PersonalConfig()
+            PersonalMasterBotConfig config = new PersonalMasterBotConfig()
             {
                 Messages = new Dictionary<string, string>()
                 {

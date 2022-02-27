@@ -1,9 +1,6 @@
 ﻿using Options;
-using System;
+using Options.MasterBotConfig;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace BotLibary.Bots.Masters.Keyboards
@@ -15,7 +12,7 @@ namespace BotLibary.Bots.Masters.Keyboards
         /// </summary>
         /// <param name="options">Параметры бота</param>
         /// <returns></returns>
-        internal protected static IReplyMarkup GetKeyboardAdmin(BotOptions options)
+        internal protected static IReplyMarkup GetKeyboardAdmin(BotOptions<MasterBotConfig,PersonalMasterBotConfig> options)
         {
             return new ReplyKeyboardMarkup
             {
@@ -37,7 +34,7 @@ namespace BotLibary.Bots.Masters.Keyboards
         /// <param name="code">Код операции</param>
         /// <param name="userId">Пользователь</param>
         /// <returns></returns>
-        internal protected static IReplyMarkup GetCanccelButton(int appointmentId, BotOptions options, string code, int userId)
+        internal protected static IReplyMarkup GetCanccelButton(int appointmentId, BotOptions<MasterBotConfig, PersonalMasterBotConfig> options, string code, int userId)
         {
             return new InlineKeyboardMarkup(InlineKeyboardButton.WithCallbackData("Отменить", $"{code}/Y/{appointmentId}/{ userId}"));
         }
@@ -49,7 +46,7 @@ namespace BotLibary.Bots.Masters.Keyboards
         /// <param name="code">Код операции</param>
         /// <param name="userId">Id пользователя</param>
         /// <returns></returns>
-        internal protected static IReplyMarkup GetConfirmKeyboard(int EntityId, BotOptions options, string code, int userId)
+        internal protected static IReplyMarkup GetConfirmKeyboard(int EntityId, BotOptions<MasterBotConfig, PersonalMasterBotConfig> options, string code, int userId)
         {
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton>()
             {
@@ -58,7 +55,7 @@ namespace BotLibary.Bots.Masters.Keyboards
             });
 
         }
-        internal protected static IReplyMarkup GetOptionsKeyboard(BotOptions options)
+        internal protected static IReplyMarkup GetOptionsKeyboard(BotOptions<MasterBotConfig, PersonalMasterBotConfig> options)
         {
             return new ReplyKeyboardMarkup
             {

@@ -1,6 +1,6 @@
 ﻿using DataBase.Models;
 using Options;
-using System;
+using Options.MasterBotConfig;
 using System.Collections.Generic;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -34,7 +34,7 @@ namespace BotLibary.Bots.Masters.Keyboards
         /// <param name="code">Спец код вызова</param>
         /// <param name="user">Пользователь</param>
         /// <returns></returns>
-        internal protected static IReplyMarkup GetDaysButton(List<Day> days, BotOptions options, string code, User user)
+        internal protected static IReplyMarkup GetDaysButton(List<Day> days, BotOptions<MasterBotConfig, PersonalMasterBotConfig> options, string code, User user)
         {
             int count = 0;
             int line = 0;
@@ -80,7 +80,7 @@ namespace BotLibary.Bots.Masters.Keyboards
         /// <param name="code">Код вызова</param>
         /// <param name="userId">Пользователь</param>
         /// <returns></returns>
-        internal protected static IReplyMarkup GetAppointmentKeyboard(List<Appointment> apps,BotOptions options, string code, int userId)
+        internal protected static IReplyMarkup GetAppointmentKeyboard(List<Appointment> apps, BotOptions<MasterBotConfig, PersonalMasterBotConfig> options, string code, int userId)
         {
             int count = 0;
             int line = 0;

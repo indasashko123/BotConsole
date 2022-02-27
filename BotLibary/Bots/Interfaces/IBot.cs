@@ -19,6 +19,5 @@ namespace BotLibary.Bots.Interfaces
         BotName GetName();
         void  BotStart();
         void BotStop();
-        BotOptions GetOptions();
     }
 }
