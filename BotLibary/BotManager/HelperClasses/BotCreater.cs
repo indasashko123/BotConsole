@@ -12,7 +12,7 @@ namespace BotLibary.BotManager.HelperClasses
         {
             throw new System.NotImplementedException();
         }
-       public void Create(BotConfig config, List<IBot> bots)
+       public void Create(string Data, List<IBot> bots)
         {
             throw new System.NotImplementedException();
         }

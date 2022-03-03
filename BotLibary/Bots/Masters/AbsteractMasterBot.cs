@@ -26,7 +26,7 @@ namespace BotLibary.Bots.Masters
             Log?.Invoke($"Начало проверки обновлений у бота {BotName.Name}\n");
             while (true)
             {
-                if (await context.db.FindAdminAsync() != null)
+                if (await context.Finder.FindAdminAsync() != null)
                 {
                     await Task.Run(() => { Thread.Sleep(85000000); });
                     Log?.Invoke($"Проверка обновлений у бота {BotName.Name}\n");
@@ -37,51 +37,32 @@ namespace BotLibary.Bots.Masters
         }
         protected virtual async Task CheckUpdateAsync()
         {
-            await Task.Run(() => CheckUpdate());
-
-        }
-        protected virtual async void CheckUpdate()
-        {
-            if (DateTime.Now.Day > dateFunction.CurrentDay)
+            while(DateTime.Now.Day > dateFunction.CurrentDay)
             {
+                Day pastDay = await context.Finder.GetFirstDayAsync();
+                List<Appointment> pastApps = await context.Finder.FindAppointmentsAsync(pastDay.DayId);
+                await context.Updater.DeleteDaysAsync(new List<Day> {pastDay});
+                await context.Updater.DeleteAppointmentsAsync(pastApps);
                 await dateFunction.IncreementDayAsync();
                 if (dateFunction.CurrentDay == 1)
                 {
-                    List<Month> pastMonth = await context.db.GetMonthsAsync(new int[]
-                        {dateFunction.CurrentMonth.MonthId,
-                        dateFunction.NextMonth.MonthId});
-                    List<Appointment> pastAppointment = new List<Appointment>();
-                    List<Day> pastDays = new List<Day>();
-                    if (pastMonth != null)
-                    {
-                        foreach (Month month in pastMonth)
-                        {
-                            pastDays.AddRange(await context.db.FindDaysAsync(month.MonthId));
-                        }
-                        foreach (Day day in pastDays)
-                        {
-                            pastAppointment.AddRange(await context.db.FindAppointmentsAsync(day.DayId));
-                        }
-                        await context.db.DeleteAppointmentsAsync(pastAppointment);
-                        await context.db.DeleteDaysAsync(pastDays);
-                        await context.db.DeleteMonthsAsync(pastMonth);
-                    }
-                    await context.db.AddMonthAsync(dateFunction.NextMonth);
-                    await context.db.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.NextMonth, dateFunction.DayNames);
-                    List<Day> daysCurrentMonth = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
+                    List<Month> pastMonths = await context.Finder.GetMonthsAsync();
+                    Month pastMonth = await context.Finder.GetFirstMonthAsync();
+                    await context.Updater.DeleteMonthsAsync(new List<Month> { pastMonth });
+                    await context.Creater.AddMonthAsync(dateFunction.NextMonth);
+                    await context.Creater.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.NextMonth, DateFunction.DayNames);
+                    List<Day> daysCurrentMonth = await context.Finder.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
                     foreach (Day day in daysCurrentMonth)
                     {
                         for (int i = 0; i < botConfig.appointmentStandartCount; i++)
-                        {
-                            Appointment app = new Appointment(botConfig.appointmentStandartTimes[i], day.DayId);
-                            await context.db.AddAppointmentAsync(app);
+                        {                           
+                            await context.Creater.AddAppointmentAsync(new Appointment(botConfig.appointmentStandartTimes[i], day.DayId));
                         }
                     }
                 }
             }
         }
-
-        protected async virtual void StartNotificationAsync()
+        protected async virtual void StartNotificationAsync(DateTime time)
         {
             Log?.Invoke($"Начало проверки отправки уведомлений у бота {BotName.Name}\n");
             while (true)
@@ -91,34 +72,31 @@ namespace BotLibary.Bots.Masters
                     Thread.Sleep(30000000);
                     Log?.Invoke($"Проверка необходимости отправки уведомлений у бота {BotName.Name}\n");
                 });
-                await CheckNotificationAsync();
+                await CheckNotificationAsync(time);
 
             }
         }
-        protected async virtual void CheckNotification()
+        public async virtual Task CheckNotificationAsync(DateTime time)
         {
-            DateTime timeNow = DateTime.Now;
-            if (timeNow.Hour <= 19 && timeNow.Hour >= 18)
+            await Task.Run(async () =>
             {
-                List<Day> days = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
-                days = days.OrderBy(day => day.Date).ToList();
-                Day firstDay = days.FirstOrDefault();
-                List<Appointment> apps = await context.db.FindAppointmentsAsync(firstDay.DayId);
-                var admin = await context.db.FindAdminAsync();
-                foreach (Appointment app in apps)
+                if (time.Hour <= 19 && time.Hour >= 18)
                 {
-                    if (app.IsConfirm)
+                    Day firstDay = await context.Finder.GetFirstDayAsync();
+                    List<Appointment> apps = await context.Finder.FindAppointmentsAsync(firstDay.DayId);
+                    var admin = await context.Finder.FindAdminAsync();
+                    foreach (Appointment app in apps)
                     {
-                        var user = await context.db.FindUserAsync(app.User);
-                        await bot.SendTextMessageAsync(user.ChatId, personalConfig.Messages["NOTIFICATION"] + "\n " + $"на время {app.AppointmentTime}");
-                        await bot.SendTextMessageAsync(admin.ChatId, $"{user.FirstName} {user.LastName} @{user.Username} записан на завтра на время {app.AppointmentTime}");
+                        if (app.IsConfirm)
+                        {
+                            var user = await context.Finder.FindUserAsync(app.User);
+                            await bot.SendTextMessageAsync(user.ChatId, personalConfig.Messages["NOTIFICATION"] + "\n " + $"на время {app.AppointmentTime}");
+                            AdminLog?.Invoke(new EventArgsNotification(admin.ChatId, $"{user.FirstName} {user.LastName} @{user.Username} записан на завтра на время {app.AppointmentTime}"));
+                        }
                     }
                 }
-            }
-        }
-        protected async Task CheckNotificationAsync()
-        {
-            await Task.Run(() => CheckNotification());
+            });
+            
         }
     }
 }

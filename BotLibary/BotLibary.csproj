@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Options\Options.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestingMock\Masters\DateFunc\" />
+  </ItemGroup>
+
 </Project>

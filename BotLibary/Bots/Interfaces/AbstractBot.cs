@@ -1,5 +1,5 @@
 ﻿
-using DataBase.Database;
+using DataBase.Masters.Database;
 using Options;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -10,7 +10,7 @@ namespace BotLibary.Bots.Interfaces
     {       
         protected internal TelegramBotClient bot;
         protected internal Message lastMessage;       
-        protected internal DataBaseConnector context;
+        protected internal DataBaseMastersConnector context;
         protected internal BotName BotName {get;set;}
         
 

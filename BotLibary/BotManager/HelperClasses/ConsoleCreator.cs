@@ -2,7 +2,6 @@
 using BotLibary.Bots;
 using BotLibary.Bots.Events;
 using BotLibary.Bots.Interfaces;
-using BotLibary.Bots.Masters;
 using Newtonsoft.Json;
 using Options;
 using Options.MasterBotConfig;

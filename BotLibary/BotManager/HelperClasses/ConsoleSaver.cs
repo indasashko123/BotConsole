@@ -1,14 +1,9 @@
 ﻿using BotLibary.BotManager.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
-using Options;
-using BotLibary.Bots.Events;
 using BotLibary.Bots.Interfaces;
+using BotLibary.Bots.Events;
 
 namespace BotLibary.BotManager.HelperClasses
 {
@@ -35,12 +30,12 @@ namespace BotLibary.BotManager.HelperClasses
                 using (StreamWriter file = File.CreateText(PathToDirectory + $"{FileSystem}\\{SelectedBot.GetName().Name}\\BotConfig.json"))
                 {
                     JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, SelectedBot.GetOptions().botConfig);
+                    SelectedBot.SerializeBotConfig(file);
                 }
                 using (StreamWriter file = File.CreateText(PathToDirectory + $"{FileSystem}\\{SelectedBot.GetName().Name}\\PersonalConfig.json"))
                 {
                     JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, SelectedBot.GetOptions().personalConfig);
+                    SelectedBot.SerializePersonalConfig(file);
                 }
                 log?.Invoke($"Бот {SelectedBot.GetName().Name} обновлен");
             }

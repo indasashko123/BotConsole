@@ -8,27 +8,7 @@ namespace BotLibary.Bots.Masters
 {
     public  class DateFunction
     {      
-        internal Dictionary<int, string> MonthNames { get; set; }
-        internal Dictionary<int, string> DayNames { get; set; }
-        internal int CurrentDay { get; set; }
-        internal Month CurrentMonth { get; set; }
-        internal Month NextMonth { get; set; }   
-        private bool IsCreated { get; set; }
-        internal DateFunction()
-        {
-            CurrentMonth = new Month();
-            NextMonth = new Month();
-            DayNames = new Dictionary<int, string>()
-            {
-            {0 , "Воскресенье" },
-            {1 , "Понедельник" },
-            {2 , "Вторник" },
-            {3 , "Среда" },
-            {4 , "Четверг" },
-            {5 , "Пятница" },
-            {6 , "Суббота" },
-            };
-            MonthNames = new Dictionary<int, string>()
+        public static readonly Dictionary<int, string> MonthNames = new Dictionary<int, string>()
             {
             {1 , "Январь🌃" },
             {2 , "Февраль🏙" },
@@ -43,12 +23,30 @@ namespace BotLibary.Bots.Masters
             {11 , "Ноябрь🌃" },
             {12, "Декабрь🏙" }
             };
+        public static readonly Dictionary<int, string> DayNames = new Dictionary<int, string>()
+            {
+            {0 , "Воскресенье" },
+            {1 , "Понедельник" },
+            {2 , "Вторник" },
+            {3 , "Среда" },
+            {4 , "Четверг" },
+            {5 , "Пятница" },
+            {6 , "Суббота" },
+            };
+        internal protected int CurrentDay { get; set; }
+        public Month CurrentMonth { get; set; }
+        public Month NextMonth { get; set; }   
+        private protected bool IsCreated { get; set; }
+        public DateFunction()
+        {
+            CurrentMonth = new Month();
+            NextMonth = new Month();           
             IsCreated = false;
         }
-        internal virtual void CreateMonths()
+        public virtual void CreateMonths(DateTime time)
         {
             IsCreated = true;
-            DateTime dateNow = DateTime.Now;           
+            DateTime dateNow = time;           
             CurrentDay = dateNow.Day;
             CurrentMonth.MonthNumber = dateNow.Month;
             CurrentMonth.Year = dateNow.Year;
@@ -57,7 +55,7 @@ namespace BotLibary.Bots.Masters
 
             NextMonth = IncreementMonth(CurrentMonth);          
         }
-        internal void IncreementDay()
+        public void IncreementDay()
         {
             if (IsCreated)
             {
@@ -65,15 +63,21 @@ namespace BotLibary.Bots.Masters
                 if (CurrentMonth.DayCount < CurrentDay)
                 {
                     CurrentDay = 1;
-                    CurrentMonth = NextMonth;
+                    CurrentMonth = new Month()
+                    {
+                        DayCount = NextMonth.DayCount,
+                        MonthNumber = NextMonth.MonthNumber,
+                        Name = NextMonth.Name,
+                        Year = NextMonth.Year
+                    };
                     NextMonth = IncreementMonth(NextMonth);
                 }
             }
-           
+            
         }
-        protected internal async Task CreateMonthsAsync()
+        protected internal async Task CreateMonthsAsync(DateTime time)
         {
-            await Task.Run(()=>CreateMonths());
+            await Task.Run(()=>CreateMonths(time));
         }
         protected internal async Task IncreementDayAsync()
         {

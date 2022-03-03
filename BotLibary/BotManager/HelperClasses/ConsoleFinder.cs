@@ -5,6 +5,7 @@ using BotLibary.Bots.Interfaces;
 using BotLibary.Bots.Masters;
 using Newtonsoft.Json;
 using Options;
+using Options.MasterBotConfig;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,10 +74,20 @@ namespace BotLibary.BotManager.HelperClasses
                 var botConfig = JsonConvert.DeserializeObject(botConfigText);
                 string personalConfigText = File.ReadAllText(path + $"\\PersonalConfig.json", Encoding.UTF8);
                 var personalConfig = JsonConvert.DeserializeObject(personalConfigText);
-
-                var newBot = new MasterBot(new MasterBotOptions(botConfig, personalConfig));
-                log?.Invoke($"Найден бот {newBot.BotName.Name}");
-                bots.Add(newBot);
+                var directioFile = File.ReadAllText(path + $"\\Direction.txt", Encoding.UTF8);
+                switch (directioFile)
+                {
+                    case "Nails":
+                        {
+                            var newBot = new MasterBot(new BotOptions<MasterBotConfig,PersonalMasterBotConfig>(botConfig as MasterBotConfig, personalConfig as PersonalMasterBotConfig));
+                            bots.Add(newBot);
+                            log?.Invoke($"Найден бот {newBot.BotName.Name}");
+                            break;
+                        }
+                }
+                
+                
+                
             }
             log?.Invoke($"Найденно {bots.Count}");
             return bots;

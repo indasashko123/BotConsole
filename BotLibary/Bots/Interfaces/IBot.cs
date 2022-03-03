@@ -16,6 +16,8 @@ namespace BotLibary.Bots.Interfaces
         Task DownLoadFileAsync(string filePath, Stream destination);
         public ChangesLog Log { get; set; }
         public AdminMessage AdminLog { get; set; }
+        public void SerializeBotConfig(StreamWriter writer);
+        public void SerializePersonalConfig(StreamWriter writer);
         BotName GetName();
         void  BotStart();
         void BotStop();

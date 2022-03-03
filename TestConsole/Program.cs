@@ -1,15 +1,12 @@
-﻿using BotLibary;
-using BotLibary.TestingMock;
-using DataBase.Database;
-using DataBase.Database.Context.MySQL;
+﻿
 using DataBase.Models;
-using Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using BotLibary.BotManager;
+using BotLibary.TestingMock.Masters.DateFunc;
+using DataBase.Masters.Database;
+using DataBase.Masters.Database.Context.MySQL;
 
 namespace TestConsole
 {
@@ -66,7 +63,7 @@ namespace TestConsole
             }
             static async Task Test1()
             {
-                DataBaseConnector connector = new DataBaseConnector(new SQLContext("Test001"));
+                DataBaseMastersConnector connector = new DataBaseMastersConnector(new SQLContext("Test001"));
                 var CrudDb = connector.db;
                 User admin = await CrudDb.FindAdminAsync();
                 var currentUser = await CrudDb.FindUserAsync(123L);
@@ -83,7 +80,7 @@ namespace TestConsole
                     await ConsoleAsync("Жопко просто юзер");
                 }
                 
-                TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+                TestDateFunctionFAKE df = new TestDateFunctionFAKE(DateTime.Now);
                 await ConsoleAsync("1");
                 await df.CreateMonthsAsync();
                 await ConsoleAsync("2");
