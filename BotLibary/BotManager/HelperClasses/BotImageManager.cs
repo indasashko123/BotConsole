@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.HelperClasses
 {
-    class BotSerializator : ISerializator
+    class BotImageManager : IImageManager
     {
         public void AddExample(EventArgsUpdate e)
         {

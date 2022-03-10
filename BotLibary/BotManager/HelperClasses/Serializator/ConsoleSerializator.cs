@@ -1,21 +1,22 @@
 ﻿using BotLibary.BotManager.Interfaces;
 using BotLibary.Events;
+using BotLibary.Interfaces;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace BotLibary.BotManager.HelperClasses
+namespace BotLibary.BotManager.HelperClasses.Serializator
 {
-    class ConsoleSerializator:ISerializator
+    /// <summary>
+    /// Serializator делает -> добаляет и удаляет фото из 
+    /// </summary>
+    class ConsoleImageManager : IImageManager
     {
         string Path { get; set; }
         string FileSystem = "\\FileSystem";
         ChangesLog log { get; set; }
-        public ConsoleSerializator(string Path, ChangesLog log)
+        public ConsoleImageManager(string Path, ChangesLog log)
         {
             this.Path = Path;
             this.log = log;
@@ -32,11 +33,6 @@ namespace BotLibary.BotManager.HelperClasses
             }
             SerializePersonalConfig(fullPath,e.bot);
         }
-
-
-
-
-
         string CheckValidExampleName(List<string> paths, string botName)
         {
             string path = "";

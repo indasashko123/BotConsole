@@ -7,11 +7,8 @@ namespace BotLibary.BotManager.HelperClasses
 {
     internal class BotCreater : IBotCreater
     {
-        public void Create(BotName Name, List<Bot> bots, string Token, string DataBaseName)
-        {
-            throw new System.NotImplementedException();
-        }
-       public void Create(BotConfig config, List<Bot> bots)
+
+       public void Create(string config, List<Bot> bots)
         {
             throw new System.NotImplementedException();
         }

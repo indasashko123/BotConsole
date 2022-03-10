@@ -29,6 +29,7 @@ namespace DataBase.Database.Context.MySQL
         private string sslCa { get; set; }
         private string sslMode { get; set; }
         private string connectionString { get; set; }
+        private bool IsLocal { get; set; }
         private MySQLVersion version { get; set; }
         private void GetOptions()
         {
@@ -43,7 +44,8 @@ namespace DataBase.Database.Context.MySQL
             this.sslCa = config.sslCa;
             this.sslMode = config.sslMode;
             this.version = config.version;
-            if (string.IsNullOrWhiteSpace(server))
+            this.IsLocal = config.IsLocal;
+            if (!IsLocal)
             {
                 connectionString = $"host={host};port={port};user={user};password={password};sslmode={sslMode};sslca={sslCa};";
             }
@@ -54,7 +56,7 @@ namespace DataBase.Database.Context.MySQL
         }
         public Connection(string DbName)
         {
-            GetOptions();
+           // GetOptions();
             this.DbName = DbName;          
         }        
         public void CreateDataBase()
@@ -65,9 +67,11 @@ namespace DataBase.Database.Context.MySQL
             OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
             optionBuilder.UseMySql(
-                $"{connectionString}database={DbName}",
-                new MySqlServerVersion(new Version(version.v1, version.v2, version.v3))
-                ); //sslca={ sslCa};
+                $"server=localhost;user=root;password=botadmin;database={DbName}",
+                     new MySqlServerVersion(new Version(8, 0, 26))
+                 // $"{connectionString}database={DbName}",
+                //  new MySqlServerVersion(new Version(version.v1, version.v2, version.v3))
+                );  //sslca={ sslCa};
         }
     }
 }

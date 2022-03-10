@@ -15,7 +15,7 @@ namespace BotLibary.BotManager.HelperClasses
 
         public void Update(Bot SelectedBot)
         {
-            
+ 
         }
 
         public void UpdateAll(List<Bot> bots)

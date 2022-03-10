@@ -3,8 +3,6 @@ using DataBase.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataBase.Database.Context.MySQL
 {
@@ -23,7 +21,16 @@ namespace DataBase.Database.Context.MySQL
             DataBaseName = dbName;
             Connection db = new Connection(DataBaseName);
             db.CreateDataBase();
-        }        
+        }
+        Day ICRUD.GetFirstDay()
+        {
+            Day day;
+            using (Connection db = new Connection(DataBaseName))
+            {
+                day = db.Days.OrderBy(d => d.Date).FirstOrDefault();
+            }
+            return day;
+        }
         User ICRUD.FindAdmin()
         {
             User admin;

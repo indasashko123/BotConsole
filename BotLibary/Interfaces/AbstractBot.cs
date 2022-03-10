@@ -20,7 +20,7 @@ namespace BotLibary.Interfaces
         {
 
         }
-        public IImageManager ImageManager;
+        protected internal ImageManager imageManager;
         protected internal TelegramBotClient bot;
         protected internal BotOptions options;
         protected internal BotConfig botConfig;
@@ -35,13 +35,13 @@ namespace BotLibary.Interfaces
 
         protected virtual async void StartUpdateDays()
         {
-            ConsoleMessage?.Invoke($"Начало проверки обновлений у бота {BotName.Name}\n");
+            //ConsoleMessage?.Invoke($"Начало проверки обновлений у бота {BotName.Name}\n");
             while (true)
             {
                 if (await context.db.FindAdminAsync() != null)
                 {
-                    await Task.Run(() => { Thread.Sleep(85000000); });                    
-                    ConsoleMessage?.Invoke($"Проверка обновлений у бота {BotName.Name}\n");
+                    await Task.Run(() => { Thread.Sleep(3000); });                    
+                    //ConsoleMessage?.Invoke($"Проверка обновлений у бота {BotName.Name}\n");
                     await CheckUpdateAsync();
                 }
                 
@@ -95,13 +95,13 @@ namespace BotLibary.Interfaces
 
         protected async virtual void StartNotificationAsync()
         {
-            ConsoleMessage?.Invoke($"Начало проверки отправки уведомлений у бота {BotName.Name}\n");
+            //ConsoleMessage?.Invoke($"Начало проверки отправки уведомлений у бота {BotName.Name}\n");
             while (true)
             {
                 await Task.Run(() =>
                 {
-                    Thread.Sleep(30000000);
-                    ConsoleMessage?.Invoke($"Проверка необходимости отправки уведомлений у бота {BotName.Name}\n");
+                    Thread.Sleep(3000);
+                  //  ConsoleMessage?.Invoke($"Проверка необходимости отправки уведомлений у бота {BotName.Name}\n");
                 });               
                 await CheckNotificationAsync();
 
@@ -110,11 +110,9 @@ namespace BotLibary.Interfaces
         protected async virtual void CheckNotification()
         {
             DateTime timeNow = DateTime.Now;
-            if (timeNow.Hour <= 19 && timeNow.Hour >= 18)
+            if (timeNow.Hour >= 17 && timeNow.Hour <= 20)
             {
-                List<Day> days = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
-                days = days.OrderBy(day => day.Date).ToList();
-                Day firstDay = days.FirstOrDefault();
+                Day firstDay = await context.db.GetFirstDayAsync();
                 List<Appointment> apps = await context.db.FindAppointmentsAsync(firstDay.DayId);
                 var admin = await context.db.FindAdminAsync();
                 foreach (Appointment app in apps)

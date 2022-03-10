@@ -15,6 +15,7 @@ namespace DataBase.Database.Interface
         /// </summary>
         /// <returns></returns>
         internal User FindAdmin();
+        internal Day GetFirstDay();
 
         /// <summary>
         /// Находим пользователя по ChatId
@@ -351,7 +352,10 @@ namespace DataBase.Database.Interface
         {
             await Task.Run(() => UpdateDay(day));
         }
-
+        async Task<Day> GetFirstDayAsync()
+        {
+            return await Task.Run(() => GetFirstDay()); 
+        }
         /// <summary>
         /// Выбирает все подписи которые подтверждены если параметр true и не подтвержденные если false
         /// </summary>

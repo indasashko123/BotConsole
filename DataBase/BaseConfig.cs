@@ -15,6 +15,7 @@ namespace DataBase
         public string host { get; set; }
         public string sslCa {get;set;}
         public string sslMode { get; set; }
+        public bool IsLocal { get; set; }
         public MySQLVersion version { get; set; }
     }
 }

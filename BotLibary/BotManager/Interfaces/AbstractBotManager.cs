@@ -12,6 +12,7 @@ namespace BotLibary.BotManager.Interfaces
         protected private IBotCreater BotCreater { get; set; }
         protected private IBotSaver BotSaver { get; set; }
         protected private IBotFinder BotFinder { get; set; }
+        protected private IImageManager ImageManager { get; set; }
         public AbstractBotManager()
         {
 

@@ -12,6 +12,5 @@ namespace BotLibary.BotManager.Interfaces
         void Update(Bot SelectedBot);
 
         void UpdateAll(List<Bot> bots);
-        //TODO: Serializate config
     }
 }

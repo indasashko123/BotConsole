@@ -21,7 +21,7 @@ namespace BotLibary
                 {
                     new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"]  }, new KeyboardButton { Text = options.personalConfig.AdminButtons["DELAPP"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["ALLUSERS"] } },
                     new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["MAKEWEEKEND"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKCONFIRM"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKNOTCONFIRM"] } },
-                    new List<KeyboardButton> {new KeyboardButton { Text = options.personalConfig.AdminButtons["MAILING"] }//, new KeyboardButton {Text = options.personalConfig.AdminButtons["OPTIONS"] } 
+                    new List<KeyboardButton> {new KeyboardButton { Text = options.personalConfig.AdminButtons["MAILING"] }, //new KeyboardButton {Text = options.personalConfig.AdminButtons["OPTIONS"] } 
                     }
                 },
                 ResizeKeyboard = true
