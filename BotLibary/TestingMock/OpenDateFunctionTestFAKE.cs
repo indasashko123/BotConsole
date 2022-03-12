@@ -14,7 +14,7 @@ namespace BotLibary.TestingMock
         {
             TestTime = time;            
         }
-        internal override void CreateMonths()
+        internal override void CreateMonths(DateTime Time)
         {
             DateTime dateNow = TestTime;
             CurrentDay = dateNow.Day;

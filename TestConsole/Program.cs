@@ -85,7 +85,7 @@ namespace TestConsole
                 
                 TestDateFunctionFAKE df = new TestDateFunctionFAKE();
                 await ConsoleAsync("1");
-                await df.CreateMonthsAsync();
+                await df.CreateMonthsAsync(DateTime.Now);
                 await ConsoleAsync("2");
                 await CrudDb.AddMonthAsync(df.getCurrentMonth());
                 await ConsoleAsync("3");

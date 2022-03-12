@@ -109,7 +109,7 @@ namespace BotLibary
                     }
                     if (e.Message.Text == "/reg" + botConfig.password && admin == null)
                     {
-                        await dateFunction.CreateMonthsAsync();
+                        await dateFunction.CreateMonthsAsync(DateTime.Now);
                         await context.db.AddMonthAsync(dateFunction.CurrentMonth);
                         await context.db.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.CurrentMonth, dateFunction.DayNames);
                         List<Day> daysCurrentMonth = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);

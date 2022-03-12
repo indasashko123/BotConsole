@@ -12,7 +12,6 @@ namespace Options
         public string token { get;set; }
         public string password { get; set; }
         public string dataBaseName { get; set; }
-        public int appointmentStandartCount { get;set; }
         public List<string> appointmentStandartTimes { get; set; }
         public string Name { get; set; }
         public string CustomerName { get; set; }
@@ -23,7 +22,6 @@ namespace Options
             token = "";
             password = "";
             dataBaseName = "";
-            appointmentStandartCount = 3;
         }
         public BotConfig(string Path)
         {
@@ -34,7 +32,6 @@ namespace Options
             token = config.token;
             password = config.password;
             dataBaseName = config.dataBaseName;
-            appointmentStandartCount = config.appointmentStandartCount;
             Name = config.Name;
             CustomerName = config.CustomerName;
             Direction = config.Direction;
@@ -51,7 +48,6 @@ namespace Options
             token = "1973705386:AAECVqHeUF6GHIFOT0xnzD23mNu9HPL0eMs",
             password = "xxxx",
             dataBaseName = "testname",
-            appointmentStandartCount = 3,
             Name = "TestName",
             CustomerName = "TestCustomer",
             Direction= "TestDirection"

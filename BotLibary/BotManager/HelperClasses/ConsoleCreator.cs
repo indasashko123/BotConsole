@@ -12,8 +12,7 @@ namespace BotLibary.BotManager.HelperClasses
     {
         string Path { get; set; }
         string FileSystem = "\\FileSystem";
-        ChangesLog log { get; set; }
-        
+        ChangesLog log { get; set; } 
         public ConsoleCreator(ChangesLog log, string Path)
         {
             this.log = log;
@@ -23,29 +22,7 @@ namespace BotLibary.BotManager.HelperClasses
         {
             string[] data = botConfig.Split(' ');
             log?.Invoke($"Созданм на пути {Path}");
-            BotConfig config = null;
-            switch (data[2])
-            {
-                case "Nails":
-                    {
-                        config = new BotConfig()
-                        {
-                            Name = data[0],
-                            CustomerName = data[1],
-                            Direction = data[2],
-                            token = data[3],
-                            dataBaseName=data[4],
-                            password=data[5],
-                        };
-                        var appTime = data[6].Split('|');
-                        foreach (var time in appTime)
-                        {
-                            config.appointmentStandartTimes.Add(time);
-                            config.appointmentStandartCount++;
-                        }
-                        break;
-                    }
-            }            
+            BotConfig config = CreateBotConfig(data);                              
             CreateFolderSystem(Path, config.Name);
             string FullPath = $"{Path}\\{FileSystem}\\{config.Name}";
             BotOptions options = new BotOptions(config, CreatePersonalConfig(Path, config.Name));
@@ -65,7 +42,24 @@ namespace BotLibary.BotManager.HelperClasses
             Directory.CreateDirectory(Path + $"{FileSystem}\\{name}\\MyPhoto");
             Directory.CreateDirectory(Path + $"{FileSystem}\\{name}\\MyWorks");
         }
-              
+        BotConfig CreateBotConfig(string[] data)
+        {
+             BotConfig config = new BotConfig()
+            {
+                Name = data[0],
+                CustomerName = data[1],
+                Direction = data[2],
+                token = data[3],
+                dataBaseName = data[4],
+                password = data[5],
+            };
+            var appTime = data[6].Split('|');
+            foreach (var time in appTime)
+            {
+                config.appointmentStandartTimes.Add(time);
+            }
+            return config;
+        }
         PersonalConfig CreatePersonalConfig(string Path, string name)
         {
             PersonalConfig personalConfig = new PersonalConfig().CreateTemplate();

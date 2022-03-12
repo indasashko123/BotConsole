@@ -1,4 +1,4 @@
-using BotLibary.TestingMock;
+Ôªøusing BotLibary.TestingMock;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 namespace UnutTesting
@@ -7,18 +7,18 @@ namespace UnutTesting
     public class DateFuncTest
     {
         [TestMethod]
-        public void CheckTimeDF1000_1_1()
+        public void CheckTimeDF1000_1_1_CheckYear()
         {
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(new DateTime(1000, 1, 1));
-            df.CreatMonth();
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+            df.CreatMonth(new DateTime(1000, 1, 1));
             string answer = df.getCurrentMonth().Year.ToString();
             Assert.AreEqual("1000", answer);
         }
         [TestMethod]
         public void IncreementDay1000_1_1to1000_1_1()
         {
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(new DateTime(1000, 1, 1));
-            df.CreatMonth();
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+            df.CreatMonth(new DateTime(1000, 1, 1));
             df.IncreementDay();
             int curDay = df.getCurrentDay();
             Assert.AreEqual(2, 2);
@@ -26,142 +26,152 @@ namespace UnutTesting
         [TestMethod]
         public void DayCount1000_1_1to31()
         {
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(new DateTime(1000, 1, 1));
-            df.CreatMonth();
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+            df.CreatMonth(new DateTime(1000, 1, 1));
             df.IncreementDay();
             int maxDay = df.getCurrentMonth().DayCount;
             Assert.AreEqual(31, 31);
         }
+
         [TestMethod]
-        public void IncreementMonth1000_1_1()
+        public void IncreementMonth1000_1_31()
         {
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(new DateTime(1000, 1, 31));
-            df.CreatMonth();
-            int monthNumber = df.getNextMonth().MonthNumber;
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+            df.CreatMonth(new DateTime(1000, 1, 31));          
+            df.IncreementDay();
+            Assert.AreEqual(2, df.getCurrentMonth().MonthNumber);
+        }
+        [TestMethod]
+        public void NextMonth1000_1_31_Answer_2()
+        {
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+            df.CreatMonth(new DateTime(1000, 1, 31));
+            var month = df.getNextMonth().MonthNumber;
+            Assert.AreEqual(2, month);
+            Assert.AreEqual(1, df.getCurrentMonth().MonthNumber);
             df.IncreementDay();
             Assert.AreEqual(2, df.getCurrentMonth().MonthNumber);
         }
         [TestMethod]
         public void IncreementMonth1000_12_31()
         {
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(new DateTime(1000, 12, 31));
-            df.CreatMonth();
-            int monthNumber = df.getNextMonth().MonthNumber;
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+            df.CreatMonth(new DateTime(1000, 12, 31));
             df.IncreementDay();
-            string ans = df.getCurrentMonth().MonthNumber +""+df.getCurrentMonth().Year;
-            Assert.AreEqual("11001", ans);
+            string ans = df.getCurrentMonth().Year.ToString() + df.getCurrentMonth().MonthNumber.ToString() + df.getCurrentDay();
+            Assert.AreEqual("100111", ans);
         }
         [TestMethod]
         public void DayOfWeek1000_1_1()
         {
             var day = new DateTime(1000, 1, 1);
             int dayOfWeek = (int)day.DayOfWeek;
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(day);
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
 
             string ans = df.getNames()[dayOfWeek];
 
-            Assert.AreEqual("—Â‰‡", ans);
+            Assert.AreEqual("–°—Ä–µ–¥–∞", ans);
         }
         [TestMethod]
         public void DayOfWeek1000_1_2()
         {
             var day = new DateTime(1000, 1, 2);
             int dayOfWeek = (int)day.DayOfWeek;
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(day);
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
 
             string ans = df.getNames()[dayOfWeek];
 
-            Assert.AreEqual("◊ÂÚ‚Â„", ans);
+            Assert.AreEqual("–ß–µ—Ç–≤–µ—Ä–≥", ans);
         }
         [TestMethod]
         public void DayOfWeek1000_1_3()
         {
             var day = new DateTime(1000, 1, 3);
             int dayOfWeek = (int)day.DayOfWeek;
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(day);
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
 
             string ans = df.getNames()[dayOfWeek];
 
-            Assert.AreEqual("œˇÚÌËˆ‡", ans);
+            Assert.AreEqual("–ü—è—Ç–Ω–∏—Ü–∞", ans);
         }
         [TestMethod]
         public void DayOfWeek1000_1_4()
         {
             var day = new DateTime(1000, 1, 4);
             int dayOfWeek = (int)day.DayOfWeek;
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(day);
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
 
             string ans = df.getNames()[dayOfWeek];
 
-            Assert.AreEqual("—Û··ÓÚ‡", ans);
+            Assert.AreEqual("–°—É–±–±–æ—Ç–∞", ans);
         }
         [TestMethod]
         public void DayOfWeek1000_1_5()
         {
             var day = new DateTime(1000, 1, 5);
             int dayOfWeek = (int)day.DayOfWeek;
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(day);
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
 
             string ans = df.getNames()[dayOfWeek];
 
-            Assert.AreEqual("¬ÓÒÍÂÒÂÌ¸Â", ans);
+            Assert.AreEqual("–í–æ—Å–∫—Ä–µ—Å–µ–Ω—å–µ", ans);
         }
         [TestMethod]
         public void DayOfWeek1000_1_6()
         {
             var day = new DateTime(1000, 1, 6);
             int dayOfWeek = (int)day.DayOfWeek;
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(day);
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
 
             string ans = df.getNames()[dayOfWeek];
 
-            Assert.AreEqual("œÓÌÂ‰ÂÎ¸ÌËÍ", ans);
+            Assert.AreEqual("–ü–æ–Ω–µ–¥–µ–ª—å–Ω–∏–∫", ans);
         }
         [TestMethod]
         public void DayOfWeek1000_1_7()
         {
             var day = new DateTime(1000, 1, 7);
             int dayOfWeek = (int)day.DayOfWeek;
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(day);
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
 
             string ans = df.getNames()[dayOfWeek];
 
-            Assert.AreEqual("¬ÚÓÌËÍ", ans);
+            Assert.AreEqual("–í—Ç–æ—Ä–Ω–∏–∫", ans);
         }
         [TestMethod]
         public void DayOfWeek1000_1_8()
         {
             var day = new DateTime(1000, 1, 8);
             int dayOfWeek = (int)day.DayOfWeek;
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(day);
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
 
             string ans = df.getNames()[dayOfWeek];
 
-            Assert.AreEqual("—Â‰‡", ans);
+            Assert.AreEqual("–°—Ä–µ–¥–∞", ans);
         }
         [TestMethod]
         public void IncreementMonthName1000_1_31()
         {
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(new DateTime(1000, 1, 31));
-            df.CreatMonth();            
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+            df.CreatMonth(new DateTime(1000, 1, 31));            
             df.IncreementDay();
 
-            Assert.AreEqual("‘Â‚‡Î¸", df.getCurrentMonth().Name);
+            Assert.AreEqual("–§–µ–≤—Ä–∞–ª—åüèô", df.getCurrentMonth().Name);
         }
         [TestMethod]
         public void IncreementMonthName1000_11_30()
         {
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(new DateTime(1000, 11, 30));
-            df.CreatMonth();
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+            df.CreatMonth(new DateTime(1000, 11, 30));
             df.IncreementDay();
 
-            Assert.AreEqual("ƒÂÍ‡·¸", df.getCurrentMonth().Name);
+            Assert.AreEqual("–î–µ–∫–∞–±—Ä—åüèô", df.getCurrentMonth().Name);
         }
         [TestMethod]
         public void IncreementMonth2_1000_12_31()
         {
-            TestDateFunctionFAKE df = new TestDateFunctionFAKE(new DateTime(1000, 12, 31));
-            df.CreatMonth();
+            TestDateFunctionFAKE df = new TestDateFunctionFAKE();
+            df.CreatMonth(new DateTime(1000, 12, 31));
             int monthNumber = df.getNextMonth().MonthNumber;
             df.IncreementDay();
             string ans = df.getCurrentMonth().MonthNumber + "" + df.getCurrentMonth().Year+""+df.getCurrentDay();

@@ -8,7 +8,7 @@ namespace DataBase.Database.Context.MySQL
 {
     public class SQLContext : ICRUD
     {
-        void ICRUD.DeleteDB()
+       public void DeleteDb()
         {
             using (Connection db = new Connection(DataBaseName))
             {
@@ -23,11 +23,16 @@ namespace DataBase.Database.Context.MySQL
             db.CreateDataBase();
         }
         Day ICRUD.GetFirstDay()
-        {
+        {           
             Day day;
             using (Connection db = new Connection(DataBaseName))
             {
-                day = db.Days.OrderBy(d => d.Date).FirstOrDefault();
+                Month firstMonth = db.Months.OrderBy(m => m.MonthNumber).FirstOrDefault();
+                if (firstMonth == null)
+                {
+                    throw new Exception("Не найден месяц");
+                }
+                    day = db.Days.Where(d=>d.Month == firstMonth.MonthId).OrderBy(d => d.Date).FirstOrDefault();
             }
             return day;
         }

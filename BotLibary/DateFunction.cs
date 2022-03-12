@@ -8,9 +8,7 @@ namespace BotLibary
 {
     public  class DateFunction
     {
-        /// <summary>
-        /// Текущий день в календаре
-        /// </summary>
+
         internal Dictionary<int, string> MonthNames { get; set; }
         internal Dictionary<int, string> DayNames { get; set; }
         internal int CurrentDay { get; set; }
@@ -48,10 +46,9 @@ namespace BotLibary
             };
             IsCreated = false;
         }
-        internal virtual void CreateMonths()
+        internal virtual void CreateMonths(DateTime dateNow)
         {
             IsCreated = true;
-            DateTime dateNow = DateTime.Now;           
             CurrentDay = dateNow.Day;
             CurrentMonth.MonthNumber = dateNow.Month;
             CurrentMonth.Year = dateNow.Year;
@@ -60,7 +57,7 @@ namespace BotLibary
 
             NextMonth = IncreementMonth(CurrentMonth);          
         }
-        internal void IncreementDay()
+        internal protected void IncreementDay()
         {
             if (IsCreated)
             {
@@ -74,9 +71,9 @@ namespace BotLibary
             }
            
         }
-        protected internal async Task CreateMonthsAsync()
+        protected internal async Task CreateMonthsAsync(DateTime time)
         {
-            await Task.Run(()=>CreateMonths());
+            await Task.Run(()=>CreateMonths(time));
         }
         protected internal async Task IncreementDayAsync()
         {

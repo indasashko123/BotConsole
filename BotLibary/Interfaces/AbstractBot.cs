@@ -34,28 +34,24 @@ namespace BotLibary.Interfaces
 
 
         protected virtual async void StartUpdateDays()
-        {
-            //ConsoleMessage?.Invoke($"Начало проверки обновлений у бота {BotName.Name}\n");
+        {           
             while (true)
             {
                 if (await context.db.FindAdminAsync() != null)
                 {
-                    await Task.Run(() => { Thread.Sleep(3000); });                    
-                    //ConsoleMessage?.Invoke($"Проверка обновлений у бота {BotName.Name}\n");
+                    await Task.Delay(10000000);                  
                     await CheckUpdateAsync();
-                }
-                
+                }                
             }
         }
         protected virtual async Task CheckUpdateAsync()
         {
-            await Task.Run(() => CheckUpdate());
-
+            await Task.Run(() => CheckUpdate(DateTime.Now));
         }
-        protected virtual async void CheckUpdate()
+        protected virtual async void CheckUpdate(DateTime timeNow)
         {
-            if (DateTime.Now.Day > dateFunction.CurrentDay)
-            {
+            if (timeNow.Day > dateFunction.CurrentDay)
+            {               
                 await dateFunction.IncreementDayAsync();
                 if (dateFunction.CurrentDay == 1)
                 {
@@ -64,7 +60,7 @@ namespace BotLibary.Interfaces
                         dateFunction.NextMonth.MonthId});
                     List<Appointment> pastAppointment = new List<Appointment>();
                     List<Day> pastDays = new List<Day>();
-                    if (pastMonth != null)
+                    if (pastMonth != null && pastMonth.Count > 0 )
                     {
                         foreach (Month month in pastMonth)
                         {
@@ -83,7 +79,7 @@ namespace BotLibary.Interfaces
                     List<Day> daysCurrentMonth = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
                     foreach (Day day in daysCurrentMonth)
                     {
-                        for (int i = 0; i < botConfig.appointmentStandartCount; i++)
+                        for (int i = 0; i < botConfig.appointmentStandartTimes.Count; i++)
                         {
                             Appointment app = new Appointment(botConfig.appointmentStandartTimes[i], day.DayId);
                             await context.db.AddAppointmentAsync(app);
@@ -95,26 +91,21 @@ namespace BotLibary.Interfaces
 
         protected async virtual void StartNotificationAsync()
         {
-            //ConsoleMessage?.Invoke($"Начало проверки отправки уведомлений у бота {BotName.Name}\n");
             while (true)
             {
-                await Task.Run(() =>
-                {
-                    Thread.Sleep(3000);
-                  //  ConsoleMessage?.Invoke($"Проверка необходимости отправки уведомлений у бота {BotName.Name}\n");
-                });               
+                await Task.Delay(10000000);            
                 await CheckNotificationAsync();
-
             }
         }
         protected async virtual void CheckNotification()
         {
-            DateTime timeNow = DateTime.Now;
-            if (timeNow.Hour >= 17 && timeNow.Hour <= 20)
+            var admin = await context.db.FindAdminAsync();
+            DateTime timeNow = DateTime.Now;           
+            if (timeNow.Hour >= 15 && timeNow.Hour <= 20)
             {
+               
                 Day firstDay = await context.db.GetFirstDayAsync();
-                List<Appointment> apps = await context.db.FindAppointmentsAsync(firstDay.DayId);
-                var admin = await context.db.FindAdminAsync();
+                List<Appointment> apps = await context.db.FindAppointmentsAsync(firstDay.DayId);               
                 foreach (Appointment app in apps)
                 {
                     if (app.IsConfirm)

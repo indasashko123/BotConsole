@@ -25,15 +25,14 @@ namespace BotLibary.BotManager
             if(SelectedBot != null)
             SelectedBot.BotStart();
         }
-
         public virtual void BotStop()
         {
             if (SelectedBot != null)
                 SelectedBot.BotStop();
         }
-
         public virtual void BotUpdate()
         {
+            if (SelectedBot != null)
             BotSaver.Update(SelectedBot);
         }
         public virtual void CreateBot(string config)
@@ -42,12 +41,11 @@ namespace BotLibary.BotManager
         }
         public virtual void SelectBot(BotName Name)
         {
-           SelectedBot = BotFinder.FindByName(Name, this.BotList);
+           SelectedBot = BotFinder.FindByName(Name, BotList);
         }
-
         public virtual void ShowBots()
         {
-            BotFinder.ShowBots(this.BotList);
+            BotFinder.ShowBots(BotList);
         }
         public virtual void ShowCurrent()
         {
@@ -55,11 +53,11 @@ namespace BotLibary.BotManager
         }
         public void FindAllBots()
         {
-            this.BotList = BotFinder.FindAllBots();
+            BotList = BotFinder.FindAllBots();
         }
         public void UpdateAll()
         {
-            this.BotSaver.UpdateAll(this.BotList);
+            BotSaver.UpdateAll(BotList);
         }
     }
 }

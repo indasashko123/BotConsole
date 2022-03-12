@@ -9,7 +9,8 @@ namespace DataBase.Database.Interface
 {
     public interface ICRUD
     {
-        internal void DeleteDB();
+        public void DeleteDb();
+
         /// <summary>
         /// Находим админа
         /// </summary>

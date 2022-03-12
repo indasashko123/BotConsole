@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BotLibary.BotManager.HelperClasses.Serializator
 {
     /// <summary>
-    /// Serializator делает -> добаляет и удаляет фото из 
+    /// Serializator делает -> добаляет и удаляет фото из хранилища
     /// </summary>
     class ConsoleImageManager : IImageManager
     {

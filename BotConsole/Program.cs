@@ -41,7 +41,7 @@ namespace BotConsole
                     if (command.Length == 8)
                     {
                         data = command[1]+" "+command[2]+" "+command[3]+" "+command[4]+" "+command[5]+" "+command[6]+" "+command[7];
-                        Console.WriteLine("СОзданы настройки бота");
+                        Console.WriteLine("Созданы настройки бота");
                     }             
                     else
                     {

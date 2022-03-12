@@ -52,7 +52,7 @@ namespace BotLibary.BotManager.HelperClasses
                 log?.Invoke("Бот не выбран");
                 return;
             }
-            string answer = $" bot name is{bot.BotName.Name}, customer is {bot.BotName.CustomerName}, direction is  {bot.BotName.Direction}\n";
+            string answer = $" bot name is {bot.BotName.Name}, customer is {bot.BotName.CustomerName}, direction is  {bot.BotName.Direction}\n";
             log?.Invoke(answer);
         }
         public List<Bot> FindAllBots()

@@ -52,7 +52,6 @@ namespace BotLibary.BotManager.HelperClasses
         {
             return Directory.Exists(Path + $"{FileSystem}\\{Name}");
         }
-
         public void UpdateAll(List<Bot> bots)
         {
             foreach (Bot bot in bots)

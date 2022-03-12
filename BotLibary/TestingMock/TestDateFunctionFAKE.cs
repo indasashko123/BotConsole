@@ -1,8 +1,6 @@
 ﻿using DataBase.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BotLibary.TestingMock
@@ -14,17 +12,13 @@ namespace BotLibary.TestingMock
         {
             df = new DateFunction();
         }
-        public TestDateFunctionFAKE(DateTime time)
+        public async Task CreateMonthsAsync(DateTime time)
         {
-            this.df = new OpenDateFunctionTestFAKE(time);
+           await Task.Run(()=> df.CreateMonthsAsync(time));
         }
-        public async Task CreateMonthsAsync()
+        public void CreatMonth(DateTime time)
         {
-           await Task.Run(()=> df.CreateMonthsAsync());
-        }
-        public void CreatMonth()
-        {
-            df.CreateMonths();
+            df.CreateMonths(time);
         }
         public Month getCurrentMonth()
         {
