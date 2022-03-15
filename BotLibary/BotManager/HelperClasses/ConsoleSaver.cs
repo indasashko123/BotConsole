@@ -1,13 +1,11 @@
 ﻿using BotLibary.BotManager.Interfaces;
 using BotLibary.Events;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using Options;
+using BotLibary.TelegramBot;
 
 namespace BotLibary.BotManager.HelperClasses
 {
@@ -19,12 +17,12 @@ namespace BotLibary.BotManager.HelperClasses
     class ConsoleSaver : IBotSaver
     {
 
-        ChangesLog log { get; set; }
+        public ChangesLog log;
         string PathToDirectory { get; set; }
         string FileSystem = "\\FileSystem";
         public ConsoleSaver(ChangesLog log, string path)
         {
-            this.log = log;
+            this.log = (string text)=> log?.Invoke(text);
             this.PathToDirectory = path;
         }            
         public void Update(Bot SelectedBot)
@@ -48,6 +46,17 @@ namespace BotLibary.BotManager.HelperClasses
                 log?.Invoke("Бот не найден");
             }
         }               
+        public void SetNewConfig(Bot SelectedBot)
+        {
+            BotConfig botConfig;
+            string botConfigText = File.ReadAllText(PathToDirectory + FileSystem + SelectedBot.BotName.Name + $"\\BotConfig.json", Encoding.UTF8);
+            botConfig = JsonConvert.DeserializeObject<BotConfig>(botConfigText);
+            PersonalConfig personalConfig;
+            string personalConfigText = File.ReadAllText(PathToDirectory + FileSystem + SelectedBot.BotName.Name+ $"\\PersonalConfig.json", Encoding.UTF8);
+            personalConfig = JsonConvert.DeserializeObject<PersonalConfig>(personalConfigText);
+            SelectedBot.GetNewConfig(new BotOptions(botConfig, personalConfig));
+            log?.Invoke($"Бот {SelectedBot.BotName.Name} обновлен");
+        }
         bool FindPath(string Name, string Path)
         {
             return Directory.Exists(Path + $"{FileSystem}\\{Name}");

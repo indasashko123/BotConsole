@@ -22,6 +22,15 @@ namespace DataBase.Database.Context.MySQL
             Connection db = new Connection(DataBaseName);
             db.CreateDataBase();
         }
+        Month ICRUD.GetFirstMonth()
+        {
+            Month month;
+            using(Connection db = new Connection(DataBaseName))
+            {
+                month = db.Months.OrderBy(m => m.MonthNumber).FirstOrDefault();
+            }
+            return month;
+        }
         Day ICRUD.GetFirstDay()
         {           
             Day day;

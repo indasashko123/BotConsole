@@ -17,6 +17,7 @@ namespace DataBase.Database.Interface
         /// <returns></returns>
         internal User FindAdmin();
         internal Day GetFirstDay();
+        internal Month GetFirstMonth();
 
         /// <summary>
         /// Находим пользователя по ChatId
@@ -399,6 +400,10 @@ namespace DataBase.Database.Interface
         async Task DeleteMonthsAsync(List<Month> months)
         {
             await Task.Run(() => DeleteMonths(months));
+        }
+        async Task<Month> GetFirstMonthAsync()
+        {
+            return await Task.Run(() => GetFirstMonth());
         }
         #endregion
 

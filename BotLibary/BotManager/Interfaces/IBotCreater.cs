@@ -1,6 +1,5 @@
-﻿
+﻿using BotLibary.TelegramBot;
 using System.Collections.Generic;
-
 
 namespace BotLibary.BotManager.Interfaces
 {

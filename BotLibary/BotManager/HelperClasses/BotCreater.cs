@@ -1,6 +1,5 @@
 ﻿using BotLibary.BotManager.Interfaces;
-using BotLibary.Interfaces;
-using Options;
+using BotLibary.TelegramBot;
 using System.Collections.Generic;
 
 namespace BotLibary.BotManager.HelperClasses

@@ -1,10 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataBase.Models;
 
-namespace BotLibary
+namespace BotLibary.TelegramBot
 {
     public  class DateFunction
     {

@@ -1,7 +1,4 @@
-﻿using BotLibary.Events;
-using BotLibary.Interfaces;
-using Options;
-using System.Collections.Generic;
+﻿using BotLibary.TelegramBot;
 
 namespace BotLibary.BotManager.Interfaces
 {
@@ -16,5 +13,6 @@ namespace BotLibary.BotManager.Interfaces
         public void ShowCurrent();
         public void FindAllBots();
         public void UpdateAll();
+        public void UpdateCurrent();
     }
 }

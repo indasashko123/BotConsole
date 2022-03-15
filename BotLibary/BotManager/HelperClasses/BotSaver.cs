@@ -1,17 +1,16 @@
 ﻿using BotLibary.BotManager.Interfaces;
-using BotLibary.Events;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Options;
+using BotLibary.TelegramBot;
 
 namespace BotLibary.BotManager.HelperClasses
 {
     class BotSaver : IBotSaver
     {
-      
+        public void SetNewConfig(Bot SelectedBot)
+        {
+            throw new NotImplementedException();
+        }
 
         public void Update(Bot SelectedBot)
         {

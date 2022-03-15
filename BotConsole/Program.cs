@@ -1,7 +1,6 @@
 ﻿using BotLibary.BotManager;
 using System;
-using BotLibary;
-using Options;
+using BotLibary.TelegramBot;
 
 namespace BotConsole
 {
@@ -10,15 +9,28 @@ namespace BotConsole
         static void Main(string[] args)
         {
             Console.WriteLine("Путь  - \n");
-
-            ConsoleBotManager manager = new ConsoleBotManager(Console.ReadLine());
+            ConsoleBotManager manager = new ConsoleBotManager(Console.ReadLine(), ConsoleMessage);
             string data = "";
-            manager.FindAllBots();
+            bool mustTryAgain = true;
+            while (mustTryAgain)
+            {
+                try
+                {
+                    manager.FindAllBots();
+                    mustTryAgain = false;
+                }
+                catch
+                {
+                    Console.WriteLine("Еще раз путь...");
+                    manager = new ConsoleBotManager(Console.ReadLine(), ConsoleMessage);
+                }
+            }
+            manager.TryLog("log");
             Console.WriteLine("Ввод команды\n" +
                 "Создать новую конфигурацию бота \n" +
                    "config + name customerName + direct + token + dbName + password +Times('|')\n"+
                 "Создать с имеющийся конфигурацией\n" + 
-                   "new" +
+                   "new\n" +
                 "Выбрать бота по имени\n " +
                    "select\n" +
                    "update\n" +
@@ -72,6 +84,10 @@ namespace BotConsole
                 {
                     manager.BotUpdate();
                 }
+                if (command[0].ToLower() == "updateoptions")
+                {
+                    manager.UpdateCurrent();
+                }
                 if (command[0].ToLower() == "showall")
                 {
                     manager.ShowBots();
@@ -90,7 +106,10 @@ namespace BotConsole
                 }
                 
             }
-           
+        }
+        static void ConsoleMessage(string text)
+        {
+            Console.WriteLine(text);
         }
     }
 }

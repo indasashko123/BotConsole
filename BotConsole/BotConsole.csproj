@@ -9,4 +9,8 @@
     <ProjectReference Include="..\BotLibary\BotLibary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
+
 </Project>

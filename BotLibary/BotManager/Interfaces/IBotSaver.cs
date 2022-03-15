@@ -1,9 +1,5 @@
-﻿using BotLibary.Events;
-using System;
+﻿using BotLibary.TelegramBot;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.Interfaces
 {
@@ -12,5 +8,6 @@ namespace BotLibary.BotManager.Interfaces
         void Update(Bot SelectedBot);
 
         void UpdateAll(List<Bot> bots);
+        void SetNewConfig(Bot SelectedBot);
     }
 }

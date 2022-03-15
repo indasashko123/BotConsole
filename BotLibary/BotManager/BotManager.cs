@@ -1,10 +1,6 @@
 ﻿using BotLibary.BotManager.HelperClasses;
 using BotLibary.BotManager.Interfaces;
-using BotLibary.Events;
-using BotLibary.Interfaces;
-using Options;
-using System;
-using System.Collections.Generic;
+using BotLibary.TelegramBot;
 
 namespace BotLibary.BotManager
 {
@@ -58,6 +54,10 @@ namespace BotLibary.BotManager
         public void UpdateAll()
         {
             BotSaver.UpdateAll(BotList);
+        }
+        public void UpdateCurrent()
+        {
+            BotSaver.SetNewConfig(SelectedBot);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BotLibary.BotManager.Interfaces;
 using BotLibary.Events;
+using BotLibary.TelegramBot;
 using Newtonsoft.Json;
 using Options;
 using System;
@@ -12,10 +13,10 @@ namespace BotLibary.BotManager.HelperClasses
     {
         string Path { get; set; }
         string FileSystem = "\\FileSystem";
-        ChangesLog log { get; set; } 
-        public ConsoleCreator(ChangesLog log, string Path)
+        public event ChangesLog log;
+        public ConsoleCreator(ChangesLog log,string Path)
         {
-            this.log = log;
+            this.log = (string text) => log?.Invoke(text);
             this.Path = Path;
         }
         public void Create(string botConfig, List<Bot> bots)
@@ -31,8 +32,9 @@ namespace BotLibary.BotManager.HelperClasses
             AddPhotos(Path, FullPath+"\\MyWorks", "\\0.jpg");
             AddPhotos(Path, FullPath+"\\MyWorks", "\\1.jpg");
             SerializeOptions(options, FullPath);
-            Bot newBot = new Bot(options);
+            Bot newBot = new Bot(options, log);
             bots.Add(newBot);
+            //newBot.ConsoleMessage += (string text) => log?.Invoke("Назначен log");
             log?.Invoke($"Создан бот {newBot.BotName.Name}");
         }  
         void CreateFolderSystem(string Path, string name)

@@ -1,10 +1,9 @@
 ﻿using DataBase.Models;
 using Options;
-using System;
 using System.Collections.Generic;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace BotLibary
+namespace BotLibary.TelegramBot.ReplyMarkups
 {
     internal class KeyBoards
     {
@@ -15,17 +14,14 @@ namespace BotLibary
         /// <returns></returns>
         internal static IReplyMarkup GetKeyboardAdmin(BotOptions options)
         {
-            return new ReplyKeyboardMarkup
-            {
-                Keyboard = new List<List<KeyboardButton>>
+            var keyboard = new ReplyKeyboardMarkup(new List<List<KeyboardButton>>
                 {
-                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["ADDAPP"]  }, new KeyboardButton { Text = options.personalConfig.AdminButtons["DELAPP"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["ALLUSERS"] } },
-                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.AdminButtons["MAKEWEEKEND"] }, new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKCONFIRM"] } ,new KeyboardButton { Text = options.personalConfig.AdminButtons["LOOKNOTCONFIRM"] } },
-                    new List<KeyboardButton> {new KeyboardButton { Text = options.personalConfig.AdminButtons["MAILING"] }, //new KeyboardButton {Text = options.personalConfig.AdminButtons["OPTIONS"] } 
-                    }
-                },
-                ResizeKeyboard = true
-            };
+                    new List<KeyboardButton> { new KeyboardButton (options.personalConfig.AdminButtons["ADDAPP"]), new KeyboardButton(options.personalConfig.AdminButtons["DELAPP"]),new KeyboardButton(options.personalConfig.AdminButtons["ALLUSERS"]) },
+                    new List<KeyboardButton> { new KeyboardButton (options.personalConfig.AdminButtons["MAKEWEEKEND"]), new KeyboardButton(options.personalConfig.AdminButtons["LOOKCONFIRM"]),new KeyboardButton (options.personalConfig.AdminButtons["LOOKNOTCONFIRM"]) },
+                    new List<KeyboardButton> {new KeyboardButton (options.personalConfig.AdminButtons["MAILING"])}
+                });
+            keyboard.ResizeKeyboard = true;
+            return keyboard;
         }
 
         /// <summary>
@@ -35,16 +31,15 @@ namespace BotLibary
         /// <returns></returns>
         internal static IReplyMarkup GetStartKeyboard(BotOptions options)
         {
-            return new ReplyKeyboardMarkup
-            {
-                Keyboard = new List<List<KeyboardButton>>
+             var keyboard = new ReplyKeyboardMarkup(new List<List<KeyboardButton>>
                 {
-                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.Buttons["APPOINTMENT"] }, new KeyboardButton { Text = options.personalConfig.Buttons["PRICE"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["ABOUT"] } },
-                    new List<KeyboardButton> { new KeyboardButton { Text = options.personalConfig.Buttons["MYWORKS"] }, new KeyboardButton { Text = options.personalConfig.Buttons["FEEDBACK"] } ,new KeyboardButton { Text = options.personalConfig.Buttons["LOCATION"] } },
-                    new List<KeyboardButton> {new KeyboardButton { Text = options.personalConfig.Buttons["LINK"] } }
-                },
-                ResizeKeyboard = true
-            };
+                    new List<KeyboardButton> { new KeyboardButton(options.personalConfig.Buttons["APPOINTMENT"]), new KeyboardButton(options.personalConfig.Buttons["PRICE"]) ,new KeyboardButton(options.personalConfig.Buttons["ABOUT"] ) },
+                    new List<KeyboardButton> { new KeyboardButton (options.personalConfig.Buttons["MYWORKS"] ),new KeyboardButton(options.personalConfig.Buttons["FEEDBACK"]) ,new KeyboardButton(options.personalConfig.Buttons["LOCATION"] ) },
+                    new List<KeyboardButton> {new KeyboardButton (options.personalConfig.Buttons["LINK"] ) }
+                });
+
+                keyboard.ResizeKeyboard = true;
+            return keyboard;
         }
 
         /// <summary>
@@ -228,15 +223,13 @@ namespace BotLibary
         }
         internal static IReplyMarkup GetOptionsKeyboard(BotOptions options)
         {
-            return new ReplyKeyboardMarkup
+            var keyboard = new ReplyKeyboardMarkup(new List<List<KeyboardButton>>()
             {
-                Keyboard = new List<List<KeyboardButton>>()
-            {
-                new List<KeyboardButton> { new KeyboardButton() {Text = options.personalConfig.Options["ADDEXAMPLE"] }, new KeyboardButton() { Text = options.personalConfig.Options["DELETEEXAMPLE"] } },
-                new List<KeyboardButton> { new KeyboardButton() {Text = options.personalConfig.Options["GREETING"] }, new KeyboardButton() { Text = options.personalConfig.Options["PRICE"] } },
-            },
-                ResizeKeyboard = true
-            };     
+                new List<KeyboardButton> { new KeyboardButton(options.personalConfig.Options["ADDEXAMPLE"] ), new KeyboardButton(options.personalConfig.Options["DELETEEXAMPLE"])},
+                new List<KeyboardButton> { new KeyboardButton(options.personalConfig.Options["GREETING"] ), new KeyboardButton(options.personalConfig.Options["PRICE"] )},
+            });
+                keyboard.ResizeKeyboard = true;
+            return keyboard;
         }
     }
 }

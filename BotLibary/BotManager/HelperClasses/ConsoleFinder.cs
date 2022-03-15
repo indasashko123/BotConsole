@@ -1,5 +1,6 @@
 ﻿using BotLibary.BotManager.Interfaces;
 using BotLibary.Events;
+using BotLibary.TelegramBot;
 using Newtonsoft.Json;
 using Options;
 using System;
@@ -7,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.HelperClasses
 {
@@ -15,11 +15,11 @@ namespace BotLibary.BotManager.HelperClasses
     {
         string PathToDirectory { get; set; }
         string FileSystem = "\\FileSystem";
-        ChangesLog log { get; set; }
+        public event ChangesLog log;
         public ConsoleFinder(ChangesLog log, string path)
         {
             PathToDirectory = path;
-            this.log = log;
+            this.log = (string text) => log?.Invoke(text);
         }
         public Bot FindByName(BotName Name, List<Bot> bots)
         {           
@@ -30,15 +30,17 @@ namespace BotLibary.BotManager.HelperClasses
             }
             else
             {
-                log?.Invoke($"Выбран бот {bot.BotName.CustomerName}");
-                bot.ConsoleMessage += ((string text) => { log?.Invoke(text); });
-                bot.ConsoleMessage?.Invoke("\n\n   Боту незначен log");               
+                log?.Invoke($"Выбран бот {bot.BotName.CustomerName}");           
             }
             return bot;
         }
 
         public void ShowBots(List<Bot> bots)
         {
+            if (bots == null || bots.Count ==0)
+            {
+                Console.WriteLine("Ботов пока нет");
+            }
             foreach (Bot bot in bots)
             {
                 string answer = $" bot name is {bot.BotName.Name}, customer is {bot.BotName.CustomerName}, direction is  {bot.BotName.Direction}\n";
@@ -72,7 +74,7 @@ namespace BotLibary.BotManager.HelperClasses
                 PersonalConfig personalConfig;
                 string personalConfigText = File.ReadAllText(path + $"\\PersonalConfig.json", Encoding.UTF8);
                 personalConfig = JsonConvert.DeserializeObject<PersonalConfig>(personalConfigText);
-                Bot newBot = new Bot(new BotOptions(botConfig, personalConfig));
+                Bot newBot = new Bot(new BotOptions(botConfig, personalConfig), log);
                 log?.Invoke($"Найден бот {newBot.BotName.Name}");
                 bots.Add(newBot);
             }

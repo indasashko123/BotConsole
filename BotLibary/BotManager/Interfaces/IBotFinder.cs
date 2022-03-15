@@ -1,10 +1,5 @@
-﻿using BotLibary.Events;
-using BotLibary.Interfaces;
-using System;
+﻿using BotLibary.TelegramBot;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BotLibary.BotManager.Interfaces
 {

@@ -1,24 +1,27 @@
 ﻿using BotLibary.BotManager.HelperClasses;
-using System;
-
+using BotLibary.Events;
 namespace BotLibary.BotManager
 {
     public class ConsoleBotManager: BotManager
     {
+        public event ChangesLog onChangerLog;
         string Path { get; set; }
         public override void InitBotManager()
         {
-            SystemMessage = ((string text) => { Console.WriteLine(text); });
-            BotCreater = new ConsoleCreator(SystemMessage, Path);
-            BotSaver = new ConsoleSaver(SystemMessage,Path);
-            BotFinder = new ConsoleFinder(SystemMessage, Path);
+            BotCreater = new ConsoleCreator(onChangerLog,Path);
+            BotSaver = new ConsoleSaver(onChangerLog,Path);
+            BotFinder = new ConsoleFinder(onChangerLog,Path);
         }
-        public ConsoleBotManager(string Path)
+        public ConsoleBotManager(string Path, ChangesLog log)
         {
             this.Path = Path;
+            onChangerLog += (string text) => log?.Invoke(text);
             InitBotManager();
         }
-
+        public void TryLog(string log)
+        {
+            onChangerLog?.Invoke($"{log}");
+        }
 
     }
 }

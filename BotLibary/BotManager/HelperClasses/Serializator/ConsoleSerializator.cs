@@ -1,10 +1,11 @@
 ﻿using BotLibary.BotManager.Interfaces;
 using BotLibary.Events;
-using BotLibary.Interfaces;
+using BotLibary.TelegramBot;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Telegram.Bot;
 
 namespace BotLibary.BotManager.HelperClasses.Serializator
 {

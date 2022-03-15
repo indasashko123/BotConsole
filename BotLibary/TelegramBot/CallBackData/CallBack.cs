@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace BotLibary.CallBackData
+namespace BotLibary.TelegramBot.CallBackData
 {
-    internal class CallBackData
+    internal class CallBack
     {
-        internal static CallBackData GetData(string data)
+        internal static CallBack GetData(string data)
         {
-            return new CallBackData(data);
+            return new CallBack(data);
         }
-        internal static async Task<CallBackData> GetDataAsync(string data)
+        internal static async Task<CallBack> GetDataAsync(string data)
         {
             return await Task.Run(() => GetData(data));
         }
-        internal CallBackData(string data)
+        public CallBack(string data)
         {
             if (data == "404")
             {
@@ -133,6 +130,33 @@ namespace BotLibary.CallBackData
         internal Action Action { get; set; }
         internal string Error { get; set; }
         internal bool EmptyButton { get; set; }
+        public override string ToString()
+        {
+            string answer = "";
+            try
+            {           
+                if (Error != "0")
+                {
+                    answer = Error;
+                }
+                else
+                {
+                    if (EmptyButton == true)
+                    {
+                        answer = "EmtyButton";
+                    }
+                    else
+                    {
+                        answer = $"UserRole {UserRole}, action {Action}, Stage {Stage}, EntityId {EntityId}, UserId {UserId}";
+                    }
+                }
+            }
+            catch
+            {
+                answer = "Не получилось расспарсить";
+            }
+            return answer;
+        }
     }
     internal enum Action
     {
