@@ -26,22 +26,22 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            Day day = await context.db.FindDayAsync(callBack.EntityId);
+            Day day = await context.db.Reader.FindDayAsync(callBack.EntityId);
             if (!day.IsWorkDay)
             {
                 day.IsWorkDay = true;
-                await context.db.UpdateDayAsync(day);
+                await context.db.Updater.UpdateDayAsync(day);
                 await bot.SendTextMessageAsync(admin.ChatId, $"День {day.Date}.{day.MonthNumber} теперь рабочий день\n", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
                 return null;
             }
-            List<Appointment> apps = await context.db.FindAppointmentsAsync(day.DayId);
+            List<Appointment> apps = await context.db.Reader.FindAppointmentsAsync(day.DayId);
             bool AllEmpty = true;
             foreach (Appointment app in apps)
             {
                 if (!app.IsEmpty)
                 {
                     AllEmpty = false;
-                    var user = await context.db.FindUserAsync(app.User);
+                    var user = await context.db.Reader.FindUserAsync(app.User);
                     string message = $"Запись на время {app.AppointmentTime} занята пользователем {user.FirstName} {user.LastName}\n" +
                          $" и {(app.IsConfirm ? "подтверждена " : "не подтверждена ")}.";
                     await bot.SendTextMessageAsync(admin.ChatId, message);
@@ -56,7 +56,7 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
             if (AllEmpty)
             {
                 day.IsWorkDay = false;
-                await context.db.UpdateDayAsync(day);
+                await context.db.Updater.UpdateDayAsync(day);
                 await bot.SendTextMessageAsync(admin.ChatId, $"День {day.Date}.{day.MonthNumber} теперь выходной\n", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
                 return null;
             }

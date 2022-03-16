@@ -43,31 +43,31 @@ namespace BotLibary.TelegramBot.Handlers.Commands
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, Message message)
         {
             await dateFunction.CreateMonthsAsync(DateTime.Now);
-            await context.db.AddMonthAsync(dateFunction.CurrentMonth);
-            await context.db.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.CurrentMonth, dateFunction.DayNames);
-            List<Day> daysCurrentMonth = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
+            await context.db.Creater.AddMonthAsync(dateFunction.CurrentMonth);
+            await context.db.Creater.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.CurrentMonth, dateFunction.DayNames);
+            List<Day> daysCurrentMonth = await context.db.Reader.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
             foreach (Day day in daysCurrentMonth)
             {
                 for (int i = 0; i < options.botConfig.appointmentStandartTimes.Count; i++)
                 {
                     Appointment app = new Appointment(options.botConfig.appointmentStandartTimes[i], day.DayId);
-                    await context.db.AddAppointmentAsync(app);
+                    await context.db.Creater.AddAppointmentAsync(app);
                 }
             }
-            await context.db.AddMonthAsync(dateFunction.NextMonth);
-            await context.db.CreateDaysAsync(1, dateFunction.NextMonth, dateFunction.DayNames);
-            List<Day> daysNextMonth = await context.db.FindDaysAsync(dateFunction.NextMonth.MonthId);
+            await context.db.Creater.AddMonthAsync(dateFunction.NextMonth);
+            await context.db.Creater.CreateDaysAsync(1, dateFunction.NextMonth, dateFunction.DayNames);
+            List<Day> daysNextMonth = await context.db.Reader.FindDaysAsync(dateFunction.NextMonth.MonthId);
             foreach (Day day in daysNextMonth)
             {
                 for (int i = 0; i < options.botConfig.appointmentStandartTimes.Count; i++)
                 {
                     Appointment app = new Appointment(options.botConfig.appointmentStandartTimes[i], day.DayId);
-                    await context.db.AddAppointmentAsync(app);
+                    await context.db.Creater.AddAppointmentAsync(app);
                 }
             }
             currentUser.IsAdmin = true;
-            await context.db.UpdateUserAsync(currentUser);
-            admin = await context.db.FindAdminAsync();
+            await context.db.Updater.UpdateUserAsync(currentUser);
+            admin = await context.db.Reader.FindAdminAsync();
             if (admin == null)
             {        
                 return null;

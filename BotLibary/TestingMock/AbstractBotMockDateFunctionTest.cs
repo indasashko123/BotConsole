@@ -13,7 +13,7 @@ namespace BotLibary.TestingMock
         public void SetContext(DataBaseConnector connector)
         {
             this.context = connector;
-            context.db.DeleteDb();
+            context.db.Erraiser.DeleteDataBase();
         }
         public AbstractBotMockDateFunctionTest()
         {
@@ -34,7 +34,7 @@ namespace BotLibary.TestingMock
         }
         public void AddDb(int StartDay,Month month)
         {
-            context.db.CreateDaysAsync(StartDay, month, dateFunction.DayNames);
+            context.db.Creater.CreateDaysAsync(StartDay, month, dateFunction.DayNames);
             Thread.Sleep(10000);
         }
         public async void UpdateDate(DateTime time)
@@ -45,7 +45,7 @@ namespace BotLibary.TestingMock
         public async void GetDays(List<Day> days)
         {
             int monthID = dateFunction.CurrentMonth.MonthId;
-            days =await context.db.FindDaysAsync(monthID);
+            days =await context.db.Reader.FindDaysAsync(monthID);
         }
         protected async override void CheckUpdate(DateTime timeNow)
         {
@@ -54,7 +54,7 @@ namespace BotLibary.TestingMock
                 await dateFunction.IncreementDayAsync();
                 if (dateFunction.CurrentDay == 1)
                 {
-                    List<Month> pastMonth = await context.db.GetMonthsAsync(new int[]
+                    List<Month> pastMonth = await context.db.Reader.GetMonthsAsync(new int[]
                         {dateFunction.CurrentMonth.MonthId,
                         dateFunction.NextMonth.MonthId});
                     List<Appointment> pastAppointment = new List<Appointment>();
@@ -63,25 +63,25 @@ namespace BotLibary.TestingMock
                     {
                         foreach (Month month in pastMonth)
                         {
-                            pastDays.AddRange(await context.db.FindDaysAsync(month.MonthId));
+                            pastDays.AddRange(await context.db.Reader.FindDaysAsync(month.MonthId));
                         }
                         foreach (Day day in pastDays)
                         {
-                            pastAppointment.AddRange(await context.db.FindAppointmentsAsync(day.DayId));
+                            pastAppointment.AddRange(await context.db.Reader.FindAppointmentsAsync(day.DayId));
                         }
-                        await context.db.DeleteAppointmentsAsync(pastAppointment);
-                        await context.db.DeleteDaysAsync(pastDays);
-                        await context.db.DeleteMonthsAsync(pastMonth);
+                        await context.db.Erraiser.DeleteAppointmentsAsync(pastAppointment);
+                        await context.db.Erraiser.DeleteDaysAsync(pastDays);
+                        await context.db.Erraiser.DeleteMonthsAsync(pastMonth);
                     }
-                    await context.db.AddMonthAsync(dateFunction.NextMonth);
-                    await context.db.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.NextMonth, dateFunction.DayNames);
-                    List<Day> daysCurrentMonth = await context.db.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
+                    await context.db.Creater.AddMonthAsync(dateFunction.NextMonth);
+                    await context.db.Creater.CreateDaysAsync(dateFunction.CurrentDay, dateFunction.NextMonth, dateFunction.DayNames);
+                    List<Day> daysCurrentMonth = await context.db.Reader.FindDaysAsync(dateFunction.CurrentMonth.MonthId);
                     foreach (Day day in daysCurrentMonth)
                     {
                         for (int i = 0; i < botConfig.appointmentStandartTimes.Count; i++)
                         {
                             Appointment app = new Appointment(botConfig.appointmentStandartTimes[i], day.DayId);
-                            await context.db.AddAppointmentAsync(app);
+                            await context.db.Creater.AddAppointmentAsync(app);
                         }
                     }
                 }

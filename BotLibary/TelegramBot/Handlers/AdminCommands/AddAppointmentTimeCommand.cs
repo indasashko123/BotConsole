@@ -28,18 +28,18 @@ namespace BotLibary.TelegramBot.Handlers.AdminCommands
             if (Int32.TryParse(admin.Status.Split('/')[1], out int appId))
             {
                 admin.Status = "";
-                await context.db.UpdateUserAsync(admin);
-                Appointment app = await context.db.FindAppointmentAsync(appId);
+                await context.db.Updater.UpdateUserAsync(admin);
+                Appointment app = await context.db.Reader.FindAppointmentAsync(appId);
                 if (data.Length == 5)
                 {
                     app.AppointmentTime = data;
-                    await context.db.UpdateAppAsync(app);
+                    await context.db.Updater.UpdateAppAsync(app);
                     return await bot.SendTextMessageAsync(admin.ChatId, $"Добавилась запись на {app.AppointmentTime}", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
                     
                 }
                 else
                 {
-                    await context.db.DeleteAppAsync(app);
+                    await context.db.Erraiser.DeleteAppAsync(app);
                     return await bot.SendTextMessageAsync(admin.ChatId, $" запись удалена", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
                     
                 }

@@ -26,7 +26,7 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            Appointment app = await context.db.FindAppointmentAsync(callBack.EntityId);
+            Appointment app = await context.db.Reader.FindAppointmentAsync(callBack.EntityId);
             if (!app.IsEmpty)
             {
                 return await bot.SendTextMessageAsync(currentUser.ChatId, 
@@ -36,12 +36,12 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands
             app.IsConfirm = false;
             app.IsEmpty = false;
             app.User = currentUser.UserId;
-            Day day = await context.db.FindDayAsync(app.Day);
+            Day day = await context.db.Reader.FindDayAsync(app.Day);
             string message = $"Новая запись - \n " +
                 $"{currentUser.FirstName} {currentUser.LastName} @{currentUser.Username}\n " +
                 $"в {day.DayOfWeek}, {day.Date}.{day.MonthNumber} числа\n" +
                 $" на время - {app.AppointmentTime}";
-            await context.db.UpdateAppAsync(app);
+            await context.db.Updater.UpdateAppAsync(app);
             await bot.SendTextMessageAsync(currentUser.ChatId, "Заявка принята. Ожидайте подтверждения мастера", 
                                            replyMarkup: KeyBoards.GetStartKeyboard(options));
             await bot.SendTextMessageAsync(admin.ChatId, message,

@@ -21,11 +21,11 @@ namespace BotLibary.TelegramBot.Handlers
         }
         internal async Task BotOnMessageReceived(ITelegramBotClient botClient, Message message)
         {      
-            DataBase.Models.User admin = await bot.context.db.FindAdminAsync();
-            DataBase.Models.User currentUser = await bot.context.db.FindUserAsync(message.Chat.Id);
+            DataBase.Models.User admin = await bot.context.db.Reader.FindAdminAsync();
+            DataBase.Models.User currentUser = await bot.context.db.Reader.FindUserAsync(message.Chat.Id);
             if (currentUser == null)
             {
-               currentUser = await bot.context.db.CreateNewUserAsync(message.From.Username, message.From.FirstName, message.From.LastName, message.Chat.Id);
+               currentUser = await bot.context.db.Creater.CreateNewUserAsync(message.From.Username, message.From.FirstName, message.From.LastName, message.Chat.Id);
                consoleMessage?.Invoke($"Создали нового пользователя {currentUser} с ChatId {currentUser.ChatId}");
             }
             if (message.Type == MessageType.Text)

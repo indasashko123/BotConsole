@@ -24,9 +24,9 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            Appointment app = await context.db.AddAppointmentAsync(callBack.EntityId);
+            Appointment app = await context.db.Creater.AddAppointmentAsync(callBack.EntityId);
             admin.Status = $"AddApp/{app.AppointmentId}";
-            await context.db.UpdateUserAsync(admin);
+            await context.db.Updater.UpdateUserAsync(admin);
             await bot.SendTextMessageAsync(admin.ChatId, $"Напишите время приема.\n Не более 5 символов", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
             return null;
         }

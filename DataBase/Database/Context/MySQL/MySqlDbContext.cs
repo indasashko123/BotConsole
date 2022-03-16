@@ -1,19 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using MySqlConnector.Authentication;
-using MySqlConnector.Logging;
-using MySqlConnector;
 using DataBase.Models;
 using System.IO;
 using Newtonsoft.Json;
 
 namespace DataBase.Database.Context.MySQL
 {
-    class Connection : DbContext
+    public class MySqlDbContext : DbContext
     {
         public Action<string> SystemMessage;
         public DbSet<User> Users { get; set; }
@@ -54,14 +48,14 @@ namespace DataBase.Database.Context.MySQL
                 connectionString = $"server = {server};user={user};password={password}; ";
             }
         }
-        public Connection(string DbName)
+        public MySqlDbContext(string DbName)
         {
            // GetOptions();
-            this.DbName = DbName;          
-        }        
-        public void CreateDataBase()
+            this.DbName = DbName;
+            this.Database.EnsureCreated();
+        }
+        public MySqlDbContext(DbContextOptions options) : base(options)
         {
-            Database.EnsureCreated();
         }
         protected override void
             OnConfiguring(DbContextOptionsBuilder optionBuilder)

@@ -4,8 +4,8 @@ namespace DataBase.Database
 {
     public class DataBaseConnector
     {
-        public ICRUD db;
-        public DataBaseConnector(ICRUD context)
+        public IRepository db;
+        public DataBaseConnector(IRepository context)
         {
             db = context;
         }

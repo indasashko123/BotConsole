@@ -25,15 +25,15 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            Appointment app = await context.db.FindAppointmentAsync(callback.EntityId);
+            Appointment app = await context.db.Reader.FindAppointmentAsync(callback.EntityId);
             app.IsConfirm = false;
             app.User = 0;
             app.IsEmpty = true;
-            await context.db.UpdateAppAsync(app);
+            await context.db.Updater.UpdateAppAsync(app);
             await bot.SendTextMessageAsync(admin.ChatId,
                                            $"Запись на время {app.AppointmentTime} отменена", 
                                            replyMarkup: KeyBoards.GetKeyboardAdmin(options));
-            var user = await context.db.FindUserAsync(callback.UserId);
+            var user = await context.db.Reader.FindUserAsync(callback.UserId);
             await bot.SendTextMessageAsync(user.ChatId, 
                                            options.personalConfig.Messages["USERAPPISCANCEL"]);
             return null;

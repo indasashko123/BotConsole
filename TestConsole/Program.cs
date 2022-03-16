@@ -14,10 +14,11 @@ using BotLibary.BotManager;
 namespace TestConsole
 {
     class Program
-    {        
+    {
+        static void Log(string text) => Console.WriteLine(text);
         static void Main(string[] args)
         {
-            var BotManager = new ConsoleBotManager("D:\\BotManager");
+            var BotManager = new ConsoleBotManager("D:\\BotManager", Log);
             while (true) 
             {
                 
@@ -66,13 +67,18 @@ namespace TestConsole
             }
             static async Task Test1()
             {
-                DataBaseConnector connector = new DataBaseConnector(new SQLContext("Test001"));
+                var rep = new MySqlRepository();
+                rep.Init(new MySqlReader("ConsltestDF"),
+                         new MySqlCreater("ConsltestDF"),
+                         new MySqlUpdater("ConsltestDF"),
+                         new MySqlErraiser("ConsltestDF"));
+                DataBaseConnector connector = new DataBaseConnector(rep);
                 var CrudDb = connector.db;
-                User admin = await CrudDb.FindAdminAsync();
-                var currentUser = await CrudDb.FindUserAsync(123L);
+                User admin = await CrudDb.Reader.FindAdminAsync();
+                var currentUser = await CrudDb.Reader.FindUserAsync(123L);
                 if (currentUser == null)
                 {
-                    currentUser = await CrudDb.CreateNewUserAsync("Яша", "Мыколаичь", "Жопко", 123L);
+                    currentUser = await CrudDb.Creater.CreateNewUserAsync("Яша", "Мыколаичь", "Жопко", 123L);
                 }
                 if (currentUser.IsAdmin)
                 {
@@ -87,10 +93,10 @@ namespace TestConsole
                 await ConsoleAsync("1");
                 await df.CreateMonthsAsync(DateTime.Now);
                 await ConsoleAsync("2");
-                await CrudDb.AddMonthAsync(df.getCurrentMonth());
+                await CrudDb.Creater.AddMonthAsync(df.getCurrentMonth());
                 await ConsoleAsync("3");
-                await CrudDb.CreateDaysAsync(df.getCurrentDay(), df.getCurrentMonth(), df.getNames());
-                List<Day> daysCurrentMonth = await CrudDb.FindDaysAsync(df.getCurrentMonth().MonthId);
+                await CrudDb.Creater.CreateDaysAsync(df.getCurrentDay(), df.getCurrentMonth(), df.getNames());
+                List<Day> daysCurrentMonth = await CrudDb.Reader.FindDaysAsync(df.getCurrentMonth().MonthId);
                 List<string> appTime = new List<string>()
                 {
                 "10-00",
@@ -102,23 +108,23 @@ namespace TestConsole
                     for (int i = 0; i < 3; i++)
                     {
                         Appointment app = new Appointment(appTime[i], day.DayId);
-                        await CrudDb.AddAppointmentAsync(app);
+                        await CrudDb.Creater.AddAppointmentAsync(app);
                     }
                 }
-                await CrudDb.AddMonthAsync(df.getNextMonth());
-                await CrudDb.CreateDaysAsync(1, df.getNextMonth(), df.getNames());
-                List<Day> daysNextMonth = await CrudDb.FindDaysAsync(df.getNextMonth().MonthId);
+                await CrudDb.Creater.AddMonthAsync(df.getNextMonth());
+                await CrudDb.Creater.CreateDaysAsync(1, df.getNextMonth(), df.getNames());
+                List<Day> daysNextMonth = await CrudDb.Reader.FindDaysAsync(df.getNextMonth().MonthId);
                 foreach (Day day in daysNextMonth)
                 {
                     for (int i = 0; i < 3; i++)
                     {
                         Appointment app = new Appointment(appTime[i], day.DayId);
-                        await CrudDb.AddAppointmentAsync(app);
+                        await CrudDb.Creater.AddAppointmentAsync(app);
                     }
                 }
                 currentUser.IsAdmin = true;
-                await CrudDb.UpdateUserAsync(currentUser);
-                admin = await CrudDb.FindAdminAsync();
+                await CrudDb.Updater.UpdateUserAsync(currentUser);
+                admin = await CrudDb.Reader.FindAdminAsync();
                 if (admin == null)
                 {
                     await ConsoleAsync($"Ошибка при регистрации");
@@ -130,22 +136,22 @@ namespace TestConsole
 
 
 
-                var days = await CrudDb.FindDaysAsync(df.getCurrentMonth().MonthId);
+                var days = await CrudDb.Reader.FindDaysAsync(df.getCurrentMonth().MonthId);
                 List<Appointment> allApps = new List<Appointment>();
                 foreach (Day day in days)
                 {
-                    var apps = await CrudDb.FindAppointmentsAsync(day.DayId);
+                    var apps = await CrudDb.Reader.FindAppointmentsAsync(day.DayId);
                     allApps.AddRange(apps);
                 }
                 
                 await ConsoleAsync($"Создано расписание\n {days.Count} - колличество дней \n {allApps.Count} - количество записей");
                 await ConsoleAsync($"{currentUser.ChatId}, Создано рассписание на {days.Count} дней\n\n\n\n");
 
-                var days2 = await CrudDb.FindDaysAsync(df.getNextMonth().MonthId);
+                var days2 = await CrudDb.Reader.FindDaysAsync(df.getNextMonth().MonthId);
                 List<Appointment> allApps2 = new List<Appointment>();
                 foreach (Day day in days)
                 {
-                    var apps = await CrudDb.FindAppointmentsAsync(day.DayId);
+                    var apps = await CrudDb.Reader.FindAppointmentsAsync(day.DayId);
                     allApps.AddRange(apps);
                 }
 

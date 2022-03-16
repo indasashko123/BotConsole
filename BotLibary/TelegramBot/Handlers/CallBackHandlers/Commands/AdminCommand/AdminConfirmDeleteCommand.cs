@@ -23,16 +23,16 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            var app = await context.db.FindAppointmentAsync(callBack.EntityId);
-            var user = await context.db.FindUserAsync(callBack.UserId);
-            var day = await context.db.FindDayAsync(app.Day);
+            var app = await context.db.Reader.FindAppointmentAsync(callBack.EntityId);
+            var user = await context.db.Reader.FindUserAsync(callBack.UserId);
+            var day = await context.db.Reader.FindDayAsync(app.Day);
             await bot.SendTextMessageAsync(admin.ChatId, $"Удалена запись", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
             if (user != null)
             {
                 await bot.SendTextMessageAsync(user.ChatId, $"Запись на {day.DayOfWeek} {day.Date}.{day.MonthNumber}\n" +
                 $"на время - {app.AppointmentTime} -Отменена");
             }
-            await context.db.DeleteAppAsync(app);
+            await context.db.Erraiser.DeleteAppAsync(app);
             return null;
         }
     }

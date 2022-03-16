@@ -25,18 +25,18 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            List<Appointment> apps = await context.db.FindAppointmentsAsync(callBack.EntityId);
-            Day day = await context.db.FindDayAsync(callBack.EntityId);
+            List<Appointment> apps = await context.db.Reader.FindAppointmentsAsync(callBack.EntityId);
+            Day day = await context.db.Reader.FindDayAsync(callBack.EntityId);
             foreach (Appointment app in apps)
             {
                 if (!app.IsEmpty)
                 {
-                    DataBase.Models.User user = await context.db.FindUserAsync(app.User);
+                    DataBase.Models.User user = await context.db.Reader.FindUserAsync(app.User);
                     await bot.SendTextMessageAsync(user.ChatId, options.personalConfig.Messages["USERAPPISCANCEL"]);
                 }
             }
             day.IsWorkDay = false;
-            await context.db.UpdateDayAsync(day);
+            await context.db.Updater.UpdateDayAsync(day);
             await bot.SendTextMessageAsync(admin.ChatId, $"День {day.Date}.{day.MonthNumber} теперь выходной\n", replyMarkup: KeyBoards.GetKeyboardAdmin(options));
             return null;
         }

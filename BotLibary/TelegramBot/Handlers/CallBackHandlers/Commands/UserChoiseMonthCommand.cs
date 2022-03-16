@@ -33,7 +33,7 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            List<Day> days = await context.db.FindDaysAsync(callBack.EntityId);
+            List<Day> days = await context.db.Reader.FindDaysAsync(callBack.EntityId);
             return await bot.SendTextMessageAsync(currentUser.ChatId, MessageText, 
                                                   replyMarkup: KeyBoards.GetDaysButton(days, options, 
                                                                                        Code, currentUser));        

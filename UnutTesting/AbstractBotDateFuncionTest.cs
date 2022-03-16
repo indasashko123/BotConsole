@@ -17,7 +17,12 @@ namespace UnutTesting
         public void TestDf()
         {
             AbstractBotMockDateFunctionTest bot = new AbstractBotMockDateFunctionTest();
-            bot.SetContext(new DataBaseConnector(new SQLContext("testDF")));
+            var rep = new MySqlRepository();
+            rep.Init(new MySqlReader("testDF"),
+                     new MySqlCreater("testDF"),
+                     new MySqlUpdater("testDF"),
+                     new MySqlErraiser("testDF"));
+            bot.SetContext(new DataBaseConnector(rep));
             bot.CreateDateFunction(new DateTime(1000, 1, 1));
             var df = bot.GetDF();
             Assert.AreEqual(1, df.getCurrentDay());
@@ -26,7 +31,12 @@ namespace UnutTesting
         public void TestUpdate()
         {
             AbstractBotMockDateFunctionTest bot = new AbstractBotMockDateFunctionTest();
-            bot.SetContext(new DataBaseConnector(new SQLContext("testDF")));
+            var rep = new MySqlRepository();
+            rep.Init(new MySqlReader("testDF"),
+                     new MySqlCreater("testDF"),
+                     new MySqlUpdater("testDF"),
+                     new MySqlErraiser("testDF"));
+            bot.SetContext(new DataBaseConnector(rep));
             bot.CreateDateFunction(new DateTime(1000, 1, 1));
             var df = bot.GetDF();
             bot.UpdateDate(new DateTime(1000,1,2));
@@ -36,7 +46,12 @@ namespace UnutTesting
         public void TestUpdate2()
         {
             AbstractBotMockDateFunctionTest bot = new AbstractBotMockDateFunctionTest();
-            bot.SetContext(new DataBaseConnector(new SQLContext("testDF")));
+            var rep = new MySqlRepository();
+            rep.Init(new MySqlReader("testDF"), 
+                     new MySqlCreater("testDF"),
+                     new MySqlUpdater("testDF"), 
+                     new MySqlErraiser("testDF"));
+            bot.SetContext(new DataBaseConnector(rep));
             bot.CreateDateFunction(new DateTime(1000, 1, 1));
             var df = bot.GetDF();
             bot.UpdateDate(new DateTime(1000, 1,3));
@@ -48,7 +63,12 @@ namespace UnutTesting
         public void TestUpdateWithContext()
         {
             AbstractBotMockDateFunctionTest bot = new AbstractBotMockDateFunctionTest();
-            bot.SetContext(new DataBaseConnector(new SQLContext("testDF")));
+            var rep = new MySqlRepository();
+            rep.Init(new MySqlReader("testDF"),
+                     new MySqlCreater("testDF"),
+                     new MySqlUpdater("testDF"),
+                     new MySqlErraiser("testDF"));
+            bot.SetContext(new DataBaseConnector(rep));
             bot.CreateDateFunction(new DateTime(1000, 1, 27));
             List<Day> days = new List<Day>();
                  bot.GetDays(days);

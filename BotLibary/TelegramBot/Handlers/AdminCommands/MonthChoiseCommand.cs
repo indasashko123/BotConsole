@@ -21,7 +21,7 @@ namespace BotLibary.TelegramBot.Handlers.AdminCommands
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, Message message)
         {
-            List<DataBase.Models.Month> month = await context.db.GetMonthsAsync();
+            List<DataBase.Models.Month> month = await context.db.Reader.GetMonthsAsync();
             return await bot.SendTextMessageAsync(admin.ChatId, $"Выбирите месяц", replyMarkup: KeyBoards.GetMonthButtons(month, code, admin));  
         }
     }

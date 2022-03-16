@@ -25,8 +25,8 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            List<Day> days = await context.db.FindDaysAsync(callBack.EntityId);
-            var user = await context.db.FindUserAsync(callBack.UserId);
+            List<Day> days = await context.db.Reader.FindDaysAsync(callBack.EntityId);
+            var user = await context.db.Reader.FindUserAsync(callBack.UserId);
             return await bot.SendTextMessageAsync(user.ChatId, "Выберите день, в который нужно добавить запись", 
                                            replyMarkup: KeyBoards.GetDaysButton(days, options, Codes.AdminAdd, admin));        
         }

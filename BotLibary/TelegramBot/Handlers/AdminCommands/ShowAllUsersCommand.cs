@@ -13,7 +13,6 @@ namespace BotLibary.TelegramBot.Handlers.AdminCommands
         private DataBase.Models.User admin;
         private DataBaseConnector context;
         private BotOptions options;
-
         public ShowAllUsersCommand(DataBase.Models.User admin, DataBaseConnector context, BotOptions options)
         {
             this.admin = admin;
@@ -22,7 +21,7 @@ namespace BotLibary.TelegramBot.Handlers.AdminCommands
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, Message message)
         {
-            List<DataBase.Models.User> users = await context.db.FindUsersAsync();
+            List<DataBase.Models.User> users = await context.db.Reader.FindUsersAsync();
             foreach (var user in users)
             {
                 string Message = $"Пользователь {user.FirstName} {user.LastName} @{user.Username}\n";

@@ -11,17 +11,15 @@ namespace BotLibary.TelegramBot.Handlers.AdminCommands
     {
         private DataBase.Models.User admin;
         private DataBaseConnector context;
-
         public StartMailingCommand(DataBase.Models.User admin, DataBaseConnector context)
         {
             this.admin = admin;
             this.context = context;
         }
-
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, Message message)
         {
             admin.Status = "Mailing";
-            await context.db.UpdateUserAsync(admin);
+            await context.db.Updater.UpdateUserAsync(admin);
             await bot.SendTextMessageAsync(admin.ChatId, "Следующее записанное сообщение будет отправленно. Может быть текст, фото, голосовое и т.д.");
             return null;
         }

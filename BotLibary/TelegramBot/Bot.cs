@@ -24,7 +24,12 @@ namespace BotLibary.TelegramBot
             personalConfig = options.personalConfig;
             BotName = new BotName(botConfig.Name, botConfig.CustomerName, botConfig.Direction);
             dateFunction = new DateFunction();
-            context = new DataBaseConnector(new SQLContext(botConfig.dataBaseName));
+            var repository = new MySqlRepository();
+            repository.Init(new MySqlReader(botConfig.dataBaseName),
+                            new MySqlCreater(botConfig.dataBaseName),
+                            new MySqlUpdater(botConfig.dataBaseName),
+                            new MySqlErraiser(botConfig.dataBaseName));
+            context = new DataBaseConnector(repository);
             bot = new TelegramBotClient(botConfig.token);
             bot.Timeout = new TimeSpan(0, 10, 0);
             imageManager = new ImageManager();

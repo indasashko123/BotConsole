@@ -24,10 +24,10 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            Appointment app = await context.db.FindAppointmentAsync(callBack.EntityId);
+            Appointment app = await context.db.Reader.FindAppointmentAsync(callBack.EntityId);
             app.IsConfirm = true;
-            await context.db.UpdateAppAsync(app);
-            var confirmedUser = await context.db.FindUserAsync(callBack.UserId);
+            await context.db.Updater.UpdateAppAsync(app);
+            var confirmedUser = await context.db.Reader.FindUserAsync(callBack.UserId);
             await bot.SendTextMessageAsync(confirmedUser.ChatId, 
                                            options.personalConfig.Messages["YOURAPPCONFIRM"],
                                            replyMarkup: KeyBoards.GetStartKeyboard(options));

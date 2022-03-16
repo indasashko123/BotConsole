@@ -25,7 +25,7 @@ namespace BotLibary.TelegramBot.Handlers.AdminCommands
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, Message message)
         {
-            List<Appointment> apps = await context.db.FindConfirmAppointmentsAsync(target);
+            List<Appointment> apps = await context.db.Reader.FindConfirmAppointmentsAsync(target);
             if (apps == null || apps.Count == 0)
             {
                 return await bot.SendTextMessageAsync(admin.ChatId, "Записей нет");
@@ -33,8 +33,8 @@ namespace BotLibary.TelegramBot.Handlers.AdminCommands
             }
             foreach (Appointment app in apps)
             {
-                DataBase.Models.User user = await context.db.FindUserAsync(app.User);
-                Day day = await context.db.FindDayAsync(app.Day);
+                DataBase.Models.User user = await context.db.Reader.FindUserAsync(app.User);
+                Day day = await context.db.Reader.FindDayAsync(app.Day);
                 if (target)
                 {
                 await bot.SendTextMessageAsync(

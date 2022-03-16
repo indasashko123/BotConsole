@@ -26,7 +26,7 @@ namespace BotLibary.TelegramBot.Handlers.Commands
                 {
                      return await bot.SendTextMessageAsync(currentUser.ChatId, "Бот пока не активирован");               
                 }
-                return await bot.SendTextMessageAsync(currentUser.ChatId, "Для записи необходимо выбрать месяц", replyMarkup: KeyBoards.GetMonthButtons(await context.db.GetMonthsAsync(), Codes.UserChoise, currentUser));             
+                return await bot.SendTextMessageAsync(currentUser.ChatId, "Для записи необходимо выбрать месяц", replyMarkup: KeyBoards.GetMonthButtons(await context.db.Reader.GetMonthsAsync(), Codes.UserChoise, currentUser));             
         }
     }
  }

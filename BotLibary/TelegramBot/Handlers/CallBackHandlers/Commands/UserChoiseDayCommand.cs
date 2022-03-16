@@ -35,7 +35,7 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands
 
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            Day day = await context.db.FindDayAsync(callBack.EntityId);
+            Day day = await context.db.Reader.FindDayAsync(callBack.EntityId);
             if (!day.IsWorkDay && !currentUser.IsAdmin)
             {
                 return await bot.SendTextMessageAsync(currentUser.ChatId, 
@@ -43,7 +43,7 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands
                                                replyMarkup: KeyBoards.GetStartKeyboard(options));
                 
             }
-            List<Appointment> apps = await context.db.FindAppointmentsAsync(callBack.EntityId);
+            List<Appointment> apps = await context.db.Reader.FindAppointmentsAsync(callBack.EntityId);
             return await bot.SendTextMessageAsync(currentUser.ChatId, MessageText, 
                                            replyMarkup: KeyBoards.GetAppointmentKeyboard(apps, options, 
                                                                                          Code,currentUser.UserId));

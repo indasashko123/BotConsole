@@ -23,9 +23,9 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers
         internal async Task BotOnCallbackQueryReceived(ITelegramBotClient botClient, CallbackQuery callbackQuery)
         {
             CallBack callBack = new CallBack(callbackQuery.Data);
-            DataBase.Models.User admin = await bot.context.db.FindAdminAsync();
+            DataBase.Models.User admin = await bot.context.db.Reader.FindAdminAsync();
             long chatId = callbackQuery.Message.Chat.Id;
-            DataBase.Models.User currentUser = await bot.context.db.FindUserAsync(chatId);
+            DataBase.Models.User currentUser = await bot.context.db.Reader.FindUserAsync(chatId);
            
             if (currentUser == null)
             {

@@ -25,7 +25,7 @@ namespace BotLibary.TelegramBot.Handlers.AdminCommands
         {
             client.lastMessage = message;
             admin.Status = "";
-            await context.db.UpdateUserAsync(admin);
+            await context.db.Updater.UpdateUserAsync(admin);
             return await bot.SendTextMessageAsync(admin.ChatId, "Отправить это сообщение всем пользователям?", replyMarkup: KeyBoards.GetConfirmKeyboard(0, options, Codes.AdminMailingConfirm, 0));
            
         }

@@ -33,10 +33,10 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
             }
 
             await Task.Run(() => admin.Status = "");
-            await context.db.UpdateUserAsync(admin);
+            await context.db.Updater.UpdateUserAsync(admin);
             if (callBack.Stage == Stage.Yes)
             {
-                var users = await context.db.FindUsersAsync();
+                var users = await context.db.Reader.FindUsersAsync();
                 foreach (var user in users)
                 {
                     try

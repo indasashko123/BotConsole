@@ -24,7 +24,7 @@ namespace BotLibary.TelegramBot.Handlers.CallBackHandlers.Commands.AdminCommand
         }
         public async Task<Message> ReturnCommand(ITelegramBotClient bot, CallbackQuery callBackQuery)
         {
-            Appointment app = await context.db.FindAppointmentAsync(callBack.EntityId);
+            Appointment app = await context.db.Reader.FindAppointmentAsync(callBack.EntityId);
             int userIDtoSend = app.User;
             if (app.IsEmpty)
             {
