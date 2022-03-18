@@ -54,7 +54,6 @@ namespace BotLibary.Interfaces
             {
                 Day pastDay = await context.db.Reader.GetFirstDayAsync();
                 List<Appointment> pastApps = await context.db.Reader.FindAppointmentsAsync(pastDay.DayId);
-                await bot.SendTextMessageAsync(admin.ChatId, $"Удалаяем день {pastDay.Date}");
                 await context.db.Erraiser.DeleteDaysAsync(new List<Day> { pastDay });
                 await context.db.Erraiser.DeleteAppointmentsAsync(pastApps);
                 await dateFunction.IncreementDayAsync();

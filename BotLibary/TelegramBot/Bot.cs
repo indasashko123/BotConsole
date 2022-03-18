@@ -8,6 +8,7 @@ using BotLibary.Interfaces;
 using BotLibary.TelegramBot.Handlers;
 using System.Threading;
 using Telegram.Bot.Extensions.Polling;
+using System.Threading.Tasks;
 
 namespace BotLibary.TelegramBot
 {
@@ -17,7 +18,7 @@ namespace BotLibary.TelegramBot
         public event ChangesLog ConsoleMessage;
         public event AdminMessage adminMessage;
         CancellationTokenSource cts = new CancellationTokenSource();
-    public Bot(BotOptions options, ChangesLog consoleMessage)
+        public Bot(BotOptions options, ChangesLog consoleMessage)
         {
             this.options = options;
             botConfig = options.botConfig;
@@ -68,5 +69,6 @@ namespace BotLibary.TelegramBot
             botConfig = options.botConfig;
             personalConfig = options.personalConfig;
         }
+
     }
 }

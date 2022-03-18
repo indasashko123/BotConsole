@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.13" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
     <PackageReference Include="coverlet.collector" Version="3.0.2" />
+    <PackageReference Include="Telegram.Bot" Version="17.0.0" />
+    <PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.2" />
+    <PackageReference Include="WTelegramClient" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>

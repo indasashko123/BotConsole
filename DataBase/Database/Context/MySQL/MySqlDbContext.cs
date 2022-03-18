@@ -52,7 +52,7 @@ namespace DataBase.Database.Context.MySQL
         {
            // GetOptions();
             this.DbName = DbName;
-            this.Database.EnsureCreated();
+            Database.EnsureCreated();
         }
         public MySqlDbContext(DbContextOptions options) : base(options)
         {
